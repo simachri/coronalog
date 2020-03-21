@@ -1,12 +1,16 @@
 import React, { Component, Fragment } from "react";
 
+import Navbar from '../../components/navigation/Navbar/Navbar';
+
 class Layout extends Component {
 
     render() {
         return (
             <Fragment>
-                <div>Layout</div>
-                {this.props.children}
+                <Navbar />
+                <main>
+                    {this.props.children}
+                </main>
             </Fragment>
         );
     }
