@@ -4,3 +4,5 @@ package-lock.json
 .idea/
 *.iml
 yarn.lock
+CoronaLog.iml
+misc.xml
