@@ -22,7 +22,8 @@ class App extends Component {
 
         return (
             <div>
-                <Layout>
+                <Layout
+                    currentLocation={this.props.location}>
                     {routes}
                 </Layout>
             </div>
