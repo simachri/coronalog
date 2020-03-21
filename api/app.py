@@ -20,6 +20,19 @@ def get_records():
     records = records_db.get(request.args.get('user'))
     return jsonify(records), 200
 
+@main.route('/records', methods=['POST'])
+def create_records(user):
+     """
+    Create a new daily mediacal record
+    :param user: is needed to transfer the record
+    :return:
+    """
+     try:
+        record_content = request.form['record']
+        db.RecordsDb.create(user, record_content)
+        return jsonify({"success": True}), 200
+     except Exception as e:
+        return f"An Error Occured: {e}"
 
 @main.route('/registrations', methods=['GET', 'POST'])
 def create_registration():
@@ -36,7 +49,6 @@ def create_registration():
     else:
         tasks = [todo_item.get().to_dict() for todo_item in todo_ref.list_documents(page_size=50)]
         return jsonify(tasks), 200
-
 
 @main.route('/', methods=['GET', 'POST'])
 def home():

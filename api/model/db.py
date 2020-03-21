@@ -1,5 +1,6 @@
 from firebase_admin import firestore, initialize_app
 from .registrations import Registration
+from .records import Records
 # noinspection PyPackageRequirements
 from google.cloud import firestore_v1
 
@@ -24,6 +25,15 @@ class RecordsDb:
         """
         records_ref = firestore_client.collection('users/' + user + '/records')
         return [record.get().to_dict() for record in records_ref.list_documents(page_size=50)]
+
+    @staticmethod
+    def create(user, records: Records):
+        """Create medical record from the json file from the record input
+        """
+        records_ref = firestore_client.collection('users/' + user + '/records')
+        doc_ref: firestore_v1.DocumentReference
+        doc_ref = records_ref.add(records.to_json())
+        return doc_ref
 
 
 class RegistrationDb:
