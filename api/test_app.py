@@ -3,12 +3,13 @@ import os
 import unittest
 from datetime import datetime
 
+from flask import Flask
+
 # For local testing, the Firebase credentials are provided from a local file,
 # see WHREG-8. We need to set the environment variable BEFORE we
 # import our app. Otherwise we receive a "missing credentials" exception.
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'firebase_key.json'
 # We need to suppress the PEP8 error 'import not at top'
-from app import main  # noqa: E402
 import registrations  # noqa: E402
 import db  # noqa: E402
 
@@ -29,9 +30,12 @@ class TestRegistration(unittest.TestCase):
 
     def setUp(self):
         """Create Flask testing client"""
+        self.app: Flask = Flask(__name__)
+        from app import main
+        self.app.register_blueprint(main)
         # Set Flask to testing mode such that exceptions within the application
         # are propagated to our test coding.
-        main.testing = True
+        self.app.testing = True
 
     def tearDown(self):
         if len(self._bin) > 0:
@@ -42,7 +46,7 @@ class TestRegistration(unittest.TestCase):
             delete_batch.commit()
 
     def test_api_create_new_registration_is_ok(self):
-        with main.test_client() as client:
+        with self.app.test_client() as client:
             test_doc = {'event_name': 'Waldheim 2020, 3. Durchgang',
                         'first_name': 'Foo',
                         'last_name': 'Bar',
