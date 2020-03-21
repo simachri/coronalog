@@ -23,14 +23,14 @@ class RecordsDb:
         :param user: username for whom the records shall be retrieved
         :return: all records for the user, empty if nothing found
         """
-        records_ref = firestore_client.collection('users/' + user + '/records')
+        records_ref: firestore_v1.collection.CollectionReference = firestore_client.collection('users/' + user + '/records')
         return [record.get().to_dict() for record in records_ref.list_documents(page_size=50)]
 
     @staticmethod
     def create(user, records: Records):
         """Create medical record from the json file from the record input
         """
-        records_ref = firestore_client.collection('users/' + user + '/records')
+        records_ref: firestore_v1.collection.CollectionReference = firestore_client.collection('users/' + user + '/records')
         doc_ref: firestore_v1.DocumentReference
         doc_ref = records_ref.add(records.to_json())
         return doc_ref
