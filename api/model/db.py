@@ -1,5 +1,5 @@
 from firebase_admin import firestore, initialize_app
-from model.registrations import Registration
+from .registrations import Registration
 # noinspection PyPackageRequirements
 from google.cloud import firestore_v1
 
@@ -8,10 +8,6 @@ firebase_app = initialize_app()
 firestore_client: firestore_v1.client.Client = firestore.client()
 registrations_coll: firestore_v1.collection.CollectionReference = firestore_client.collection('registrations')
 
-
-def get_timestamp():
-    """Returns a server timestamp."""
-    return firestore.firestore.SERVER_TIMESTAMP
 
 
 class RegistrationDb:

@@ -1,4 +1,9 @@
-import db
+from firebase_admin import firestore
+
+
+def get_timestamp():
+    """Returns a server timestamp."""
+    return firestore.firestore.SERVER_TIMESTAMP
 
 
 class Registration:
@@ -24,7 +29,7 @@ class Registration:
         self.event_name = event_name
         self.created_at = created_at
         if created_at is None:
-            self.created_at = db.get_timestamp()
+            self.created_at = get_timestamp()
         if from_json is not None:
             # Set emptry attributes from provided JSON.
             for name, value in from_json.items():

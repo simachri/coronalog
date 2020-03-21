@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, render_template, redirect
 
-import registrations
-import db
+from .model import registrations
+from .model import db
 
 # Initialize Flask app
 main = Blueprint('app', __name__)
