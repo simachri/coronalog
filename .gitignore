@@ -1,2 +1,5 @@
 api/firebase_key.json
-__pycache__
+package-lock.json
+#pycharm
+.idea/
+*.iml
