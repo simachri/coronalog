@@ -4,3 +4,6 @@ package-lock.json
 #pycharm
 .idea/
 *.iml
+yarn.lock
+CoronaLog.iml
+misc.xml
