@@ -1,1 +1,5 @@
 api/firebase_key.json
+
+#pycharm
+.idea/
+*.iml
