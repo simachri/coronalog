@@ -1,0 +1,27 @@
+.DayItem {
+    width: 3.5rem;
+    height: 5rem;
+    background-color: #fff8ec;
+    border-radius: 7px;
+    margin: 0 0.4rem 0;
+    color: #606060;
+    font-family: Barlow;
+    text-align: center;
+    display: block;
+    padding: 1rem;
+}
+
+.ItemMask {
+    z-index: 10;
+    background-color: #ffecc8;
+}
+
+.Weekday {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.DayOfMonth {
+    font-size: 1rem;
+    font-weight: normal;
+}

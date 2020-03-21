@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import AboutUs from './containers/AboutUs/AboutUs';
 import Home from './containers/Home/Home';
+import Dashboard from './containers/Dashboard/Dashboard';
 import Layout from "./hoc/Layout/Layout";
 
 class App extends Component {
@@ -16,6 +17,7 @@ class App extends Component {
             <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/about-us" component={AboutUs} />
+                <Route path='/dashboard' component={Dashboard} />
                 <Redirect to="/" />
             </Switch>
         );

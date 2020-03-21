@@ -8,14 +8,16 @@ const tabNav = ( props ) => {
     const containerClasses = [classes.MobileOnly, classes.TabNav];
 
     const navItems = props.items.map( (item, idx) =>  (
-        <div className={classes.TabNavItem} key={idx}>
-            <NavLink
-                to={item.link}
-                exact={item.exact}>
-                {item.faIcon}
-                <div>{item.title}</div>
-            </NavLink>
-        </div>
+        <NavLink
+            className={classes.TabNavItem}
+            key={idx}
+            to={item.link}
+            exact={item.exact}>
+            <div>
+                    {item.faIcon}
+                    <div>{item.title}</div>
+            </div>
+        </NavLink>
     ));
 
     return (

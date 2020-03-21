@@ -1,9 +1,3 @@
-@media (min-width: 500px) {
-    .MobileOnly {
-        display: none;
-    }
-}
-
 .TabNav {
     position: fixed;
     bottom: 0;
@@ -25,7 +19,10 @@
     padding: 5px;
     text-align: center;
     vertical-align: center;
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*justify-content: flex-end;*/
+}
+
+@media (min-width: 500px) {
+    .MobileOnly {
+        display: none;
+    }
 }
