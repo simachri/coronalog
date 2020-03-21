@@ -1,13 +1,24 @@
 from flask import Blueprint, request, jsonify, render_template, redirect
 
-from .model import registrations
 from .model import db
+from .model import registrations
 
 # Initialize Flask app
 main = Blueprint('app', __name__)
 
 todo_ref = db.firestore_client.collection('todos')
 registrations_db = db.RegistrationDb()
+records_db = db.RecordsDb()
+
+
+@main.route('/records', methods=['GET'])
+def get_records():
+    """Read all records for a given user provide by URL parameter 'user'
+
+    :return: All medical records for the given user.
+    """
+    records = records_db.get(request.args.get('user'))
+    return jsonify(records), 200
 
 
 @main.route('/registrations', methods=['GET', 'POST'])
