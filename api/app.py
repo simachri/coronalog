@@ -1,12 +1,17 @@
+from firebase_admin import initialize_app
 from flask import Blueprint, request, jsonify, render_template, redirect
 
-from .model import db
-from .model import registrations
+from model import db
+from model import registrations
+from model.records import Record
 
 # Initialize Flask app
 main = Blueprint('app', __name__)
 
-todo_ref = db.firestore_client.collection('todos')
+# Initialize Firestore DB
+firebase_app = initialize_app()
+
+todo_ref = db.firestore_client().collection('todos')
 registrations_db = db.RegistrationDb()
 records_db = db.RecordsDb()
 
@@ -20,19 +25,25 @@ def get_records():
     records = records_db.get(request.args.get('user'))
     return jsonify(records), 200
 
+
 @main.route('/records', methods=['POST'])
-def create_records(user):
-     """
-    Create a new daily mediacal record
-    :param user: is needed to transfer the record
-    :return:
+def create_records():
+    """Create a new daily medical record
+
     """
-     try:
-        record_content = request.form['record']
-        db.RecordsDb.create(user, record_content)
-        return jsonify({"success": True}), 200
-     except Exception as e:
+    try:
+        user = request.json["user"]
+        date = request.json["date"]
+        record = Record(from_json=request.json["symptoms"])
+        doc_ref = db.RecordsDb.create(user, date, record)
+        doc_snapshot = doc_ref.get()
+        doc_attr = doc_snapshot.to_dict()
+        # The document ID is not returned by to_dict above. We need to add it manually.
+        doc_attr.update(id=doc_snapshot.id)
+        return jsonify(doc_attr), 200
+    except Exception as e:
         return f"An Error Occured: {e}"
+
 
 @main.route('/registrations', methods=['GET', 'POST'])
 def create_registration():
@@ -49,6 +60,7 @@ def create_registration():
     else:
         tasks = [todo_item.get().to_dict() for todo_item in todo_ref.list_documents(page_size=50)]
         return jsonify(tasks), 200
+
 
 @main.route('/', methods=['GET', 'POST'])
 def home():
