@@ -1,0 +1,31 @@
+@media (min-width: 500px) {
+    .MobileOnly {
+        display: none;
+    }
+}
+
+.TabNav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 1.5cm;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-evenly;
+    border-top: 3px #eee solid;
+    background-color: #ddd;
+}
+
+.TabNavItem {
+    width: 18%;
+    height: 100%;
+    margin: 1%;
+    padding: 5px;
+    text-align: center;
+    vertical-align: center;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: flex-end;*/
+}
