@@ -2,8 +2,8 @@ from firebase_admin import firestore
 # noinspection PyPackageRequirements
 from google.cloud import firestore_v1
 
-from records import Record
-from registrations import Registration
+from .records import Record
+from .registrations import Registration
 
 
 def firestore_client():

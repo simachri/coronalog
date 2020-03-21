@@ -1,9 +1,9 @@
 from firebase_admin import initialize_app
 from flask import Blueprint, request, jsonify, render_template, redirect
 
-from model import db
-from model import registrations
-from model.records import Record
+from .model import db
+from .model import registrations
+from .model.records import Record
 
 # Initialize Flask app
 main = Blueprint('app', __name__)
