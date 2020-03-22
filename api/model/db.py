@@ -4,6 +4,7 @@ from google.cloud import firestore_v1
 
 from .records import Record
 from .registrations import Registration
+from .anamneses import Anamnese
 
 
 def firestore_client():
@@ -40,6 +41,31 @@ class RecordsDb:
         records_ref: firestore_v1.collection.CollectionReference = firestore_client().collection(
             'users/' + user + '/records')
         timestamp, doc_ref = records_ref.add(record.to_json(), date)
+        return doc_ref
+
+
+class AnamnesesDb:
+
+    def get(self, user):
+        """Get anamnese single record from the Firestore database.
+
+        :param user: username for whom the anamnese shall be retrieved
+        :return: anamnese data record for the user, empty if nothing found
+        """
+        anamnese_ref = firestore_v1.collection.CollectionReference = firestore_client().collection('users/' + user + '/anamneses').document(u'data')
+        anamnese = anamnese_ref.get().to_dict()
+        return anamnese
+
+
+
+    @staticmethod
+    def create(user, anamnese: Anamnese):
+        """Create single anamnese record from the json file from the input
+        """
+        anamnese_ref = firestore_client().collection(
+            'users/' + user + '/anamneses').document(u'data')
+       # doc_ref = anamnese_ref.document(u'data').add(anamnese.to_json())
+        doc_ref = anamnese_ref.set(anamnese.to_json())
         return doc_ref
 
 

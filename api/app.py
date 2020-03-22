@@ -4,6 +4,8 @@ from flask import Blueprint, request, jsonify, render_template, redirect
 from .model import db
 from .model import registrations
 from .model.records import Record
+from .model.anamneses import Anamnese
+import json
 
 # Initialize Flask app
 main = Blueprint('app', __name__)
@@ -14,6 +16,7 @@ firebase_app = initialize_app()
 todo_ref = db.firestore_client().collection('todos')
 registrations_db = db.RegistrationDb()
 records_db = db.RecordsDb()
+anamneses_db = db.AnamnesesDb()
 
 
 @main.route('/records', methods=['GET'])
@@ -43,6 +46,22 @@ def create_records():
         return jsonify(doc_attr), 200
     except Exception as e:
         return f"An Error Occured: {e}"
+
+@main.route('/anamneses', methods=['GET', 'POST'])
+def create_anamneses():
+    if request.method == 'POST':
+        """Create or update the anamneses record for the specified user."""
+        try:
+            user = request.json["user"]
+            anamnese :Anamnese = Anamnese(from_json=request.json["characteristics"])
+            anamnese.enhance_values(anamneses_db.get(user))
+            doc_ref = db.AnamnesesDb.create(user, anamnese)
+            return jsonify(anamneses_db.get(user)), 200
+        except Exception as e:
+            return f"An Error Occured: {e}", 500
+    else:
+        anamnese = anamneses_db.get(request.args.get('user'))
+        return jsonify(anamnese), 200
 
 
 @main.route('/registrations', methods=['GET', 'POST'])
