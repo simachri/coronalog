@@ -52,7 +52,7 @@ class Record:
         """Converts the object instance to JSON."""
         return vars(self)
 
-    def get_symptoms(self) -> Dict[Any]:
+    def get_symptoms(self) -> Dict[str, Any]:
         json = self.to_json()
         json.pop('date')
         return json
