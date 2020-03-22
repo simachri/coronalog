@@ -67,7 +67,7 @@ class UsersDb:
 class RecordsDb:
 
     @staticmethod
-    def get(user) -> List[Dict[Any, Any]]:
+    def get(user) -> List[Record]:
         """Get medical record documents from the Firestore database.
 
         :param user: username for whom the records shall be retrieved
@@ -75,7 +75,11 @@ class RecordsDb:
         """
         records_ref: CollectionReference = firestore_client().collection(
             'users/' + user + '/records')
-        return [record.get().to_dict() for record in records_ref.list_documents(page_size=50)]
+        records = []
+        for doc_ref in records_ref.list_documents(page_size=50):
+            doc_snapshot = doc_ref.get()
+            records.append(Record(from_json=doc_snapshot.to_dict(), date=doc_snapshot.id))
+        return records
 
     @staticmethod
     def set_record(username, date, record: Record) -> Dict[Any, Any]:

@@ -1,10 +1,12 @@
+from typing import List, Dict, Any
+
 from firebase_admin import initialize_app
 from flask import Blueprint, request, jsonify, render_template, redirect
 
-from model.db import RecordsDb, AnamnesesDb, firestore_client, get_timestamp, RegistrationDb
 from model import registrations
-from model.records import Record
 from model.anamneses import Anamnese
+from model.db import RecordsDb, AnamnesesDb, firestore_client, get_timestamp, RegistrationDb
+from model.records import Record
 
 # Initialize Flask app
 main = Blueprint('app', __name__)
@@ -21,8 +23,20 @@ def get_records():
 
     :return: All medical records for the given user.
     """
-    records = RecordsDb.get(request.args.get('user'))
-    return jsonify(records), 200
+    username = request.args.get('user', '', type=str)
+    if username is '':
+        return {'Not found.'}, 404
+    records = RecordsDb.get(username)
+    if records is []:
+        return {'Not found.'}, 404
+    result: List[Dict[Any, Any]] = []
+    for record in records:
+        result.append({
+            'user': username,
+            'date': record.date,
+            'symptoms': record.get_symptoms()
+        })
+    return jsonify(result), 200
 
 
 @main.route('/records', methods=['POST'])
