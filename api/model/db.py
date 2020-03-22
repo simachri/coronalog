@@ -2,6 +2,7 @@ from firebase_admin import firestore
 # noinspection PyPackageRequirements
 from google.cloud import firestore_v1
 
+from .anamneses import Anamnese
 from .records import Record
 from .registrations import Registration
 
@@ -21,7 +22,8 @@ def get_timestamp():
 
 class RecordsDb:
 
-    def get(self, user):
+    @staticmethod
+    def get(user):
         """Get medical record documents from the Firestore database.
 
         :param user: username for whom the records shall be retrieved
@@ -30,6 +32,13 @@ class RecordsDb:
         records_ref: firestore_v1.collection.CollectionReference = firestore_client().collection(
             'users/' + user + '/records')
         return [record.get().to_dict() for record in records_ref.list_documents(page_size=50)]
+
+    @staticmethod
+    def create_user(username):
+        """Create a user for whom records can be tracked.
+
+        If the user already exists, nothing is changed.
+        :return: DocumentReference to the user document."""
 
     @staticmethod
     def create_record(username, date, record: Record) -> firestore_v1.document.DocumentReference:
@@ -45,7 +54,8 @@ class RecordsDb:
 
 class AnamnesesDb:
 
-    def get(self, user):
+    @staticmethod
+    def get(user):
         """Get anamnese single record from the Firestore database.
 
         :param user: username for whom the anamnese shall be retrieved

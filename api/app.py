@@ -1,11 +1,10 @@
 from firebase_admin import initialize_app
 from flask import Blueprint, request, jsonify, render_template, redirect
 
-from .model import db
+from .model.db import RecordsDb, AnamnesesDb, firestore_client, get_timestamp, RegistrationDb
 from .model import registrations
 from .model.records import Record
 from .model.anamneses import Anamnese
-import json
 
 # Initialize Flask app
 main = Blueprint('app', __name__)
@@ -13,10 +12,7 @@ main = Blueprint('app', __name__)
 # Initialize Firestore DB
 firebase_app = initialize_app()
 
-todo_ref = db.firestore_client().collection('todos')
-registrations_db = db.RegistrationDb()
-records_db = db.RecordsDb()
-anamneses_db = db.AnamnesesDb()
+todo_ref = firestore_client().collection('todos')
 
 
 @main.route('/records', methods=['GET'])
@@ -25,7 +21,7 @@ def get_records():
 
     :return: All medical records for the given user.
     """
-    records = records_db.get(request.args.get('user'))
+    records = RecordsDb.get(request.args.get('user'))
     return jsonify(records), 200
 
 
@@ -38,14 +34,20 @@ def create_records():
         user = request.json["user"]
         date = request.json["date"]
         record = Record(from_json=request.json["symptoms"])
-        doc_ref = db.RecordsDb.create_record(user, date, record)
-        doc_snapshot = doc_ref.get()
-        doc_attr = doc_snapshot.to_dict()
-        # The document ID is not returned by to_dict above. We need to add it manually.
-        doc_attr.update(id=doc_snapshot.id)
+        doc_ref = RecordsDb.create_record(user, date, record)
+        doc_attr = get_doc_attr(doc_ref)
         return jsonify(doc_attr), 200
     except Exception as e:
         return f"An Error Occured: {e}"
+
+
+def get_doc_attr(doc_ref):
+    doc_snapshot = doc_ref.get()
+    doc_attr = doc_snapshot.to_dict()
+    # The document ID is not returned by to_dict above. We need to add it manually.
+    doc_attr.update(id=doc_snapshot.id)
+    return doc_attr
+
 
 @main.route('/anamneses', methods=['GET', 'POST'])
 def create_anamneses():
@@ -53,14 +55,15 @@ def create_anamneses():
         """Create or update the anamneses record for the specified user."""
         try:
             user = request.json["user"]
-            anamnese :Anamnese = Anamnese(from_json=request.json["characteristics"])
-            anamnese.enhance_values(anamneses_db.get(user))
-            doc_ref = db.AnamnesesDb.create(user, anamnese)
-            return jsonify(anamneses_db.get(user)), 200
+            anamnese: Anamnese = Anamnese(from_json=request.json["characteristics"])
+            anamnese.enhance_values(AnamnesesDb.get(user))
+            doc_ref = AnamnesesDb.create(user, anamnese)
+            doc_attr = get_doc_attr(doc_ref)
+            return jsonify(doc_attr), 200
         except Exception as e:
             return f"An Error Occured: {e}", 500
     else:
-        anamnese = anamneses_db.get(request.args.get('user'))
+        anamnese = AnamnesesDb.get(request.args.get('user'))
         return jsonify(anamnese), 200
 
 
@@ -70,11 +73,8 @@ def create_registration():
         """Create new registration. The UUID is calculated by the server."""
         # Try/except is currently not required as it is impossible to raise a 'Conflict'
         # exception as the UUID is calculated by the server.
-        doc_ref = registrations_db.create(registrations.Registration(request.json))
-        doc_snapshot = doc_ref.get()
-        doc_attr = doc_snapshot.to_dict()
-        # The document ID is not returned by to_dict above. We need to add it manually.
-        doc_attr.update(id=doc_snapshot.id)
+        doc_ref = RegistrationDb.create(registrations.Registration(request.json))
+        doc_attr = get_doc_attr(doc_ref)
         return jsonify(doc_attr), 200
     else:
         tasks = [todo_item.get().to_dict() for todo_item in todo_ref.list_documents(page_size=50)]
@@ -93,7 +93,7 @@ def home():
 def create_new_task():
     task_content = request.form['content']
     todo_ref.add({'task': task_content,
-                  'created_at': db.get_timestamp()})
+                  'created_at': get_timestamp()})
     return redirect('/')
 
 

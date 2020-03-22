@@ -1,5 +1,6 @@
 from firebase_admin import firestore
 
+
 def get_timestamp():
     """Returns a server timestamp."""
     return firestore.firestore.SERVER_TIMESTAMP
@@ -8,23 +9,23 @@ def get_timestamp():
 class Anamnese:
     """Anamnese record"""
 
-    def __init__(self, from_json, 
-                gender=None, 
-                residence=None, 
-                birthyear=None, 
-                smoker=None,
-                pregnant=None, 
-                positive_tested=None, 
-                infection_contact=None,
-                risk_area_stay=None, 
-                medication=None, 
-                cardiovascular_desease=None,
-                pulmonary_problems=None, 
-                    =None, 
-                diabetes_mellitus=None,
-                cancer=None, 
-                immunodeficiency=None, 
-                miscellaneous=None ):
+    def __init__(self, from_json,
+                 gender=None,
+                 residence=None,
+                 birthyear=None,
+                 smoker=None,
+                 pregnant=None,
+                 positive_tested=None,
+                 infection_contact=None,
+                 risk_area_stay=None,
+                 medication=None,
+                 cardiovascular_desease=None,
+                 pulmonary_problems=None,
+                 chronic_liver_disease=None,
+                 diabetes_mellitus=None,
+                 cancer=None,
+                 immunodeficiency=None,
+                 miscellaneous=None):
 
         """Creates an anamnese object instance.
         """
@@ -51,13 +52,12 @@ class Anamnese:
                 if getattr(self, name) is None:
                     setattr(self, name, value)
 
-
     def to_json(self):
         """Converts the object instance to JSON."""
         return vars(self)
 
     def enhance_values(self, anamnese):
         for name, value in anamnese.items():
-                if getattr(self, name) is None:
-                    setattr(self, name, value)
+            if getattr(self, name) is None:
+                setattr(self, name, value)
         return self
