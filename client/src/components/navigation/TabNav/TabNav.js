@@ -14,7 +14,8 @@ const tabNav = ( props ) => {
             to={item.link}
             exact={item.exact}>
             <div>
-                {item.faIcon}
+                {item.svgIcon ? item.svgIcon
+                    : (item.faIcon ? item.faIcon : null)}
                 {props.showTitle ? <div>{item.title}</div> : null}
             </div>
         </NavLink>

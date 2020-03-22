@@ -8,6 +8,7 @@ const pages = [
     {
         type: 'start',
         header: <Fragment><span className={classes.Large}>Hallo,</span><br/> willkommen in meiner virtuellen Sprechstunde.</Fragment>,
+        pageClass: 'StartPage',
         onResume: null
     }
 ];
