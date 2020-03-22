@@ -68,6 +68,22 @@ class TestRegistration(unittest.TestCase):
                 self.assertIn(result['date'], dates)
                 assert result['symptoms']['breathlessness'] is True
 
+    def test_create_anamnesis_all_symptoms_written_to_db(self):
+        """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
+        with self.app.test_client() as client:
+            test_doc = {'user': TEST_USER_NAME,
+                        'characteristics': {
+                            'gender': 'm',
+                            'residence': 12345,
+                            'birthyear': 1960
+                        }
+                        }
+            post_result = client.post('/anamneses', json=test_doc, follow_redirects=True)
+            assert b'404 Not Found' not in post_result.data
+            result_doc = json.loads(post_result.data.decode('utf-8'))
+            for key, value in test_doc['characteristics'].items():
+                assert result_doc[key] == value
+
     def test_create_record_all_symptoms_written_to_db(self):
         """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
         with self.app.test_client() as client:
@@ -91,6 +107,33 @@ class TestRegistration(unittest.TestCase):
             result_doc = json.loads(post_result.data.decode('utf-8'))
             for key, value in test_doc['symptoms'].items():
                 assert result_doc[key] == value
+
+    def test_update_anamnesis_merge_is_performed(self):
+        """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
+        with self.app.test_client() as client:
+            gender = 'f'
+            birthyear = 1960
+            initial_test_doc = {'user': TEST_USER_NAME,
+                                'characteristics': {
+                                    'gender': gender,
+                                    'residence': 12345,
+                                    'birthyear': birthyear
+                                }
+                                }
+            # Now, we update the residence and add a new value for chronic_liver_disease.
+            update_doc = {'user': TEST_USER_NAME,
+                          'characteristics': {
+                              'residence': 4711,
+                              'chronic_liver_disease': 'Anything'
+                          }
+                          }
+            client.post('/anamneses', json=initial_test_doc, follow_redirects=True)
+            second_post_result = client.post('/anamneses', json=update_doc, follow_redirects=True)
+            result_doc = json.loads(second_post_result.data.decode('utf-8'))
+            for key, value in update_doc['characteristics'].items():
+                assert result_doc[key] == value
+            assert result_doc['gender'] == gender
+            assert result_doc['birthyear'] == birthyear
 
     def test_transform_to_dict_is_ok(self):
         """Transformation to dictionary for Firestore matches expected results"""

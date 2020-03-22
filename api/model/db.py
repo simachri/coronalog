@@ -81,12 +81,12 @@ class RecordsDb:
     def set_record(username, date, record: Record) -> Dict[Any, Any]:
         """Set medical record from the json file from the record input
 
-        If the record already exists, its data is updated.
+        If the record already exists, its data is merged.
         :return: DocumentReference of the new document created.
         """
         record_ref: DocumentReference = firestore_client().collection(
             'users/' + username + '/records').document(date)
-        record_ref.set(record.to_json())
+        record_ref.set(record.to_json(), merge=True)
         return get_doc_attr(record_ref)
 
 
@@ -108,11 +108,11 @@ class AnamnesesDb:
     def set_anamnesis(username, anamnese: Anamnese) -> Dict[Any, Any]:
         """Create single anamnesis record from the json file from the input
 
-        If the record already exists, nothing is changed.
+        If the record already exists, a merge is performed.
         :return: DocumentReference of the new document created.
         """
-        anamnesis_ref: DocumentReference = firestore_client().collection('users/' + username).document(u'anamnesis')
-        anamnesis_ref.set(anamnese.to_json())
+        anamnesis_ref: DocumentReference = firestore_client().collection('users').document(username)
+        anamnesis_ref.set(anamnese.to_json(), merge=True)
         return get_doc_attr(anamnesis_ref)
 
 
