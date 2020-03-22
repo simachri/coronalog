@@ -16,6 +16,14 @@
     background-color: #ffecc8;
 }
 
+.Check {
+    font-size: 1rem;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
 .Weekday {
     font-size: 1.2rem;
     font-weight: bold;
