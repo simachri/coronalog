@@ -1,15 +1,38 @@
+/*.TabNav {*/
+/*    position: fixed;*/
+/*    bottom: 0;*/
+/*    width: 100%;*/
+/*    height: 1.5cm;*/
+/*    text-align: center;*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    align-items: stretch;*/
+/*    justify-content: space-evenly;*/
+/*    border-top: 3px #eee solid;*/
+/*    background-color: #ddd;*/
+/*}*/
+
+/*.TabNavItem {*/
+/*    width: 18%;*/
+/*    height: 100%;*/
+/*    margin: 1%;*/
+/*    padding: 5px;*/
+/*    text-align: center;*/
+/*    vertical-align: center;*/
+/*}*/
+
 .TabNav {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 1.5cm;
+    height: 3.5rem;
     text-align: center;
     display: flex;
     flex-direction: row;
     align-items: stretch;
     justify-content: space-evenly;
-    border-top: 3px #eee solid;
-    background-color: #ddd;
+    background-color: #fff;
+    box-shadow: -5px 0 3px #ddd;
 }
 
 .TabNavItem {
@@ -19,6 +42,11 @@
     padding: 5px;
     text-align: center;
     vertical-align: center;
+}
+
+.TabNavItem svg {
+    font-size: 1.8rem;
+    color: #26238B;
 }
 
 @media (min-width: 500px) {
