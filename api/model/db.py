@@ -77,14 +77,8 @@ class UsersDb:
     @staticmethod
     def check_if_user_exists(user):
         users_ref: CollectionReference = firestore_client().collection('users')
-        users = []
-        for user_ref in users_ref.list_documents():
-            user_snapshot = user_ref.get()
-            if user_snapshot is user:
-                return True
-        return False
-
-
+        user_ref: DocumentReference = users_ref.document(user)
+        return user_ref.get().exists
 
 class RecordsDb:
 

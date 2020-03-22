@@ -25,10 +25,10 @@ def get_records():
     """
     username = request.args.get('user', '', type=str)
     if username == '':
-        return {'Not found.'}, 404
+        return "Not found.", 404
     records = RecordsDb.get(username)
     if records is []:
-        return {'Not found.'}, 404
+        return "Not found.", 404
     result: List[Dict[Any, Any]] = []
     for record in records:
         result.append({
@@ -42,7 +42,7 @@ def get_records():
 def get_all_users():
     users = UsersDb.get_all_users()
     if users is []:
-        return {'Not found.'}, 404
+        return "Not found.", 404
     else:
         return jsonify(users), 200
 
@@ -50,7 +50,7 @@ def get_all_users():
 def check_if_users_exist():
     user = request.args.get('user')
     if UsersDb.check_if_user_exists(user):
-        return {'User exists'}, 200
+        return "User exists", 200
     return jsonify(UsersDb.get), 404
 
 @main.route('/records', methods=['POST'])
