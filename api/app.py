@@ -5,7 +5,7 @@ from flask import Blueprint, request, jsonify, render_template, redirect
 
 from model import registrations
 from model.anamneses import Anamnese
-from model.db import RecordsDb, AnamnesesDb, firestore_client, get_timestamp, RegistrationDb
+from model.db import RecordsDb, AnamnesesDb, firestore_client, get_timestamp, RegistrationDb, UsersDb
 from model.records import Record
 
 # Initialize Flask app
@@ -24,7 +24,7 @@ def get_records():
     :return: All medical records for the given user.
     """
     username = request.args.get('user', '', type=str)
-    if username is '':
+    if username == '':
         return {'Not found.'}, 404
     records = RecordsDb.get(username)
     if records is []:
@@ -38,6 +38,20 @@ def get_records():
         })
     return jsonify(result), 200
 
+@main.route('/users', methods=['GET'])
+def get_all_users():
+    users = UsersDb.get_all_users()
+    if users is []:
+        return {'Not found.'}, 404
+    else:
+        return jsonify(users), 200
+
+@main.route('/check', methods=['GET'])
+def check_if_users_exist():
+    user = request.args.get('user')
+    if UsersDb.check_if_user_exists(user):
+        return {'User exists'}, 200
+    return jsonify(UsersDb.get), 404
 
 @main.route('/records', methods=['POST'])
 def set_record():

@@ -16,7 +16,6 @@ from registrations import Registration
 def firestore_client():
     return firestore.client()
 
-
 def registrations_coll():
     return firestore_client().collection('registrations')
 
@@ -62,6 +61,29 @@ class UsersDb:
     def delete_user(username):
         """Delete a user record."""
         firestore_client().collection(u'users').document(username).delete()
+
+    @staticmethod
+    def get_all_users():
+        """
+        :return: all users that exists in the firestore database
+        """
+        users_ref: CollectionReference = firestore_client().collection('users')
+        users = []
+        for user_ref in users_ref.list_documents():
+            user_snapshot = user_ref.get()
+            users.append(user_snapshot.to_dict())
+        return users
+
+    @staticmethod
+    def check_if_user_exists(user):
+        users_ref: CollectionReference = firestore_client().collection('users')
+        users = []
+        for user_ref in users_ref.list_documents():
+            user_snapshot = user_ref.get()
+            if user_snapshot is user:
+                return True
+        return False
+
 
 
 class RecordsDb:
