@@ -16,9 +16,10 @@ const rootReducer = combineReducers({
     dailyLog: dailyLogReducer,
 });
 
-const store = createStore(rootReducer, composeEnhancers(
-    applyMiddleware(thunk)
-));
+const store = createStore(rootReducer);
+//, composeEnhancers(
+//     applyMiddleware(thunk)
+// ));
 
 const app = (
     <Provider store={store}>
