@@ -24,7 +24,7 @@ def get_timestamp():
     return firestore.firestore.SERVER_TIMESTAMP
 
 
-def get_doc_attr(doc_ref: DocumentReference) -> Dict[Any]:
+def get_doc_attr(doc_ref: DocumentReference) -> Dict[Any, Any]:
     """Returns all the attributes of a DocumentReference. The current data is fetched."""
     doc_snapshot = doc_ref.get()
     doc_attr = doc_snapshot.to_dict()
@@ -36,7 +36,7 @@ def get_doc_attr(doc_ref: DocumentReference) -> Dict[Any]:
 class UsersDb:
 
     @staticmethod
-    def set_user(username) -> Dict[Any]:
+    def set_user(username) -> Dict[Any, Any]:
         """Create or update user for whom records can be tracked.
 
         If the user already exists, nothing is changed.
@@ -54,7 +54,7 @@ class UsersDb:
 class RecordsDb:
 
     @staticmethod
-    def get(user) -> List[Dict[Any]]:
+    def get(user) -> List[Dict[Any, Any]]:
         """Get medical record documents from the Firestore database.
 
         :param user: username for whom the records shall be retrieved
@@ -65,7 +65,7 @@ class RecordsDb:
         return [record.get().to_dict() for record in records_ref.list_documents(page_size=50)]
 
     @staticmethod
-    def set_record(username, date, record: Record) -> Dict[Any]:
+    def set_record(username, date, record: Record) -> Dict[Any, Any]:
         """Set medical record from the json file from the record input
 
         If the record already exists, its data is updated.
@@ -80,7 +80,7 @@ class RecordsDb:
 class AnamnesesDb:
 
     @staticmethod
-    def get(user) -> Dict[Any]:
+    def get(user) -> Dict[Any, Any]:
         """Get anamnese single record from the Firestore database.
 
         :param user: username for whom the anamnese shall be retrieved
