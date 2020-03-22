@@ -68,6 +68,22 @@ class TestRegistration(unittest.TestCase):
                 self.assertIn(result['date'], dates)
                 assert result['symptoms']['breathlessness'] is True
 
+    def test_create_anamnesis_all_symptoms_written_to_db(self):
+        """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
+        with self.app.test_client() as client:
+            test_doc = {'user': TEST_USER_NAME,
+                        'characteristics': {
+                            'gender': 'm',
+                            'residence': 12345,
+                            'birthyear': 1960
+                        }
+                        }
+            post_result = client.post('/anamneses', json=test_doc, follow_redirects=True)
+            assert b'404 Not Found' not in post_result.data
+            result_doc = json.loads(post_result.data.decode('utf-8'))
+            for key, value in test_doc['characteristics'].items():
+                assert result_doc[key] == value
+
     def test_create_record_all_symptoms_written_to_db(self):
         """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
         with self.app.test_client() as client:
