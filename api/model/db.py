@@ -4,7 +4,6 @@ from google.cloud import firestore_v1
 
 from .records import Record
 from .registrations import Registration
-from .anamneses import Anamnese
 
 
 def firestore_client():
@@ -33,7 +32,7 @@ class RecordsDb:
         return [record.get().to_dict() for record in records_ref.list_documents(page_size=50)]
 
     @staticmethod
-    def create_record(username, date, record: Record):
+    def create_record(username, date, record: Record) -> firestore_v1.document.DocumentReference:
         """Create medical record from the json file from the record input
 
         :return: DocumentReference of the new document created.
