@@ -51,7 +51,7 @@ class TestRegistration(unittest.TestCase):
         # Delete the test user document.
         UsersDb.delete_user(TEST_USER_NAME)
 
-    def test_api_create_record_is_ok(self):
+    def test_api_create_record_all_attributes_written_to_db(self):
         with self.app.test_client() as client:
             test_doc = {'user': TEST_USER_NAME,
                         'date': '2020-03-21',
