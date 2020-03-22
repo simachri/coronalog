@@ -92,7 +92,7 @@ class AnamnesesDb:
         return anamnese
 
     @staticmethod
-    def set_anamnesis(username, anamnese: Anamnese) -> Dict[Any]:
+    def set_anamnesis(username, anamnese: Anamnese) -> Dict[Any, Any]:
         """Create single anamnesis record from the json file from the input
 
         If the record already exists, nothing is changed.
