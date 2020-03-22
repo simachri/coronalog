@@ -26,8 +26,9 @@ class Home extends Component {
                         <div className={classes.SignIn}>Anmelden</div>
                     </NavLink>
                 </div>
-                <h1 className={toCss(classes.HeaderText, classes.Header1)}>Was bedeutet sicher in schwierigen Zeiten?</h1>
-                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam er</p>
+                <h1 className={toCss(classes.HeaderText, classes.Header1)}>Gib dir & anderen Sicherheit</h1>
+                <p>Mit CORONALOG hast du die Gelegenheit, Symptome, die dich verunsichern, abzuklären und im Auge zu behalten.</p>
+                <p>Auch viele Symptome sind für uns neu. Es ist wichtig, davon zu erfahren!</p>
 
                 <div className={classes.StartButton}>
                     <NavLink

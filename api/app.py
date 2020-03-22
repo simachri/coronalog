@@ -68,7 +68,7 @@ def set_record():
         return f"An Error Occured: {e}"
 
 
-@main.route('/anamneses', methods=['GET', 'POST'])
+@main.route('/anamneses', methods=['POST'])
 def create_anamneses():
     if request.method == 'POST':
         """Create or update the anamneses record for the specified user."""
@@ -83,6 +83,15 @@ def create_anamneses():
     else:
         return jsonify(AnamnesesDb.get(request.args.get('user'))), 200
 
+@main.route('/anamneses', methods=['GET'])
+def get_anamneses_by_user():
+    """Returns the anamnese of a given user"""
+    user = request.args.get('user')
+    anamnese = AnamnesesDb.get(user)
+    if anamnese is None:
+        return "Not found.", 404
+    else:
+        return jsonify(anamnese), 200
 
 @main.route('/registrations', methods=['GET', 'POST'])
 def create_registration():
