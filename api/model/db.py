@@ -1,7 +1,8 @@
 from typing import Dict, List, Any
 
 from firebase_admin import firestore
-from firebase_admin.exceptions import ConflictError
+# noinspection PyPackageRequirements
+from google.api_core.exceptions import AlreadyExists
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.collection import CollectionReference
 # noinspection PyPackageRequirements
@@ -52,7 +53,7 @@ class UsersDb:
         # we need to use the .add() API instead to be able to create empty user documents.
         try:
             timestamp, doc_ref = firestore_client().collection(u'users').add({}, document_id=username)
-        except ConflictError:
+        except AlreadyExists:
             # The user already exists, which is fine for us.
             doc_ref = firestore_client().collection(u'users').document(username)
         return get_doc_attr(doc_ref)
