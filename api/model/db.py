@@ -33,13 +33,13 @@ class RecordsDb:
         return [record.get().to_dict() for record in records_ref.list_documents(page_size=50)]
 
     @staticmethod
-    def create_record(user, date, record: Record):
+    def create_record(username, date, record: Record):
         """Create medical record from the json file from the record input
 
         :return: DocumentReference of the new document created.
         """
         records_ref: firestore_v1.collection.CollectionReference = firestore_client().collection(
-            'users/' + user + '/records')
+            'users/' + username + '/records')
         timestamp, doc_ref = records_ref.add(record.to_json(), date)
         return doc_ref
 
