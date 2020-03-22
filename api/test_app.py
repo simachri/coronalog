@@ -2,6 +2,7 @@ import json
 import os
 import unittest
 from datetime import datetime
+from typing import List
 
 from flask import Flask
 
@@ -51,6 +52,22 @@ class TestRegistration(unittest.TestCase):
         # Delete the test user document.
         UsersDb.delete_user(TEST_USER_NAME)
 
+    def test_get_all_records_for_user_is_ok(self):
+        with self.app.test_client() as client:
+            dates = ['2020-03-21', '2020-03-22']
+            self.create_two_records(client, TEST_USER_NAME, dates)
+            get_result = client.get('/records', query_string=dict(user=TEST_USER_NAME))
+            assert b'404 Not Found' not in get_result.data
+            result_data: List = json.loads(get_result.data.decode('utf-8'))
+            assert len(result_data) == len(dates)
+            for result in result_data:
+                assert 'user' in result
+                assert 'date' in result
+                assert 'symptoms' in result
+                assert result['user'] == TEST_USER_NAME
+                self.assertIn(result['date'], dates)
+                assert result['symptoms']['breathlessness'] is True
+
     def test_create_record_all_symptoms_written_to_db(self):
         """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
         with self.app.test_client() as client:
@@ -69,8 +86,7 @@ class TestRegistration(unittest.TestCase):
                             'diarrhoea': False
                         }
                         }
-            post_result = client.post('/records', json=test_doc, follow_redirects=True
-                                      )
+            post_result = client.post('/records', json=test_doc, follow_redirects=True)
             assert b'404 Not Found' not in post_result.data
             result_doc = json.loads(post_result.data.decode('utf-8'))
             for key, value in test_doc['symptoms'].items():
@@ -96,3 +112,23 @@ class TestRegistration(unittest.TestCase):
 
     def add_to_bin(self, doc_id):
         self._bin.append(doc_id)
+
+    @staticmethod
+    def create_two_records(client, user_name, dates: List):
+        for date in dates:
+            test_doc = {'user': user_name,
+                        'date': date,
+                        'symptoms': {
+                            'cough_intensity': 30,
+                            'cough_type': 'produktiv',
+                            'cough_color': 'yellow',
+                            'breathlessness': True,
+                            'fatigued': False,
+                            'limb_pain': 10,
+                            'sniffles': True,
+                            'sore_throat': 30,
+                            'fever': 38.6,
+                            'diarrhoea': False
+                        }
+                        }
+            client.post('/records', json=test_doc)
