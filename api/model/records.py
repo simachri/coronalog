@@ -18,19 +18,26 @@ class Record:
         :param from_json: JSON data for all the attributes. All other explicitly provided parameters values take
         precedence over the values provided in from_json.
         """
-        # self.user = user
-        # self.date = date
-        # TODO User erstellen
-        self.cough_intensity = cough_intensity
-        self.cough_type = cough_type
-        self.cough_color = cough_color
-        self.breathlessness = breathlessness
-        self.fatigued = fatigued
-        self.limb_pain = limb_pain
-        self.sniffles = sniffles
-        self.sore_throat = sore_throat
-        self.fever = fever
-        self.diarrhoea = diarrhoea
+        if cough_intensity is not None:
+            self.cough_intensity = cough_intensity
+        if cough_type is not None:
+            self.cough_type = cough_type
+        if cough_color is not None:
+            self.cough_color = cough_color
+        if breathlessness is not None:
+            self.breathlessness = breathlessness
+        if fatigued is not None:
+            self.fatigued = fatigued
+        if limb_pain is not None:
+            self.limb_pain = limb_pain
+        if sniffles is not None:
+            self.sniffles = sniffles
+        if sore_throat is not None:
+            self.sore_throat = sore_throat
+        if fever is not None:
+            self.fever = fever
+        if diarrhoea is not None:
+            self.diarrhoea = diarrhoea
         if from_json is not None:
             # Set emptry attributes from provided JSON.
             for name, value in from_json.items():

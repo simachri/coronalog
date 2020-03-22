@@ -29,22 +29,38 @@ class Anamnese:
 
         """Creates an anamnese object instance.
         """
-        self.gender = gender
-        self.residence = residence
-        self.birthyear = birthyear
-        self.smoker = smoker
-        self.pregnant = pregnant
-        self.positive_tested = positive_tested
-        self.infection_contact = infection_contact
-        self.risk_area_stay = risk_area_stay
-        self.medication = medication
-        self.cardiovascular_desease = cardiovascular_desease
-        self.pulmonary_problems = pulmonary_problems
-        self.chronic_liver_disease = chronic_liver_disease
-        self.diabetes_mellitus = diabetes_mellitus
-        self.cancer = cancer
-        self.immunodeficiency = immunodeficiency
-        self.miscellaneous = miscellaneous
+        if gender is not None:
+            self.gender = gender
+        if residence is not None:
+            self.residence = residence
+        if birthyear is not None:
+            self.birthyear = birthyear
+        if smoker is not None:
+            self.smoker = smoker
+        if pregnant is not None:
+            self.pregnant = pregnant
+        if positive_tested is not None:
+            self.positive_tested = positive_tested
+        if infection_contact is not None:
+            self.infection_contact = infection_contact
+        if risk_area_stay is not None:
+            self.risk_area_stay = risk_area_stay
+        if medication is not None:
+            self.medication = medication
+        if cardiovascular_desease is not None:
+            self.cardiovascular_desease = cardiovascular_desease
+        if pulmonary_problems is not None:
+            self.pulmonary_problems = pulmonary_problems
+        if chronic_liver_disease is not None:
+            self.chronic_liver_disease = chronic_liver_disease
+        if diabetes_mellitus is not None:
+            self.diabetes_mellitus = diabetes_mellitus
+        if cancer is not None:
+            self.cancer = cancer
+        if immunodeficiency is not None:
+            self.immunodeficiency = immunodeficiency
+        if miscellaneous is not None:
+            self.miscellaneous = miscellaneous
         self.changed_at = get_timestamp()
         if from_json is not None:
             # Set emptry attributes from provided JSON.
