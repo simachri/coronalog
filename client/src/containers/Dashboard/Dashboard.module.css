@@ -1,0 +1,16 @@
+.dmSerifDisplay {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+}
+
+.blueish {
+    color: #252A7C;
+}
+
+.DashboardHeader {
+    margin: 1rem;
+}
+
+.RadarChart {
+    text-align: center;
+}
