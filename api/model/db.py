@@ -33,7 +33,7 @@ class RecordsDb:
         return [record.get().to_dict() for record in records_ref.list_documents(page_size=50)]
 
     @staticmethod
-    def create(user, date, record: Record):
+    def create_record(user, date, record: Record):
         """Create medical record from the json file from the record input
 
         :return: DocumentReference of the new document created.
@@ -56,15 +56,13 @@ class AnamnesesDb:
         anamnese = anamnese_ref.get().to_dict()
         return anamnese
 
-
-
     @staticmethod
     def create(user, anamnese: Anamnese):
         """Create single anamnese record from the json file from the input
         """
         anamnese_ref = firestore_client().collection(
             'users/' + user + '/anamneses').document(u'data')
-       # doc_ref = anamnese_ref.document(u'data').add(anamnese.to_json())
+        # doc_ref = anamnese_ref.document(u'data').add(anamnese.to_json())
         doc_ref = anamnese_ref.set(anamnese.to_json())
         return doc_ref
 

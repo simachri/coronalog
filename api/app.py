@@ -38,7 +38,7 @@ def create_records():
         user = request.json["user"]
         date = request.json["date"]
         record = Record(from_json=request.json["symptoms"])
-        doc_ref = db.RecordsDb.create(user, date, record)
+        doc_ref = db.RecordsDb.create_record(user, date, record)
         doc_snapshot = doc_ref.get()
         doc_attr = doc_snapshot.to_dict()
         # The document ID is not returned by to_dict above. We need to add it manually.
