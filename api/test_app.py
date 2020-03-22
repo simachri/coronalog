@@ -11,6 +11,7 @@ from flask import Flask
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'firebase_key.json'
 # We need to suppress the PEP8 error 'import not at top'
 import registrations  # noqa: E402
+from db import RecordsDb, UsersDb, AnamnesesDb
 
 COMMENT = u'Ich mag keinen Käse'
 CITY = u'Hamburg'
@@ -19,6 +20,7 @@ STREET_W_HOUSE_NO = u'Best road 14a'
 LAST_NAME = u'Bar'
 FIRST_NAME = u'Foo'
 EVENT_NAME = u'Waldheim 2020, 3. Durchgang'
+TEST_USER_NAME = u'Unit Test User 1337'
 
 
 class TestRegistration(unittest.TestCase):
@@ -28,26 +30,31 @@ class TestRegistration(unittest.TestCase):
         super().__init__(*args, **kwargs)
 
     def setUp(self):
-        """Create Flask testing client"""
+        """Test setup; is called before every unit test"""
         self.app: Flask = Flask(__name__)
         from app import main
         self.app.register_blueprint(main)
         # Set Flask to testing mode such that exceptions within the application
         # are propagated to our test coding.
         self.app.testing = True
+        # Create a document in the database for the test user.
+        UsersDb.set_user(TEST_USER_NAME)
+
 
     def tearDown(self):
         from db import firestore_client, registrations_coll
         if len(self._bin) > 0:
-            delete_batch = firestore_client.batch()
+            delete_batch = firestore_client().batch()
             for doc_to_delete_id in self._bin:
-                delete_batch.delete(registrations_coll.document(doc_to_delete_id))
+                delete_batch.delete(registrations_coll().document(doc_to_delete_id))
                 self._bin.remove(doc_to_delete_id)
             delete_batch.commit()
+        # Delete the test user document.
+        UsersDb.delete_user(TEST_USER_NAME)
 
     def test_api_create_record_is_ok(self):
         with self.app.test_client() as client:
-            test_doc = {'user': 'testPersonA',
+            test_doc = {'user': TEST_USER_NAME,
                         'date': '2020-03-21',
                         'symptoms': {
                             'cough_intensity': 30,
