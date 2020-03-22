@@ -7,6 +7,10 @@ import classes from './Dashboard.module.css';
 
 class Dashboard extends Component {
 
+    componentDidMount() {
+        //TODO api call to fetch data to be displayed in dashboard
+    }
+
     render() {
         return (
             <Fragment>
