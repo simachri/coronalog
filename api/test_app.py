@@ -87,11 +87,31 @@ class TestRegistration(unittest.TestCase):
     def test_user_exists(self):
         """When I check if an existing user is saved in the firestore db i get a 200 code"""
         with self.app.test_client() as client:
-            test_existing_user = {
-                'user': TEST_USER_NAME
-            }
             get_result = client.get('check',  query_string={'user': TEST_USER_NAME})
             assert b'User exists' in get_result.data
+
+    def test_get_all_users(self):
+        """test if all users are returned"""
+        with self.app.test_client() as client:
+            get_result = client.get('users')
+            result_doc = json.loads(get_result.data.decode('utf-8'))
+            assert result_doc is not None
+
+    def test_get_anamneses_of_user(self):
+        """When i give a user, i want to get his anamneses"""
+        with self.app.test_client() as client:
+            test_doc = {'user': TEST_USER_NAME,
+                        'characteristics': {
+                            'gender': 'm',
+                            'residence': 12345,
+                            'birthyear': 1954
+                        }
+                        }
+            client.post('/anamneses', json=test_doc, follow_redirects=True)
+            get_result = client.get('anamneses', query_string={'user': TEST_USER_NAME})
+            result_doc = json.loads(get_result.data.decode('utf-8'))
+            for key, value in test_doc['characteristics'].items():
+                assert result_doc[key] == value
 
 
     def test_create_record_all_symptoms_written_to_db(self):

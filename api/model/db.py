@@ -119,8 +119,7 @@ class AnamnesesDb:
         :param user: username for whom the anamnese shall be retrieved
         :return: anamnese data record for the user, empty if nothing found
         """
-        anamnese_ref: DocumentReference = firestore_client().collection('users/' + user + '/anamneses').document(
-            u'data')
+        anamnese_ref: DocumentReference = firestore_client().collection('users').document(user)
         anamnese = anamnese_ref.get().to_dict()
         return anamnese
 
