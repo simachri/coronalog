@@ -26,27 +26,18 @@ def get_records():
 
 
 @main.route('/records', methods=['POST'])
-def create_records():
-    """Create a new daily medical record
+def set_record():
+    """Create or update a new daily medical record
 
     """
     try:
         user = request.json["user"]
         date = request.json["date"]
         record = Record(from_json=request.json["symptoms"])
-        doc_ref = RecordsDb.create_record(user, date, record)
-        doc_attr = get_doc_attr(doc_ref)
+        doc_attr = RecordsDb.set_record(user, date, record)
         return jsonify(doc_attr), 200
     except Exception as e:
         return f"An Error Occured: {e}"
-
-
-def get_doc_attr(doc_ref):
-    doc_snapshot = doc_ref.get()
-    doc_attr = doc_snapshot.to_dict()
-    # The document ID is not returned by to_dict above. We need to add it manually.
-    doc_attr.update(id=doc_snapshot.id)
-    return doc_attr
 
 
 @main.route('/anamneses', methods=['GET', 'POST'])
@@ -57,14 +48,12 @@ def create_anamneses():
             user = request.json["user"]
             anamnese: Anamnese = Anamnese(from_json=request.json["characteristics"])
             anamnese.enhance_values(AnamnesesDb.get(user))
-            doc_ref = AnamnesesDb.create_anamnesis(user, anamnese)
-            doc_attr = get_doc_attr(doc_ref)
+            doc_attr = AnamnesesDb.set_anamnesis(user, anamnese)
             return jsonify(doc_attr), 200
         except Exception as e:
             return f"An Error Occured: {e}", 500
     else:
-        anamnese = AnamnesesDb.get(request.args.get('user'))
-        return jsonify(anamnese), 200
+        return jsonify(AnamnesesDb.get(request.args.get('user'))), 200
 
 
 @main.route('/registrations', methods=['GET', 'POST'])
@@ -73,8 +62,7 @@ def create_registration():
         """Create new registration. The UUID is calculated by the server."""
         # Try/except is currently not required as it is impossible to raise a 'Conflict'
         # exception as the UUID is calculated by the server.
-        doc_ref = RegistrationDb.create(registrations.Registration(request.json))
-        doc_attr = get_doc_attr(doc_ref)
+        doc_attr = RegistrationDb.create(registrations.Registration(request.json))
         return jsonify(doc_attr), 200
     else:
         tasks = [todo_item.get().to_dict() for todo_item in todo_ref.list_documents(page_size=50)]
