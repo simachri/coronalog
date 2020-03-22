@@ -9,7 +9,7 @@ def get_timestamp():
 class Record:
     """Registration of a person to an event"""
 
-    def __init__(self, from_json: dict = None, cough_intensity=None, cough_type=None, cough_color=None,
+    def __init__(self, from_json: dict = None, date=None, cough_intensity=None, cough_type=None, cough_color=None,
                  breathlessness=None,
                  fatigued=None,
                  limb_pain=None, sniffles=None, sore_throat=None, fever=None, diarrhoea=None):
@@ -18,6 +18,8 @@ class Record:
         :param from_json: JSON data for all the attributes. All other explicitly provided parameters values take
         precedence over the values provided in from_json.
         """
+        # Date is mandatory but it can be provided by from_json
+        self.date = date
         if cough_intensity is not None:
             self.cough_intensity = cough_intensity
         if cough_type is not None:
