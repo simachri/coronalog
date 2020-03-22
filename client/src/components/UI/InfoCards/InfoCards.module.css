@@ -1,0 +1,11 @@
+.Cards {
+    width: 100%;
+    margin: 3em 0;
+}
+
+.CardsBg {
+    margin: 0 -1.5rem;
+    padding: 2em 1.5rem;
+    background-image: url('/assets/home_cards_bg.svg');
+    background-size: 100% auto;
+}

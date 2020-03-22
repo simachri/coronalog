@@ -1,0 +1,8 @@
+.FullWidthButton {
+    width: 100%;
+    text-align: center;
+}
+
+.FullWidthButton button {
+    width: calc(100% - 3em);
+}

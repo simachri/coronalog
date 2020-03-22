@@ -6,6 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
+  color: #1d206a;
 }
 
 code {
@@ -13,12 +14,12 @@ code {
     monospace;
 }
 
-main {
-  height: 90%;
-  width: 100%;
-  position: fixed;
-  top: 0;
-}
+/*main {*/
+/*  height: 90%;*/
+/*  width: 100%;*/
+/*  position: fixed;*/
+/*  top: 0;*/
+/*}*/
 
 @media (min-width: 500px) {
   main {
