@@ -11,7 +11,7 @@ from flask import Flask
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'firebase_key.json'
 # We need to suppress the PEP8 error 'import not at top'
 import registrations  # noqa: E402
-from db import RecordsDb, UsersDb, AnamnesesDb
+from db import UsersDb  # noqa: E402
 
 COMMENT = u'Ich mag keinen Käse'
 CITY = u'Hamburg'
@@ -39,7 +39,6 @@ class TestRegistration(unittest.TestCase):
         self.app.testing = True
         # Create a document in the database for the test user.
         UsersDb.set_user(TEST_USER_NAME)
-
 
     def tearDown(self):
         from db import firestore_client, registrations_coll
