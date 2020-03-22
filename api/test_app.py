@@ -21,7 +21,7 @@ STREET_W_HOUSE_NO = u'Best road 14a'
 LAST_NAME = u'Bar'
 FIRST_NAME = u'Foo'
 EVENT_NAME = u'Waldheim 2020, 3. Durchgang'
-TEST_USER_NAME = u'Unit Test User 1337'
+TEST_USER_NAME = u'UnitTestUser1337'
 
 
 class TestRegistration(unittest.TestCase):
@@ -56,7 +56,7 @@ class TestRegistration(unittest.TestCase):
         with self.app.test_client() as client:
             dates = ['2020-03-21', '2020-03-22']
             self.create_two_records(client, TEST_USER_NAME, dates)
-            get_result = client.get('/records', query_string=dict(user=TEST_USER_NAME))
+            get_result = client.get('/records', query_string={'user': TEST_USER_NAME})
             assert b'404 Not Found' not in get_result.data
             result_data: List = json.loads(get_result.data.decode('utf-8'))
             assert len(result_data) == len(dates)
