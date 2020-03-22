@@ -5,9 +5,27 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+main {
+  height: 90%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+}
+
+@media (min-width: 500px) {
+  main {
+    display: none;
+  }
+
+  main::after {
+    content: 'Diese Webapp wurde bisher nur für Mobilgeräte entwickelt.';
+  }
 }

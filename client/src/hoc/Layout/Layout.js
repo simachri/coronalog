@@ -3,8 +3,10 @@ import React, { Component, Fragment } from "react"
 import TabNav from '../../components/navigation/TabNav/TabNav';
 import Navbar from '../../components/navigation/Navbar/Navbar';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faInfoCircle, faUser, faColumns } from "@fortawesome/free-solid-svg-icons";
+import {ReactComponent as HomeIcon} from "../../assets/nav_home_icon.svg";
+import {ReactComponent as InfoIcon} from "../../assets/nav_info_icon.svg";
+import {ReactComponent as UserIcon} from "../../assets/nav_user_icon.svg";
+import {ReactComponent as DashboardIcon} from "../../assets/nav_dashboard_icon.svg";
 
 class Layout extends Component {
 
@@ -13,25 +15,25 @@ class Layout extends Component {
             title: 'Home',
             link: '/',
             exact: true,
-            faIcon: <FontAwesomeIcon icon={faHome} />
+            svgIcon: <HomeIcon />,
         },
         {
             title: 'Dashboard',
             link: '/dashboard',
             exact: true,
-            faIcon: <FontAwesomeIcon icon={faColumns} />
+            svgIcon: <DashboardIcon />,
         },
         {
             title: 'About Us',
             link: '/about-us',
             exact: true,
-            faIcon: <FontAwesomeIcon icon={faInfoCircle} />
+            svgIcon: <InfoIcon />,
         },
         {
             title: 'User',
             link: '/user',
             exact: true,
-            faIcon: <FontAwesomeIcon icon={faUser} />
+            svgIcon: <UserIcon />,
         }
     ];
 
