@@ -45,6 +45,11 @@ class UsersDb:
         doc_ref = firestore_client().collection(u'users').document(username)
         return get_doc_attr(doc_ref)
 
+    @staticmethod
+    def delete_user(username):
+        """Delete a user record."""
+        firestore_client().collection(u'users').document(username).delete()
+
 
 class RecordsDb:
 
