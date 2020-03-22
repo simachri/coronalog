@@ -14,8 +14,8 @@ const tabNav = ( props ) => {
             to={item.link}
             exact={item.exact}>
             <div>
-                    {item.faIcon}
-                    <div>{item.title}</div>
+                {item.faIcon}
+                {props.showTitle ? <div>{item.title}</div> : null}
             </div>
         </NavLink>
     ));

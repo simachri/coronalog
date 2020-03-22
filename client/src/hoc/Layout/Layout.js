@@ -4,7 +4,7 @@ import TabNav from '../../components/navigation/TabNav/TabNav';
 import Navbar from '../../components/navigation/Navbar/Navbar';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faInfoCircle, faUser, faColumns } from "@fortawesome/free-solid-svg-icons";
 
 class Layout extends Component {
 
@@ -13,19 +13,25 @@ class Layout extends Component {
             title: 'Home',
             link: '/',
             exact: true,
-            faIcon: <FontAwesomeIcon icon={faCoffee} />
+            faIcon: <FontAwesomeIcon icon={faHome} />
         },
         {
             title: 'Dashboard',
             link: '/dashboard',
             exact: true,
-            faIcon: <FontAwesomeIcon icon={faCoffee} />
+            faIcon: <FontAwesomeIcon icon={faColumns} />
         },
         {
             title: 'About Us',
             link: '/about-us',
             exact: true,
-            faIcon: <FontAwesomeIcon icon={faCoffee} />
+            faIcon: <FontAwesomeIcon icon={faInfoCircle} />
+        },
+        {
+            title: 'User',
+            link: '/user',
+            exact: true,
+            faIcon: <FontAwesomeIcon icon={faUser} />
         }
     ];
 
@@ -37,7 +43,7 @@ class Layout extends Component {
                 <main>
                     {this.props.children}
                 </main>
-                <TabNav items={this.navItems} />
+                <TabNav items={this.navItems} showTitle={false} />
             </Fragment>
         );
     }
