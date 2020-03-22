@@ -84,6 +84,17 @@ class TestRegistration(unittest.TestCase):
             for key, value in test_doc['characteristics'].items():
                 assert result_doc[key] == value
 
+    def test_user_exists(self):
+        """When I check if an existing user is saved in the firestore db i get a 200 code"""
+        with self.app.test_client() as client:
+            test_existing_user = {
+                'user': TEST_USER_NAME
+            }
+            get_result = client.post('check', json=test_existing_user, follow_redirects=True)
+            assert b'404 Not Found' not in get_result.data
+            result_doc = json.loads(get_result.data.decode('utf-8'))
+            assert TEST_USER_NAME in result_doc
+
     def test_create_record_all_symptoms_written_to_db(self):
         """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
         with self.app.test_client() as client:
