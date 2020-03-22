@@ -11,3 +11,9 @@
 .Large {
     font-size: 3.5rem;
 }
+
+.QButton {
+    position: absolute;
+    bottom: 4rem;
+    right: 2rem;
+}
