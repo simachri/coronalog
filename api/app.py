@@ -1,10 +1,10 @@
 from firebase_admin import initialize_app
 from flask import Blueprint, request, jsonify, render_template, redirect
 
-from .model.db import RecordsDb, AnamnesesDb, firestore_client, get_timestamp, RegistrationDb
-from .model import registrations
-from .model.records import Record
-from .model.anamneses import Anamnese
+from model.db import RecordsDb, AnamnesesDb, firestore_client, get_timestamp, RegistrationDb
+from model import registrations
+from model.records import Record
+from model.anamneses import Anamnese
 
 # Initialize Flask app
 main = Blueprint('app', __name__)

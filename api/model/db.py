@@ -7,9 +7,9 @@ from google.cloud.firestore_v1.collection import CollectionReference
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.document import DocumentReference
 
-from .anamneses import Anamnese
-from .records import Record
-from .registrations import Registration
+from anamneses import Anamnese
+from records import Record
+from registrations import Registration
 
 
 def firestore_client():
