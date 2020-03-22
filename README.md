@@ -13,7 +13,7 @@ Der Technologiestack der Webapp:
 * Flask (Python) Backend
 * Google Cloud Firestore NoSQL Datenbank
 
-[Guide zum Aufsetzen des Projekts](https://penny-private.atlassian.net/wiki/spaces/C/pages/23724078/Aufsetzen+des+Entwicklungsprojekts)
+[Confluence-Doku inklusive Guide zum Aufsetzen des Projekts](https://penny-private.atlassian.net/wiki/spaces/C/pages/23724078/Aufsetzen+des+Entwicklungsprojekts)
 
 [Devpost-Page](https://devpost.com/software/27_patientenaustausch_coronalog)
 
