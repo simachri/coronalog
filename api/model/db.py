@@ -1,6 +1,7 @@
 from typing import Dict, List, Any
 
 from firebase_admin import firestore
+from firebase_admin.exceptions import ConflictError
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.collection import CollectionReference
 # noinspection PyPackageRequirements
@@ -42,7 +43,13 @@ class UsersDb:
         If the user already exists, nothing is changed.
         :return: The document data
         """
-        doc_ref = firestore_client().collection(u'users').document(username)
+        # As a document is only written to the database when it has some content when using the .document() API,
+        # we need to use the .add() API instead to be able to create empty user documents.
+        try:
+            timestamp, doc_ref = firestore_client().collection(u'users').add({}, document_id=username)
+        except ConflictError:
+            # The user already exists, which is fine for us.
+            doc_ref = firestore_client().collection(u'users').document(username)
         return get_doc_attr(doc_ref)
 
     @staticmethod
