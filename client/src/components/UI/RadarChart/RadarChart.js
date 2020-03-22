@@ -4,6 +4,10 @@ import RadarChart from 'react-svg-radar-chart';
 import 'react-svg-radar-chart/build/css/index.css';
 import classes from './RadarChart.module.css';
 
+function setData(json) {
+
+}
+
 //example data
 const data_ex = [
       {
@@ -30,19 +34,22 @@ const data_ex = [
 
 const captions_ex = {
       // columns
-      battery: 'Battery Capacity',
-      design: 'Design',
-      useful: 'Usefulness',
-      speed: 'Speed',
-      weight: 'Weight'
-    };
+      breathlessness: 'Atemnot',
+      diarrhoea: 'Durchfall',
+      cough_intensity: 'Husten',
+      limb_pain: 'Glieder- & Kopfschmerzen',
+      fatigued: 'Müdigkeit',
+      sore_throat: 'Halsschmerzen',
+      fewer: 'Fieber',
+      sniffles: 'Schnupfen',
+};
 
 const radarChart = ( props ) => {
 
     return (
         <RadarChart
             captions={captions_ex}
-            data={data_ex}
+            data={props.dashboardData}
             size={props.size}
         />
     );
