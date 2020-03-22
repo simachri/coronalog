@@ -9,7 +9,7 @@ def get_timestamp():
 class Anamnese:
     """Anamnese record"""
 
-    def __init__(self, from_json,
+    def __init__(self, from_json=None,
                  gender=None,
                  residence=None,
                  birthyear=None,
