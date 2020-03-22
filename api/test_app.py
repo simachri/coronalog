@@ -73,9 +73,8 @@ class TestRegistration(unittest.TestCase):
                                       )
             assert b'404 Not Found' not in post_result.data
             result_doc = json.loads(post_result.data.decode('utf-8'))
-            # for key, value in test_doc.items():
-            #     assert result_doc[key] == value
-            # self.add_to_bin(result_doc['id'])
+            for key, value in test_doc['symptoms'].items():
+                assert result_doc[key] == value
 
     def test_transform_to_dict_is_ok(self):
         """Transformation to dictionary for Firestore matches expected results"""
