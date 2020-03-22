@@ -41,7 +41,7 @@ class Record:
         if from_json is not None:
             # Set emptry attributes from provided JSON.
             for name, value in from_json.items():
-                if getattr(self, name) is None:
+                if getattr(self, name, None) is None:
                     setattr(self, name, value)
 
     def to_json(self):
