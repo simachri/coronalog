@@ -1,0 +1,73 @@
+.Home {
+    color: #252A7C;
+    padding: 1.5rem 1.5rem 5rem 1.5rem;
+}
+
+.Centered {
+    text-align: center;
+}
+
+.Home img {
+    margin-top: 3em;
+    width: 70%;
+}
+
+.Home p {
+    margin: 1rem 0;
+}
+
+.Header {
+    height: 8rem;
+    max-height: 15cm;
+    width: 100%;
+}
+
+.HeaderBg {
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 45%;
+    max-width: 20rem;
+}
+
+.SignIn {
+    color: #1d206a;
+    z-index: 5;
+    margin: 0.5rem;
+    position: relative;
+    float: right;
+}
+
+.HeaderText {
+    font-family: 'DM Serif Display', serif;
+}
+
+.Header1 {
+    font-size: 3.7rem;
+}
+
+.Header2 {
+    font-size: 2.5rem;
+    margin: 2rem 0;
+}
+
+.Logo {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 4rem;
+    max-width: 5cm;
+}
+
+.StartButton {
+    text-align: center;
+    margin: 2em 0;
+}
+
+.CardsBg {
+    margin: 0 -1.5rem;
+    padding: 2em 1.5rem;
+    background-image: url('/assets/home_cards_bg.svg');
+    background-size: 100% auto;
+}

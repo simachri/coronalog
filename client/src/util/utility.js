@@ -35,3 +35,5 @@ export const checkValidity = ( value, rules ) => {
 
     return isValid;
 }
+
+export const toCss = ( ...classNames) => classNames.join(' ');
