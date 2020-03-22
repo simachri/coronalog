@@ -5,7 +5,7 @@ import classes from '../../../../containers/Questionnaire/Questionnaire.module.c
 import Button from '../../Button/Button';
 
 const start = ( props ) => (
-    <div className={props.pageClass}>
+    <div className={props.pageClasses}>
         <div className={classes.Header}>{props.header}</div>
         <Button additionalClasses={classes.QButton} click={props.onResume}>Starten</Button>
     </div>
