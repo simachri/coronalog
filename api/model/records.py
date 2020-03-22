@@ -49,3 +49,6 @@ class Record:
     def to_json(self):
         """Converts the object instance to JSON."""
         return vars(self)
+
+    def get_symptoms(self):
+        self.to_json().pop('date')
