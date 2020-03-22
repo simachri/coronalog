@@ -52,6 +52,7 @@ class TestRegistration(unittest.TestCase):
         UsersDb.delete_user(TEST_USER_NAME)
 
     def test_create_record_all_symptoms_written_to_db(self):
+        """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
         with self.app.test_client() as client:
             test_doc = {'user': TEST_USER_NAME,
                         'date': '2020-03-21',
