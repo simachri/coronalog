@@ -36,7 +36,7 @@ def get_doc_attr(doc_ref: DocumentReference) -> Dict[Any]:
 class UsersDb:
 
     @staticmethod
-    def set_ser(username) -> Dict[Any]:
+    def set_user(username) -> Dict[Any]:
         """Create or update user for whom records can be tracked.
 
         If the user already exists, nothing is changed.
