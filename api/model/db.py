@@ -26,8 +26,13 @@ def get_timestamp():
 
 
 def get_doc_attr(doc_ref: DocumentReference) -> Dict[Any, Any]:
-    """Returns all the attributes of a DocumentReference. The current data is fetched."""
+    """Returns all the attributes of a DocumentReference. The current data is fetched.
+
+    :return: Empty dictionary, if the document does not exist.
+    """
     doc_snapshot = doc_ref.get()
+    if not doc_snapshot.exists:
+        return {}
     doc_attr = doc_snapshot.to_dict()
     # The document ID is not returned by to_dict above. We need to add it manually.
     doc_attr.update(id=doc_snapshot.id)
