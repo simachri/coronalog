@@ -57,7 +57,7 @@ def create_anamneses():
             user = request.json["user"]
             anamnese: Anamnese = Anamnese(from_json=request.json["characteristics"])
             anamnese.enhance_values(AnamnesesDb.get(user))
-            doc_ref = AnamnesesDb.create(user, anamnese)
+            doc_ref = AnamnesesDb.create_anamnesis(user, anamnese)
             doc_attr = get_doc_attr(doc_ref)
             return jsonify(doc_attr), 200
         except Exception as e:

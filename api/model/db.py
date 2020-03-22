@@ -1,4 +1,7 @@
+from typing import Dict, List
+
 from firebase_admin import firestore
+from firebase_admin.exceptions import ConflictError
 # noinspection PyPackageRequirements
 from google.cloud import firestore_v1
 
@@ -23,7 +26,7 @@ def get_timestamp():
 class RecordsDb:
 
     @staticmethod
-    def get(user):
+    def get(user) -> List[Dict]:
         """Get medical record documents from the Firestore database.
 
         :param user: username for whom the records shall be retrieved
@@ -34,22 +37,20 @@ class RecordsDb:
         return [record.get().to_dict() for record in records_ref.list_documents(page_size=50)]
 
     @staticmethod
-    def create_user(username):
-        """Create a user for whom records can be tracked.
-
-        If the user already exists, nothing is changed.
-        :return: DocumentReference to the user document."""
-
-    @staticmethod
     def create_record(username, date, record: Record) -> firestore_v1.document.DocumentReference:
         """Create medical record from the json file from the record input
 
+        If the record already exists, nothing is changed.
         :return: DocumentReference of the new document created.
         """
         records_ref: firestore_v1.collection.CollectionReference = firestore_client().collection(
             'users/' + username + '/records')
-        timestamp, doc_ref = records_ref.add(record.to_json(), date)
-        return doc_ref
+        try:
+            timestamp, doc_ref = records_ref.add(record.to_json(), date)
+            return doc_ref
+        except ConflictError:
+            # It is fine if the document already exists. We do not need any handling here.
+            pass
 
 
 class AnamnesesDb:
@@ -67,13 +68,14 @@ class AnamnesesDb:
         return anamnese
 
     @staticmethod
-    def create(user, anamnese: Anamnese):
-        """Create single anamnese record from the json file from the input
+    def create_anamnesis(username, anamnese: Anamnese) -> firestore_v1.document.DocumentReference:
+        """Create single anamnesis record from the json file from the input
+
+        If the record already exists, nothing is changed.
+        :return: DocumentReference of the new document created.
         """
-        anamnese_ref = firestore_client().collection(
-            'users/' + user + '/anamneses').document(u'data')
-        # doc_ref = anamnese_ref.document(u'data').add(anamnese.to_json())
-        doc_ref = anamnese_ref.set(anamnese.to_json())
+        anamnesis_ref = firestore_client().collection('users/' + username).document(u'anamnesis')
+        doc_ref = anamnesis_ref.set(anamnese.to_json())
         return doc_ref
 
 
