@@ -1,0 +1,21 @@
+.InputWrapper {
+    display: flex;
+    width: 80%;
+    padding: 5px;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.InputWrapper label {
+    margin-left: 10px;
+}
+
+.InputWrapper input {
+    border: none;
+    border-bottom: 2px solid #888;
+    transition: all 0.3s ease;
+}
+
+.InputWrapper input:focus {
+    border-bottom-color: #262C77;
+}
