@@ -1,0 +1,89 @@
+.Bubble {
+    position: relative;
+    display: block;
+    height: 3rem;
+    background-color: #262C77;
+    color: white;
+    text-align: center;
+    line-height: 3rem;
+    border-radius: 15px 15px 0 15px;
+}
+
+/*.Bubble:before {*/
+/*    content: ' ';*/
+/*    position: absolute;*/
+/*    width: 0;*/
+/*    height: 0;*/
+/*    right: 0;*/
+/*    top: 100px;*/
+/*    !*border: 25px solid;*!*/
+/*    border-right: 30px solid #262C77;*/
+/*    border-top: 15px solid #262C77;*/
+/*    border-bottom: 15px solid #262C77;*/
+/*    border-left: 30px solid #262C77;*/
+/*    !*border-color: red green blue yellow;*!*/
+/*    border-color: #262C77 #262C77 transparent transparent;*/
+/*}*/
+
+/*.Bubble:after {*/
+/*    content: ' ';*/
+/*    display: block;*/
+/*    position: absolute;*/
+/*    box-sizing: content-box;*/
+/*    top: 104px;*/
+/*    right: 0;*/
+/*    transform: translate(5px, 8px);*/
+/*    width: 10px;*/
+/*    height: 10px;*/
+/*    background-color: orange;*/
+/*    border: 5px solid indianred;*/
+/*    border-color: transparent white white rgba(0,0,0,0);*/
+/*    border-radius: 20px;*/
+/*}*/
+
+/*.Bubble .Overlay {*/
+/*    display: block;*/
+/*    position: absolute;*/
+/*    top: 100px;*/
+/*    right: 0;*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*    background-color: orange;*/
+/*    border: 5px solid indianred;*/
+/*    border-radius: 15px;*/
+/*}*/
+
+.Triangle {
+    position: absolute;
+    top: 0.8rem;
+    right: -2.2px;
+    background-color: #262C77;
+    text-align: left;
+}
+
+.Triangle:before,
+.Triangle:after{
+    content: '';
+    position: absolute;
+    background-color: inherit;
+}
+
+.Triangle,
+.Triangle:before,
+.Triangle:after {
+    width: 2rem;
+    height: 2rem;
+    border-top-right-radius: 50%;
+}
+
+.Triangle {
+    transform: rotate(-30deg) skewX(-30deg) scale(1,.866);
+}
+
+.Triangle:before {
+    transform: rotate(-135deg) skewX(-45deg) scale(1.414,.707) translate(0,-50%);
+}
+
+.Triangle:after {
+    transform: rotate(135deg) skewY(-45deg) scale(.707,1.414) translate(50%);
+}

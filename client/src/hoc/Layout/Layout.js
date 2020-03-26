@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react"
 
 import TabNav from '../../components/navigation/TabNav/TabNav';
 import Navbar from '../../components/navigation/Navbar/Navbar';
+import Bubble from '../../components/UI/Bubble/Bubble';
 
 import {ReactComponent as HomeIcon} from "../../assets/nav_home_icon.svg";
 import {ReactComponent as InfoIcon} from "../../assets/nav_info_icon.svg";
@@ -31,7 +32,7 @@ class Layout extends Component {
         },
         {
             title: 'User',
-            link: '/user',
+            link: '/questionnaire',
             exact: true,
             svgIcon: <UserIcon />,
         }
@@ -41,7 +42,8 @@ class Layout extends Component {
 
         return (
             <Fragment>
-                <Navbar />
+                {/*<Navbar />*/}
+                <Bubble />
                 <main>
                     {this.props.children}
                 </main>

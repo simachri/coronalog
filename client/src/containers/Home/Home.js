@@ -4,7 +4,6 @@ import { HOME_CARDS, HOME_CARDS_BOTTOM } from "../../contentConf/Home";
 import { NavLink } from "react-router-dom";
 
 import Button from '../../components/UI/Button/Button';
-import SimpleInfoCard from '../../components/UI/InfoCards/InfoCard/SimpleInfoCard';
 
 import classes from './Home.module.css';
 import {ReactComponent as Logo} from "../../assets/logo_transparent.svg";
