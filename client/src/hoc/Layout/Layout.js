@@ -3,6 +3,7 @@ import React, { Component, Fragment } from "react"
 import TabNav from '../../components/navigation/TabNav/TabNav';
 import Navbar from '../../components/navigation/Navbar/Navbar';
 import Bubble from '../../components/UI/Bubble/Bubble';
+import { NAV_BAR_AT } from '../../contentConf/General';
 
 import {ReactComponent as AnalysisIcon} from "../../assets/nav_analysis_icon.svg";
 import {ReactComponent as InfoIcon} from "../../assets/nav_info_icon.svg";
@@ -39,14 +40,15 @@ class Layout extends Component {
     ];
 
     render() {
-
         return (
             <Fragment>
                 <Navbar />
                 <main>
                     {this.props.children}
                 </main>
-                <TabNav items={this.navItems} showTitle={false} />
+                {NAV_BAR_AT.includes(this.props.currentLocation.pathname)
+                    ? <TabNav items={this.navItems} showTitle={false} />
+                    : null}
             </Fragment>
         );
     }
