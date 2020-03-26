@@ -4,7 +4,7 @@ import TabNav from '../../components/navigation/TabNav/TabNav';
 import Navbar from '../../components/navigation/Navbar/Navbar';
 import Bubble from '../../components/UI/Bubble/Bubble';
 
-import {ReactComponent as HomeIcon} from "../../assets/nav_home_icon.svg";
+import {ReactComponent as AnalysisIcon} from "../../assets/nav_analysis_icon.svg";
 import {ReactComponent as InfoIcon} from "../../assets/nav_info_icon.svg";
 import {ReactComponent as UserIcon} from "../../assets/nav_user_icon.svg";
 import {ReactComponent as DashboardIcon} from "../../assets/nav_dashboard_icon.svg";
@@ -13,16 +13,16 @@ class Layout extends Component {
 
     navItems = [
         {
-            title: 'Home',
-            link: '/',
-            exact: true,
-            svgIcon: <HomeIcon />,
-        },
-        {
             title: 'Dashboard',
             link: '/dashboard',
             exact: true,
             svgIcon: <DashboardIcon />,
+        },
+        {
+            title: 'Analysis',
+            link: '/',
+            exact: true,
+            svgIcon: <AnalysisIcon />
         },
         {
             title: 'About Us',
