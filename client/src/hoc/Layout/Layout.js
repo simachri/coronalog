@@ -42,8 +42,7 @@ class Layout extends Component {
 
         return (
             <Fragment>
-                {/*<Navbar />*/}
-                <Bubble />
+                <Navbar />
                 <main>
                     {this.props.children}
                 </main>

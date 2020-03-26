@@ -1,0 +1,19 @@
+.Picker {
+    display: block;
+    margin: 10px;
+    line-height: 3rem;
+    appearance: none;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    width: 80%;
+    text-align: center;
+    text-align-last: center;
+    background-color: #262C77;
+}
+
+.Picker option {
+    background-color: white;
+    color: black;
+}

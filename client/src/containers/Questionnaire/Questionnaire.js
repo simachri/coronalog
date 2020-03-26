@@ -41,6 +41,7 @@ class Questionnaire extends Component {
     render() {
         return (
             <div className={classes.Questionnaire}>
+                {mapToComp(pages[0])}
                 {mapToComp(pages[1])}
             </div>
         );
