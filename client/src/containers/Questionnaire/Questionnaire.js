@@ -3,7 +3,7 @@ import React, {Component, Fragment} from 'react';
 import classes from './Questionnaire.module.css';
 
 import StartPage from '../../components/UI/Questionnaire/Start/Start';
-import YesNo from "../../components/UI/Questionnaire/YesNo/YesNo";
+import Options from "../../components/UI/Questionnaire/Options/Options";
 
 const pages = [
     {
@@ -26,7 +26,6 @@ const pages = [
 const mapToComp = ( obj ) => {
     switch(obj.type){
         case 'start': return <StartPage {...obj} />;
-        case 'yesNo': return <YesNo {...obj} />
         default: return null;
     }
 };
@@ -41,8 +40,13 @@ class Questionnaire extends Component {
     render() {
         return (
             <div className={classes.Questionnaire}>
-                {mapToComp(pages[0])}
-                {mapToComp(pages[1])}
+                <Options
+                    header='Dies ist meine Frage?'
+                    subHeader='Dies ist ein Subheader'
+                    answers={['Yes', 'No', 'Cancel']}
+                    onNoAnswer={() => console.log('No Answer')}
+                    noAnswerText='Möchte ich nicht sagen'
+                />
             </div>
         );
     }

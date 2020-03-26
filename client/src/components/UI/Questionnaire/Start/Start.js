@@ -1,13 +1,13 @@
 import React from "react";
 
-import classes from '../../../../containers/Questionnaire/Questionnaire.module.css';
+import classes from '../Questionnaire.module.css';
 
 import Button from '../../Button/Button';
 
 const start = ( props ) => (
-    <div className={props.pageClasses}>
+    <div className={classes.Start}>
         <div className={classes.Header}>{props.header}</div>
-        <Button additionalClasses={classes.QButton} click={props.onResume}>Starten</Button>
+        <Button additionalClasses={classes.ResumeButton} click={props.onResume}>Starten</Button>
     </div>
 );
 

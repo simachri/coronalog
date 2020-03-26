@@ -33,7 +33,7 @@ class Layout extends Component {
         },
         {
             title: 'User',
-            link: '/questionnaire',
+            link: '/user-info',
             exact: true,
             svgIcon: <UserIcon />,
         }
