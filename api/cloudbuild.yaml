@@ -1,0 +1,11 @@
+# Build the Flask backend API and deploy as Docker image to Google Cloud Run.
+steps:
+  # build Docker image & push to registry
+  - name: "gcr.io/kaniko-project/executor:latest"
+    args: ["--cache=true", "--cache-ttl=48h",
+           "--destination=gcr.io/$PROJECT_ID/coronalog-api:latest"]
+    # Deploy container image to Google Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ['beta', 'run', 'deploy', 'coronalog-api', '--image',
+           'gcr.io/$PROJECT_ID/coronalog-api:latest', '--region', 'europe-west4',
+           '--allow-unauthenticated', '--platform', 'managed']
