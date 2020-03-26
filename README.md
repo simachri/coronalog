@@ -6,4 +6,15 @@ CoronaLog ist im Rahmen des Hackathons #WirVsVirus als Ergebnis der Gruppe entst
 
 [Kurzvideo auf YouTube](https://www.youtube.com/watch?v=YFxHOLcjwQI&feature=youtu.be)
 
-[Guide zum Aufsetzen des Projekts](https://penny-private.atlassian.net/wiki/spaces/C/pages/23724078/Aufsetzen+des+Entwicklungsprojekts)
+Der Arbeitsfortschritt zum Zeitpunkt der Abgabe des Hackathons ist unter dem git Tag `ABGABE_HACKATHON` gelistet.
+
+Der Technologiestack der Webapp:
+* React.js Frontend
+* Flask (Python) Backend
+* Google Cloud Firestore NoSQL Datenbank
+
+[Confluence-Doku inklusive Guide zum Aufsetzen des Projekts](https://penny-private.atlassian.net/wiki/spaces/C/pages/23724078/Aufsetzen+des+Entwicklungsprojekts)
+
+[Devpost-Page](https://devpost.com/software/27_patientenaustausch_coronalog)
+
+[Jira](https://penny-private.atlassian.net/secure/RapidBoard.jspa?projectKey=CL&rapidView=2)
