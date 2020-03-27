@@ -1,8 +1,7 @@
 import React from "react";
 
-import classes from '../Questionnaire.module.css';
-import {ReactComponent as InfoCircle} from "../../../../assets/info_circle.svg";
-import Bubble from "../../Bubble/Bubble";
+import classes from '../../Questionnaire.module.css';
+import Bubble from "../../../Bubble/Bubble";
 
 const options = ( props ) => (
     <div className={classes.Question}>
@@ -22,3 +21,4 @@ const options = ( props ) => (
 );
 
 export default options;
+export const TYPE_START = 'type_start';

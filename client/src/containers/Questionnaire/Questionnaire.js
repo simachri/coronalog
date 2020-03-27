@@ -2,8 +2,8 @@ import React, {Component, Fragment} from 'react';
 
 import classes from './Questionnaire.module.css';
 
-import StartPage from '../../components/UI/Questionnaire/Start/Start';
-import Options from "../../components/UI/Questionnaire/Options/Options";
+import StartPage from '../../components/UI/Questionnaire/QTypes/Start/Start';
+import Options from "../../components/UI/Questionnaire/QTypes/Options/Options";
 
 const pages = [
     {
