@@ -1,5 +1,6 @@
 .Button {
     background-color: #FB4B62;
+    font-size: 1.3rem;
     border-radius: 100px;
     border: none;
     height: 2rem;
@@ -9,8 +10,8 @@
     text-align: center;
     color: #fff;
     display: inline-flex;
-    align-items: center;
-    font-size: 1.3rem;
+    flex-flow: column;
+    justify-content: center;
 }
 
 .Button div {
