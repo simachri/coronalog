@@ -3,6 +3,7 @@ __pycache__
 package-lock.json
 #pycharm
 .idea/
+.idea/vcs.xml
 *.iml
 yarn.lock
 CoronaLog.iml
