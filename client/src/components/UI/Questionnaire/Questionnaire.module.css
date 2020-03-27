@@ -4,6 +4,7 @@
     width: 100vw;
     height: 100vh;
     padding: 20px;
+    overflow: hidden;
 }
 
 .Anamnesis {
@@ -34,7 +35,7 @@
 
 .Answers {
     position: absolute;
-    bottom: 50px;
+    bottom: 90px;
     right: 1rem;
     display: flex;
     flex-flow: column;
@@ -46,9 +47,20 @@
     margin: 10px 0;
 }
 
+.AnswerSelect,
+.AnswerTextInput {
+    text-align: center;
+    width: 100%;
+    margin: 150px auto;
+    display: flex;
+    justify-content: center;
+}
+
 .NoAnswer {
-    margin-top: 25px;
     font-size: 0.8em;
+    position: absolute;
+    bottom: 50px;
+    right: 30px;
 }
 
 .ResumeButton {

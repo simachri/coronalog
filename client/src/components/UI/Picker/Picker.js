@@ -2,8 +2,6 @@ import React from "react";
 
 import classes from './Picker.module.css';
 
-export const TYPE_YEAR = 'type_year';
-
 const picker = ( props ) => {
     let options = [];
     switch(props.type){
@@ -20,10 +18,11 @@ const picker = ( props ) => {
     console.log(Array(20))
 
     return (
-        <select className={classes.Picker}>
+        <select className={classes.Picker} name={props.name}>
             {options.map(el => <option key={el} value={el}>{el}</option>)}
         </select>
     )
 };
 
+export const TYPE_YEAR = 'type_year';
 export default picker;

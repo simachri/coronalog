@@ -13,9 +13,9 @@ const options = ( props ) => (
                     <Bubble key={val + idx} text={val} />
                 </div>
             ))}
-            <div className={classes.NoAnswer} onClick={props.onNoAnswer}>
-                {props.noAnswerText}
-            </div>
+        </div>
+        <div className={classes.NoAnswer} onClick={props.onNoAnswer}>
+            {props.noAnswerText}
         </div>
     </div>
 );
