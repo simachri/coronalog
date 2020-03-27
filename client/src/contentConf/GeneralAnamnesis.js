@@ -9,12 +9,14 @@ import {TYPE_TEXT_INPUT} from "../components/UI/Questionnaire/QTypes/TextInput/T
 export const GENERAL_ANAMNESIS_QUESTIONS = [
     {
         type: TYPE_START,
+        name: 'start',
         header: 'Hallo, wir müssen dich näher kennenlernen, um dich besser unterstützen zu können',
         subHeader: <Fragment>Wozu werden diese Daten benötigt? <InfoCircle /></Fragment>,
         onResume: () => console.log('resume')
     },
     {
         type: TYPE_OPTIONS,
+        name: 'sex',
         header: 'Welches Geschlecht hast du?',
         answers: ['Weiblich', 'Männlich', 'Divers'],
         infoHref: 'https://rki.de',

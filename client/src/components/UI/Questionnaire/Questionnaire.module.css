@@ -7,6 +7,13 @@
     overflow: hidden;
 }
 
+.Resume {
+    position: absolute;
+    bottom: 50px;
+    left: 20px;
+    cursor: pointer;
+}
+
 .Anamnesis {
 
 }
@@ -26,6 +33,7 @@
 
 .Header {
     font-size: 2.7rem;
+    line-height: 3.5rem;
     max-font-size: 30px;
 }
 

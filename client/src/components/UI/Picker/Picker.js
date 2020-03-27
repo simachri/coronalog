@@ -8,14 +8,12 @@ const picker = ( props ) => {
         case TYPE_YEAR:
             options = Array(props.to - props.from + 1).fill(0)
                 .map( (el, idx) => {
-                    console.log('HEY',el, idx)
                     return props.from + idx;
                 });
             break;
         default:
             break;
     }
-    console.log(Array(20))
 
     return (
         <select className={classes.Picker} name={props.name}>

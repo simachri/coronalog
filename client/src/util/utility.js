@@ -5,7 +5,10 @@ export const updateObject = (oldObject, updatedProperties) => {
     };
 };
 
-export const scrollTo = (myRef) => window.scrollTo(0, myRef.current.offsetTop);
+export const scrollTo = (myRef) => {
+    window.scrollTo(0, myRef.current.offsetTop);
+    console.log(myRef.current.offsetTop)
+}
 
 export const checkValidity = ( value, rules ) => {
     let isValid = true;
