@@ -1,3 +1,5 @@
+import os
+
 import uvicorn
 from typing import List
 
@@ -78,5 +80,6 @@ async def get_records(username: str):
 #         return jsonify(anamnese), 200
 #
 
+port = os.environ['PORT']
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=port)
