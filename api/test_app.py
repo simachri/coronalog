@@ -56,7 +56,7 @@ class TestRegistration(unittest.TestCase):
         with self.app.test_client() as client:
             dates = ['2020-03-21', '2020-03-22']
             self.create_two_records(client, TEST_USER_NAME, dates)
-            get_result = client.get('/records', query_string={'user': TEST_USER_NAME})
+            get_result = client.get('/api/records', query_string={'user': TEST_USER_NAME})
             assert b'404 Not Found' not in get_result.data
             result_data: List = json.loads(get_result.data.decode('utf-8'))
             assert len(result_data) == len(dates)
@@ -78,7 +78,7 @@ class TestRegistration(unittest.TestCase):
                             'birthyear': 1960
                         }
                         }
-            post_result = client.post('/anamneses', json=test_doc, follow_redirects=True)
+            post_result = client.post('/api/anamneses', json=test_doc, follow_redirects=True)
             assert b'404 Not Found' not in post_result.data
             result_doc = json.loads(post_result.data.decode('utf-8'))
             for key, value in test_doc['characteristics'].items():
@@ -87,13 +87,13 @@ class TestRegistration(unittest.TestCase):
     def test_user_exists(self):
         """When I check if an existing user is saved in the firestore db i get a 200 code"""
         with self.app.test_client() as client:
-            get_result = client.get('check',  query_string={'user': TEST_USER_NAME})
+            get_result = client.get('/api/check',  query_string={'user': TEST_USER_NAME})
             assert b'User exists' in get_result.data
 
     def test_get_all_users(self):
         """test if all users are returned"""
         with self.app.test_client() as client:
-            get_result = client.get('users')
+            get_result = client.get('/api/users')
             result_doc = json.loads(get_result.data.decode('utf-8'))
             assert result_doc is not None
 
@@ -107,8 +107,8 @@ class TestRegistration(unittest.TestCase):
                             'birthyear': 1954
                         }
                         }
-            client.post('/anamneses', json=test_doc, follow_redirects=True)
-            get_result = client.get('anamneses', query_string={'user': TEST_USER_NAME})
+            client.post('/api/anamneses', json=test_doc, follow_redirects=True)
+            get_result = client.get('/api/anamneses', query_string={'user': TEST_USER_NAME})
             result_doc = json.loads(get_result.data.decode('utf-8'))
             for key, value in test_doc['characteristics'].items():
                 assert result_doc[key] == value
@@ -132,7 +132,7 @@ class TestRegistration(unittest.TestCase):
                             'diarrhoea': False
                         }
                         }
-            post_result = client.post('/records', json=test_doc, follow_redirects=True)
+            post_result = client.post('/api/records', json=test_doc, follow_redirects=True)
             assert b'404 Not Found' not in post_result.data
             result_doc = json.loads(post_result.data.decode('utf-8'))
             for key, value in test_doc['symptoms'].items():
@@ -157,8 +157,8 @@ class TestRegistration(unittest.TestCase):
                               'chronic_liver_disease': 'Anything'
                           }
                           }
-            client.post('/anamneses', json=initial_test_doc, follow_redirects=True)
-            second_post_result = client.post('/anamneses', json=update_doc, follow_redirects=True)
+            client.post('/api/anamneses', json=initial_test_doc, follow_redirects=True)
+            second_post_result = client.post('/api/anamneses', json=update_doc, follow_redirects=True)
             result_doc = json.loads(second_post_result.data.decode('utf-8'))
             for key, value in update_doc['characteristics'].items():
                 assert result_doc[key] == value
@@ -204,4 +204,4 @@ class TestRegistration(unittest.TestCase):
                             'diarrhoea': False
                         }
                         }
-            client.post('/records', json=test_doc)
+            client.post('/api/records', json=test_doc)
