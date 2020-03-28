@@ -74,7 +74,7 @@ class Dashboard extends Component {
 
     fetchDashboardData() {
         const me = this;
-        axios.get('/records?user=Kurt')
+        axios.get('/api/records?user=Kurt')
             .then(function (response) {
                 console.log(response);
                 if (response.data.length === 0) {
