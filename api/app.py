@@ -9,7 +9,8 @@ from model.db import RecordsDb, AnamnesesDb, firestore_client, get_timestamp, Re
 from model.records import Record
 
 # Initialize Flask app
-main = Blueprint('app', __name__)
+# url_prefix 'api' is used to make the server clearly identify API calls by their specific URL.
+main = Blueprint('app', __name__, url_prefix="/api")
 
 # Initialize Firestore DB
 firebase_app = initialize_app()

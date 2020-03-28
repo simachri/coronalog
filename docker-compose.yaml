@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  api:
+#    build: ./api    only required if we want Docker to build this. But we use Kaniko instead.
+#    network_mode: cloudbuild   required for Google Cloud deployment
+    image: gcr.io/coronalog-28e5e/coronalog-api:${DOCKER_IMAGE_TAG:-latest}
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=firebase_key.json # only required for local deployment
+      - FLASK_ENV=development  # only required for local deployment
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+
+
+  client:
+#    build: ./client    only required if we want Docker to build this. But we use Kaniko instead.
+    image: gcr.io/coronalog-28e5e/coronalog-client:${DOCKER_IMAGE_TAG:-latest}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api
+#    network_mode: cloudbuild   required for Google Cloud deployment
+
+#networks:   required for Google Cloud deployment
+#  default:
+#    external:
+#      name: cloudbuild
