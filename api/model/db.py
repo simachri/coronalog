@@ -8,13 +8,12 @@ from google.cloud.firestore_v1.collection import CollectionReference
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.document import DocumentReference
 
-from anamneses import Anamnese
-from records import Record
-from registrations import Registration
+from api import Record, Anamnesis, Symptoms
 
 
 def firestore_client():
     return firestore.client()
+
 
 def registrations_coll():
     return firestore_client().collection('registrations')
@@ -80,21 +79,24 @@ class UsersDb:
         user_ref: DocumentReference = users_ref.document(user)
         return user_ref.get().exists
 
+
 class RecordsDb:
 
     @staticmethod
-    def get(user) -> List[Record]:
+    def get(username) -> List[Record]:
         """Get medical record documents from the Firestore database.
 
-        :param user: username for whom the records shall be retrieved
+        :param username: username for whom the records shall be retrieved
         :return: all records for the user, empty if nothing found
         """
         records_ref: CollectionReference = firestore_client().collection(
-            'users/' + user + '/records')
+            'users/' + username + '/records')
         records = []
         for doc_ref in records_ref.list_documents(page_size=50):
             doc_snapshot = doc_ref.get()
-            records.append(Record(from_json=doc_snapshot.to_dict(), date=doc_snapshot.id))
+            symptoms = Symptoms.parse_obj(doc_snapshot.to_dict())
+            record = Record(username=username, date=doc_snapshot.id, symptoms=symptoms)
+            records.append(record)
         return records
 
     @staticmethod
@@ -124,26 +126,12 @@ class AnamnesesDb:
         return anamnese
 
     @staticmethod
-    def set_anamnesis(username, anamnese: Anamnese) -> Dict[Any, Any]:
+    def set_anamnesis(username, anamnesis: Anamnesis) -> Dict[Any, Any]:
         """Create single anamnesis record from the json file from the input
 
         If the record already exists, a merge is performed.
         :return: DocumentReference of the new document created.
         """
         anamnesis_ref: DocumentReference = firestore_client().collection('users').document(username)
-        anamnesis_ref.set(anamnese.to_json(), merge=True)
+        anamnesis_ref.set(anamnesis.json(), merge=True)
         return get_doc_attr(anamnesis_ref)
-
-
-class RegistrationDb:
-
-    @staticmethod
-    def create(registration: Registration):
-        """Create a registration document on the Firestore database.
-
-        :param registration: Registration object instance
-        :return: DocumentReference of the new document created.
-        """
-        doc_ref: DocumentReference
-        timestamp, doc_ref = registrations_coll().add(registration.to_json())
-        return doc_ref
