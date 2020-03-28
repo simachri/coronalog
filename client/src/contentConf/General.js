@@ -1,0 +1,1 @@
+export const NAV_BAR_AT = ['/', '/dashboard'];

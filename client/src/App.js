@@ -8,6 +8,7 @@ import Home from './containers/Home/Home';
 import Dashboard from './containers/Dashboard/Dashboard';
 import Layout from "./hoc/Layout/Layout";
 import Questionnaire from "./containers/Questionnaire/Questionnaire";
+import GeneralAnamnesis from "./containers/GeneralAnamnesis/GeneralAnamnesis";
 
 class App extends Component {
 
@@ -20,6 +21,7 @@ class App extends Component {
                 <Route path="/about-us" component={AboutUs} />
                 <Route path='/dashboard' component={Dashboard} />
                 <Route path='/questionnaire' component={Questionnaire} />
+                <Route path='/user-info' component={GeneralAnamnesis} />
                 <Redirect to="/" />
             </Switch>
         );

@@ -1,0 +1,78 @@
+.Page {
+    position: relative;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.Resume {
+    position: absolute;
+    bottom: 50px;
+    left: 20px;
+    cursor: pointer;
+}
+
+.Anamnesis {
+
+}
+
+.Question {
+
+}
+
+.Start {
+
+}
+
+.Header,
+.SubHeader {
+    font-family: 'DM Serif Display', serif;
+}
+
+.Header {
+    font-size: 2.7rem;
+    line-height: 3.5rem;
+    max-font-size: 30px;
+}
+
+.SubHeader {
+    margin-top: 10px;
+}
+
+.Answers {
+    position: absolute;
+    bottom: 90px;
+    right: 1rem;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.Answer {
+    margin: 10px 0;
+}
+
+.AnswerSelect,
+.AnswerTextInput {
+    text-align: center;
+    width: 100%;
+    margin: 150px auto;
+    display: flex;
+    justify-content: center;
+}
+
+.NoAnswer {
+    font-size: 0.8em;
+    position: absolute;
+    bottom: 50px;
+    right: 30px;
+}
+
+.ResumeButton {
+    position: absolute;
+    bottom: 50px;
+    right: 20px;
+}

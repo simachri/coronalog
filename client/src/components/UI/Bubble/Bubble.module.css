@@ -1,11 +1,11 @@
 .Bubble {
     position: relative;
     display: block;
-    height: 3rem;
+    height: 3.5rem;
     background-color: #262C77;
     color: white;
     text-align: center;
-    line-height: 3rem;
+    line-height: 3.5rem;
     border-radius: 15px 15px 0 15px;
 }
 
@@ -55,13 +55,12 @@
 
 .Triangle {
     position: absolute;
-    top: 0.8rem;
-    right: -2.2px;
+    top: 1rem;
+    right: -2.4px;
     background-color: #262C77;
     text-align: left;
 }
 
-.Triangle:before,
 .Triangle:after{
     content: '';
     position: absolute;
@@ -69,7 +68,6 @@
 }
 
 .Triangle,
-.Triangle:before,
 .Triangle:after {
     width: 2rem;
     height: 2rem;
@@ -80,9 +78,7 @@
     transform: rotate(-30deg) skewX(-30deg) scale(1,.866);
 }
 
-.Triangle:before {
-    transform: rotate(-135deg) skewX(-45deg) scale(1.414,.707) translate(0,-50%);
-}
+
 
 .Triangle:after {
     transform: rotate(135deg) skewY(-45deg) scale(.707,1.414) translate(50%);
