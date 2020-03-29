@@ -1,14 +1,13 @@
 import os
-
-import uvicorn
 from typing import List
 
-from fastapi import FastAPI, APIRouter, status
+import uvicorn
+from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from firebase_admin import initialize_app
 
-from model.api import Record
-from model.db import RecordsDb
+from model.api import Record, Anamnesis
+from model.db import RecordsDb, AnamnesesDb
 
 app = FastAPI()
 # Initialize Firestore DB
@@ -28,6 +27,18 @@ async def get_records(username: str):
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND,
                             content={f"No records exist for username {username}."})
     return records
+
+
+@app.post('/api/anamneses', response_model=Anamnesis, status_code=200)
+async def set_anamneses(anamnesis: Anamnesis):
+    """Create or update the anamneses record for a specific user."""
+    try:
+        anamnesis = AnamnesesDb.set_anamnesis(anamnesis)
+        return anamnesis
+    except LookupError:
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND,
+                            content={f"User '{anamnesis.username}' is not yet registered in the database."})
+
 
 # @main.get('/users')
 # async def get_all_users():
@@ -57,17 +68,6 @@ async def get_records(username: str):
 #         return f"An Error Occured: {e}"
 #
 #
-# @main.post('/anamneses')
-# async def create_anamneses():
-#     """Create or update the anamneses record for the specified user."""
-#     try:
-#         user = request.json["user"]
-#         anamnese: Anamnese = Anamnese(from_json=request.json["characteristics"])
-#         # anamnese.enhance_values(AnamnesesDb.get(user))
-#         doc_attr = AnamnesesDb.set_anamnesis(user, anamnese)
-#         return jsonify(doc_attr), 200
-#     except Exception as e:
-#         return f"An Error Occured: {e}", 500
 #
 # @main.get('/anamneses')
 # async def get_anamneses_by_user():

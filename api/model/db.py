@@ -126,12 +126,18 @@ class AnamnesesDb:
         return anamnese
 
     @staticmethod
-    def set_anamnesis(username, anamnesis: Anamnesis) -> Dict[Any, Any]:
-        """Create single anamnesis record from the json file from the input
-
+    def set_anamnesis(anamnesis: Anamnesis) -> Anamnesis:
+        """Create or update single anamnesis record from the json file from the input.
         If the record already exists, a merge is performed.
+
         :return: DocumentReference of the new document created.
         """
-        anamnesis_ref: DocumentReference = firestore_client().collection('users').document(username)
-        anamnesis_ref.set(anamnesis.json(), merge=True)
-        return get_doc_attr(anamnesis_ref)
+        db_record_ref: DocumentReference = firestore_client().collection('users').document(anamnesis.username)
+        db_record_ref.set(anamnesis.dict(), merge=True)
+        doc_snapshot = db_record_ref.get()
+        if not doc_snapshot.exists:
+            raise LookupError(f"No database document exists for user {anamnesis.username}.")
+        doc_attr = doc_snapshot.to_dict()
+        # The document ID is not returned by to_dict above. We need to add it manually.
+        doc_attr.update(id=doc_snapshot.id)
+        return anamnesis.parse_obj(doc_attr)

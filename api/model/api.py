@@ -33,7 +33,7 @@ class Anamnesis(BaseModel):
     username: str
     gender: str
     residence: int
-    birthyear: datetime.date
+    birthyear: int
     smoker: bool = False
     pregnant: bool = False
     positive_tested: bool = False
