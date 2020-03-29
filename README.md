@@ -10,7 +10,7 @@ Der Arbeitsfortschritt zum Zeitpunkt der Abgabe des Hackathons ist unter dem git
 
 Der Technologiestack der Webapp:
 * React.js Frontend
-* Flask (Python) Backend
+* FastAPI (Python) Backend
 * Google Cloud Firestore NoSQL Datenbank
 
 [Confluence-Doku inklusive Guide zum Aufsetzen des Projekts](https://penny-private.atlassian.net/wiki/spaces/C/pages/23724078/Aufsetzen+des+Entwicklungsprojekts)
