@@ -7,18 +7,14 @@ from typing import List
 # import our app. Otherwise we receive a "missing credentials" exception.
 from starlette.testclient import TestClient
 
+from api import User, Anamnesis
+
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'firebase_key.json'
 # We need to suppress the PEP8 error 'import not at top'
 from db import UsersDb  # noqa: E402
 
-COMMENT = u'Ich mag keinen Käse'
-CITY = u'Hamburg'
-ZIP_CODE = 70736
-STREET_W_HOUSE_NO = u'Best road 14a'
-LAST_NAME = u'Bar'
-FIRST_NAME = u'Foo'
-EVENT_NAME = u'Waldheim 2020, 3. Durchgang'
 TEST_USER_NAME = u'UnitTestUser1337'
+NON_EXISTING_USER_NAME = u'9012nsdkfl0912k'
 
 os.environ['PORT'] = '8080'
 
@@ -34,7 +30,12 @@ class TestApi(unittest.TestCase):
         from app import app
         self.client = TestClient(app)
         # Create a document in the database for the test user.
-        UsersDb.set_user(TEST_USER_NAME)
+        UsersDb.set_user(User(username=TEST_USER_NAME,
+                              anamnesis=Anamnesis(
+                                  gender='male',
+                                  residence=22765,
+                                  birthyear=1951
+                              )))
 
     def tearDown(self):
         from db import firestore_client, registrations_coll
@@ -66,7 +67,7 @@ class TestApi(unittest.TestCase):
         """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
         post_in = {'username': TEST_USER_NAME,
                    'gender': 'm',
-                   'residence': 12345,
+                   'residence': 22765,
                    'birthyear': 1960}
         resp = self.client.post('/api/anamneses', json=post_in)
         assert resp.status_code == 200
@@ -74,12 +75,16 @@ class TestApi(unittest.TestCase):
         for key, value in post_in.items():
             assert post_out[key] == value
 
-    # def test_user_exists(self):
-    #     """When I check if an existing user is saved in the firestore db i get a 200 code"""
-    #     with self.app.test_client() as client:
-    #         get_result = client.get('/api/check',  query_string={'user': TEST_USER_NAME})
-    #         assert b'User exists' in get_result.data
-    #
+    def test_user_exists_returns_200(self):
+        """Check if a status code 200 is returned if a user exists."""
+        resp = self.client.get(f"/api/users?username={TEST_USER_NAME}")
+        assert resp.status_code == 200
+
+    def test_user_not_exists_returns_404(self):
+        """Check if a status code 204 is returned if a user does not exists"""
+        resp = self.client.get(f"/api/users?username={NON_EXISTING_USER_NAME}")
+        assert resp.status_code == 404
+
     # def test_get_all_users(self):
     #     """test if all users are returned"""
     #     with self.app.test_client() as client:

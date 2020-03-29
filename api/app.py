@@ -5,13 +5,18 @@ import uvicorn
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from firebase_admin import initialize_app
+from pydantic.main import BaseModel
 
-from model.api import Record, Anamnesis
-from model.db import RecordsDb, AnamnesesDb
+from model.api import Record, Anamnesis, User
+from model.db import RecordsDb, AnamnesesDb, UsersDb
 
 app = FastAPI()
 # Initialize Firestore DB
 firebase_app = initialize_app()
+
+
+class ReturnMessage(BaseModel):
+    message: str
 
 
 @app.get('/api/records', response_model=List[Record], status_code=200)
@@ -29,7 +34,7 @@ async def get_records(username: str):
     return records
 
 
-@app.post('/api/anamneses', response_model=Anamnesis, status_code=200)
+@app.post('/api/anamneses', response_model=Anamnesis, status_code=200, responses={404: {"model": ReturnMessage}})
 async def set_anamneses(anamnesis: Anamnesis):
     """Create or update the anamneses record for a specific user."""
     try:
@@ -37,24 +42,26 @@ async def set_anamneses(anamnesis: Anamnesis):
         return anamnesis
     except LookupError:
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND,
-                            content={f"User '{anamnesis.username}' is not yet registered in the database."})
+                            content={"message": f"User '{anamnesis.username}' is not yet created."})
 
 
-# @main.get('/users')
-# async def get_all_users():
-#     users = UsersDb.get_all_users()
-#     if users is []:
-#         return "Not found.", 404
-#     else:
-#         return jsonify(users), 200
-#
-# @main.get('/check')
-# async def check_if_users_exist():
-#     user = request.args.get('user')
-#     if UsersDb.check_if_user_exists(user):
-#         return "User exists", 200
-#     return jsonify(UsersDb.get), 404
-#
+@app.get('/api/users', response_model=List[User], status_code=200, responses={404: {"model": ReturnMessage}})
+async def get_users(username: str = None):
+    """Get user record.
+    :param username: Optional - if a username is provided the record for that user will be returned.
+    :return: Userrecord and status code 200 if at least one user is found.
+             Status code 400 if nothing is found or the requested user does not exist.
+    """
+    if username is not None:
+        try:
+            return [UsersDb.get(username)]
+        except LookupError:
+            return JSONResponse(status_code=status.HTTP_404_NOT_FOUND,
+                                content={"message": f"User '{username}' is not yet created."})
+    else:
+        return UsersDb.get_all()
+
+
 # @main.post('/records')
 # async def set_record():
 #     """Create or update a new daily medical record"""

@@ -30,7 +30,7 @@ class Record(BaseModel):
 
 
 class Anamnesis(BaseModel):
-    username: str
+    username: str = None
     gender: str
     residence: int
     birthyear: int
@@ -47,3 +47,8 @@ class Anamnesis(BaseModel):
     cancer: bool = False
     immunodeficiency: bool = False
     miscellaneous: str = None
+
+
+class User(BaseModel):
+    username: str
+    anamnesis: Anamnesis = None
