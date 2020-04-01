@@ -18,19 +18,21 @@ class Symptoms(BaseModel):
     limb_pain: int = 0
     sniffles: bool = False
     sore_throat: int = 0
-    fever: int = 0
+    fever: float = 0.0
     diarrhoea: bool = False
 
 
 class Record(BaseModel):
-    """Symptoms record for a specific user and date."""
-    username: str
+    """Symptoms record for a specific date."""
     date: datetime.date
     symptoms: Symptoms
 
 
+class User(BaseModel):
+    username: str
+
+
 class Anamnesis(BaseModel):
-    username: str = None
     gender: str
     residence: int
     birthyear: int
@@ -47,8 +49,3 @@ class Anamnesis(BaseModel):
     cancer: bool = False
     immunodeficiency: bool = False
     miscellaneous: str = None
-
-
-class User(BaseModel):
-    username: str
-    anamnesis: Anamnesis = None
