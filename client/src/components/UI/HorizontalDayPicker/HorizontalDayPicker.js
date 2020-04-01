@@ -5,7 +5,7 @@ import DayItems from './DayItems/DayItems';
 import Arrow from './DayItems/Arrow/Arrow';
 
 import './overwrite.css';
-import classes from './HorizontalDayPicker.module.css';
+// import classes from './HorizontalDayPicker.module.css';
 
 class HorizontalDayPicker extends Component {
 

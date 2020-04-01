@@ -23,7 +23,7 @@ const button = ( props ) => {
                 <button
                     onClick={props.click}>
                     <div>{props.children}</div>
-            </button>
+                </button>
             </div>
         );
 }

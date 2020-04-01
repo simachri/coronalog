@@ -3,8 +3,6 @@ import React from "react";
 import InfoCard from './InfoCard/InfoCard';
 
 import classes from './InfoCards.module.css';
-import {toCss} from "../../../util/utility";
-import {HOME_CARDS} from "../../../contentConf/Home";
 
 const infoCards = ( props ) => {
     const cards = props.data.map((entry, idx) => (

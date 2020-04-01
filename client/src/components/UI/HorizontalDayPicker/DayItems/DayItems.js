@@ -3,7 +3,7 @@ import React from "react";
 import DayItem from './DayItem/DayItem';
 import AddDayItem from './AddDayItem/AddDayItem';
 
-import classes from './DayItems.module.css';
+// import classes from './DayItems.module.css';
 
 const dayInMs = 1000*60*60*24;
 
