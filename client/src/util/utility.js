@@ -40,3 +40,4 @@ export const checkValidity = ( value, rules ) => {
 }
 
 export const toCss = ( ...classNames) => classNames.join(' ');
+export const arrToCss = arr => arr.join(' ');

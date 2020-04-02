@@ -9,6 +9,16 @@
     border-radius: 15px 15px 0 15px;
 }
 
+.Bubble.Selected,
+.Bubble.Selected .Triangle {
+    color: #262C77;
+    background-color: #FFECC3;
+}
+
+.Bubble.Button {
+    cursor: pointer;
+}
+
 /*.Bubble:before {*/
 /*    content: ' ';*/
 /*    position: absolute;*/
