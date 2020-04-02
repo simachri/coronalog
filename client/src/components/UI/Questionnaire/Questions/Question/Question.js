@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import propTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons/faAngleDoubleDown";
 
@@ -18,5 +19,13 @@ class Question extends Component {
         );
     }
 }
+
+Question.propTypes = {
+    outerRef: propTypes.instanceOf(Object),
+    hideResume: propTypes.bool,
+    onResume: propTypes.func,
+    value: propTypes.string,
+    valueChanged: propTypes.func,
+};
 
 export default Question;

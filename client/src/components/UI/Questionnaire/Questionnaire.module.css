@@ -52,7 +52,11 @@
 }
 
 .Answer {
+    position: relative;
     margin: 10px 0;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
 }
 
 .AnswerSelect,
@@ -69,10 +73,63 @@
     position: absolute;
     bottom: 50px;
     right: 30px;
+    cursor: pointer;
 }
 
 .ResumeButton {
     position: absolute;
     bottom: 50px;
     right: 20px;
+}
+
+.AnswerInput {
+    z-index: -100;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 2em;
+    transition: opacity 0.5s ease;
+}
+
+.AnswerInput.Show {
+    opacity: 1;
+    z-index: auto;
+}
+
+.SlideUp {
+    transform: translateY(-3em);
+    animation: slide-up 0.3s ease;
+}
+
+.SlideDown {
+    transform: translateY(0);
+    animation: slide-down 0.3s ease;
+}
+
+@keyframes slide-up {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3em);
+    }
+    100% {
+        transform: translateY(-3em);
+    }
+}
+
+@keyframes slide-down {
+    0% {
+        transform: translateY(-3em);
+    }
+    50% {
+        transform: translateY(-3em);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.AnswerInput.Hide {
+    opacity: 0;
 }

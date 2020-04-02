@@ -7,12 +7,10 @@ class GeneralAnamnesis extends Component {
 
     render() {
         return (
-            <Questions qSpecs={GENERAL_ANAMNESIS_QUESTIONS} />
+            <Questions qSpecs={GENERAL_ANAMNESIS_QUESTIONS}  />
         );
     }
 
 }
-
-GeneralAnamnesis.propTypes = {};
 
 export default GeneralAnamnesis;

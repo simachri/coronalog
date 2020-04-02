@@ -1,24 +1,89 @@
-import React from "react";
+import React, { Component } from "react";
+import propTypes from 'prop-types';
 
 import classes from '../../Questionnaire.module.css';
 import Bubble from "../../../Bubble/Bubble";
+import TextInput from "../../../TextInput/TextInput";
+import {arrToCss} from "../../../../../util/utility";
 
-const options = ( props ) => (
-    <div className={classes.Question}>
-        <div className={classes.Header}>{props.header}</div>
-        <div className={classes.SubHeader}>{props.subHeader}</div>
-        <div className={classes.Answers}>
-            {props.answers.map((val, idx) => (
-                <div key={val} className={classes.Answer}>
-                    <Bubble key={val + idx} text={val} clicked={() => console.log('click')}/>
-                </div>
-            ))}
-        </div>
-        <div className={classes.NoAnswer} onClick={props.onNoAnswer}>
-            {props.noAnswerText}
-        </div>
-    </div>
-);
+class Options extends Component {
 
-export default options;
-export const TYPE_START = 'type_start';
+    state = {
+        textInput: ''
+    };
+
+   render() {
+
+      const answers = this.props.answers.map( answer => {
+          const answerIsSelected = (!answer.textInput && answer.value === this.props.value) || (answer.textInput && this.props.extraTextSelected);
+          const inputClasses = [classes.AnswerInput];
+          if(answer.textInput){
+              if(answerIsSelected){
+                  inputClasses.push(classes.Show);
+              } else {
+                  inputClasses.push(classes.Hide);
+              }
+          }
+          return (
+              <div key={answer.id} className={classes.Answer}>
+                  <div className={this.props.extraTextSelected ? classes.SlideUp : classes.SlideDown}>
+                      <Bubble
+                          selected={answerIsSelected}
+                          text={answer.label}
+                          clicked={() => this.props.valueChanged(
+                              !answer.textInput ? answer.value : this.state.textInput,
+                              answer.textInput
+                          )}
+                      />
+                  </div>
+                  {answer.textInput
+                      ?
+                      <div className={arrToCss(inputClasses)}>
+                          <TextInput
+                              name={answer.label}
+                              val={this.state.textInput}
+                              inputChangedHandler={(event) => {
+                                  this.setState({textInput: event.target.value});
+                                  this.props.valueChanged(event.target.value, true);
+                              }}
+                          />
+                      </div>
+                      : null
+                  }
+              </div>
+          );
+      });
+
+      return (
+         <div className={classes.Question}>
+            <div className={classes.Header}>{this.props.header}</div>
+            <div className={classes.SubHeader}>{this.props.subHeader}</div>
+            <div className={classes.Answers}>
+               {answers}
+            </div>
+            <div className={classes.NoAnswer} onClick={this.props.onNoAnswer}>
+               {this.props.noAnswerText}
+            </div>
+         </div>
+      );
+   }
+}
+
+Options.propTypes = {
+    header: propTypes.string.isRequired,
+    subHeader: propTypes.string,
+    answers: propTypes.arrayOf(propTypes.shape({
+        id: propTypes.number,
+        label: propTypes.string,
+        value: propTypes.string,
+        textInput: propTypes.bool,
+    })).isRequired,
+    noAnswerText: propTypes.string,
+    onNoAnswer: propTypes.func,
+    extraTextSelected: propTypes.bool,
+    value: propTypes.string.isRequired,
+    valueChanged: propTypes.func.isRequired,
+};
+
+export default Options;
+export const TYPE_OPTIONS = 'type_options';

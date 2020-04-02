@@ -1,29 +1,30 @@
-import React, {useState} from 'react';
+import React from 'react';
+import propTypes from 'prop-types';
 
 import classes from './TextInput.module.css';
 
 const TextInput = ( props ) => {
 
-    const [val, setVal] = useState('');
-
-    const inputChangedHandler = ( event ) => {
-        if(props.verify.test(event.target.value)){
-            setVal(event.target.value);
-        }
-    };
-
     return (
         <div className={classes.InputWrapper}>
-            <label>{props.label}</label>
+           {props.label ? <label>{props.label}</label> : null}
             <input
                 type='text'
                 name={props.name}
                 placeholder={props.placeholder}
-                value={val}
-                onChange={inputChangedHandler}
+                value={props.val}
+                onChange={props.inputChangedHandler}
             />
         </div>
     )
+};
+
+TextInput.propTypes = {
+    val: propTypes.string,
+    inputChangedHandler: propTypes.func,
+    label: propTypes.string,
+    name: propTypes.string.isRequired,
+    placeholder: propTypes.string,
 };
 
 export default TextInput;
