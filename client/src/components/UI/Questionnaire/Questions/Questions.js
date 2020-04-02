@@ -8,13 +8,15 @@ import SelectPage, {TYPE_SELECT} from '../QTypes/Select/Select';
 import InputPage, {TYPE_TEXT_INPUT} from "../QTypes/TextInput/TextInput";
 import Question from "./Question/Question";
 
-const mapToComp = ( obj, ref, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer ) => {
+const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer ) => {
     switch(obj.type){
         case TYPE_START:
             return (
                 <Question
                     key={obj.name}
                     outerRef={ref}
+                    onGoBack={onGoBack}
+                    hideBack={hideBack}
                     onResume={resumeHandler}
                     hideResume={hideResume}
                 >
@@ -29,6 +31,8 @@ const mapToComp = ( obj, ref, hideResume, resumeHandler, value, extraSelected, v
                 <Question
                     key={obj.name}
                     outerRef={ref}
+                    onGoBack={onGoBack}
+                    hideBack={hideBack}
                     onResume={resumeHandler}
                     hideResume={hideResume}
                 >
@@ -46,6 +50,8 @@ const mapToComp = ( obj, ref, hideResume, resumeHandler, value, extraSelected, v
                 <Question
                     key={obj.name}
                     outerRef={ref}
+                    onGoBack={onGoBack}
+                    hideBack={hideBack}
                     onResume={resumeHandler}
                     hideResume={hideResume}
                 >
@@ -62,6 +68,8 @@ const mapToComp = ( obj, ref, hideResume, resumeHandler, value, extraSelected, v
                 <Question
                     key={obj.name}
                     outerRef={ref}
+                    onGoBack={onGoBack}
+                    hideBack={hideBack}
                     onResume={resumeHandler}
                     hideResume={hideResume}
                 >
@@ -126,18 +134,27 @@ class Questions extends Component {
         return () => scrollTo(allRefs[idx + 1]);
     };
 
+    getGoBackHandler = ( elementRef, allRefs ) => {
+        const idx = allRefs.findIndex( ref => ref === elementRef);
+        if(idx < 0 || idx >= allRefs.length) return null;
+        return () => scrollTo(allRefs[idx - 1]);
+    };
+
     render() {
         const questions = [];
         const refs = [];
-        this.props.qSpecs.forEach( (pageSpec) => {
+        this.props.qSpecs.forEach( (pageSpec, idx) => {
             refs.push(React.createRef());
+            const hideBack = idx === 0;
             const hideResume = this.props.qSpecs.slice(-1)[0] === pageSpec ? true : false;
             questions.push(
                 mapToComp(
                     pageSpec,
                     refs.slice(-1)[0],
+                    hideBack,
+                    (!hideBack ? this.getGoBackHandler(refs.slice(-1)[0], refs) : null),
                     hideResume,
-                    this.getResumeHandler(refs.slice(-1)[0], refs),
+                    (!hideResume ? this.getResumeHandler(refs.slice(-1)[0], refs) : null),
                     (pageSpec.type !== TYPE_START ? this.state[pageSpec.name].value : null),
                     (pageSpec.type === TYPE_OPTIONS ? this.state[pageSpec.name].extraSelected : null),
                     (value, extraSelected = false) => this.valChangedHandler(pageSpec.name, value, extraSelected)
