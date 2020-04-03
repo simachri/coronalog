@@ -4,6 +4,7 @@ from typing import List, Tuple
 from firebase_admin import firestore
 # noinspection PyPackageRequirements
 # noinspection PyPackageRequirements
+from google.cloud.firestore_v1 import Client
 from google.cloud.firestore_v1.collection import CollectionReference
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.document import DocumentReference
@@ -12,7 +13,7 @@ from google.cloud.firestore_v1.transforms import Sentinel
 from models import Record, Anamnesis, Symptoms, User
 
 
-def firestore_client() -> firestore:
+def firestore_client() -> Client:
     return firestore.client()
 
 
