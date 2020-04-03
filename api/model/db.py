@@ -149,7 +149,9 @@ class RecordsDb:
         date_str = convert_date_to_str(record.date)
         record_ref: DocumentReference = firestore_client().collection('users/' + user.username + '/records').document(
                 date_str)
-        record_ref.set(record.symptoms.dict(), merge=True)
+        # We do not want default values to overwrite existing values so we only fetch the values
+        # that have been explicitely set for the model.
+        record_ref.set(record.symptoms.dict(exclude_unset=True), merge=True)
         db_data = record_ref.get().to_dict()
         return Record(date=date_str, symptoms=Symptoms.parse_obj(db_data))
 

@@ -49,7 +49,7 @@ class TestApi(unittest.TestCase):
         resp = self.client.get(f"/api/records?username={TEST_USER_NAME}")
         assert resp.status_code == 200
         data: List = resp.json()
-        assert len(data) == len(dates)
+        assert len(data) == len(dates), f'{len(data)} == {len(dates)}'
         for result in data:
             assert 'date' in result
             self.assertIn(result['date'], dates)
@@ -123,7 +123,34 @@ class TestApi(unittest.TestCase):
             assert result_value == value, f"Result value '{result_value}' does not equal expected value '{value}'."
 
     def test_update_record_merge_is_performed(self):
-        self.fail('Not yet implemented.')
+        """When a symptoms record is updated, make sure that the data is merged on the DB."""
+        date = '2020-04-01'
+        initial_data = {'user': {'username': TEST_USER_NAME},
+                        'record': {
+                            'date': date,
+                            'symptoms': {
+                                'cough_intensity': 30,
+                                'cough_type': 'produktiv',
+                                'cough_color': 'green',
+                                'breathlessness': True,
+                                'fatigued': False,
+                                'sore_throat': 30,
+                                'fever': 38.6,
+                                'diarrhoea': False
+                                }
+                            }
+                        }
+        self.client.post('/api/records', json=initial_data)
+        update_data = self.create_symptoms_record(date, TEST_USER_NAME)
+        update_resp = self.client.post('/api/records', json=update_data)
+        assert update_resp.status_code == 200.
+        result_json = update_resp.json()
+        for key, value in update_data['record']['symptoms'].items():
+            assert result_json['symptoms'][key] == value
+        assert result_json['symptoms']['cough_intensity'] == 30
+        assert result_json['symptoms']['limb_pain'] == 10
+        assert result_json['symptoms']['cough_color'] == 'yellow'
+        assert result_json['symptoms']['sniffles'] is True
 
     def test_update_anamnesis_merge_is_performed(self):
         """When an anamnesis record is updated, make sure that the data is merged on the DB."""
