@@ -40,7 +40,9 @@ class UsersDb:
         if anamnesis is None:
             anamnesis_data = {}
         else:
-            anamnesis_data = anamnesis.dict()
+            # We do not want default values to overwrite existing values so we only fetch the values
+            # that have been explicitely set for the model.
+            anamnesis_data = anamnesis.dict(exclude_unset=True)
         doc_ref: DocumentReference = firestore_client().collection(u'users').document(user.username)
         doc_ref.set(anamnesis_data, merge=True)
         return Anamnesis.parse_obj(doc_ref.get().to_dict())
@@ -149,5 +151,7 @@ class AnamnesesDb:
         :return: DocumentReference of the new document created.
         """
         user_ref: DocumentReference = firestore_client().collection('users').document(username)
-        user_ref.set(anamnesis.dict(), merge=True)
+        # We do not want default values to overwrite existing values so we only fetch the values
+        # that have been explicitely set for the model.
+        user_ref.set(anamnesis.dict(exclude_unset=True), merge=True)
         return Anamnesis.parse_obj(user_ref.get().to_dict())

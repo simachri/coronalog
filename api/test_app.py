@@ -121,33 +121,41 @@ class TestApi(unittest.TestCase):
             result_value = result_data['symptoms'][key]
             assert result_value == value, f"Result value '{result_value}' does not equal expected value '{value}'."
 
-# def test_update_anamnesis_merge_is_performed(self):
-#     """When a new symptoms record is created, make sure that all symptoms are written to the DB."""
-#     with self.app.test_client() as client:
-#         gender = 'f'
-#         birthyear = 1960
-#         initial_test_doc = {'user': TEST_USER_NAME,
-#                             'characteristics': {
-#                                 'gender': gender,
-#                                 'residence': 12345,
-#                                 'birthyear': birthyear
-#                             }
-#                             }
-#         # Now, we update the residence and add a new value for chronic_liver_disease.
-#         update_doc = {'user': TEST_USER_NAME,
-#                       'characteristics': {
-#                           'residence': 4711,
-#                           'chronic_liver_disease': 'Anything'
-#                       }
-#                       }
-#         client.post('/api/anamneses', json=initial_test_doc, follow_redirects=True)
-#         second_post_result = client.post('/api/anamneses', json=update_doc, follow_redirects=True)
-#         result_doc = json.loads(second_post_result.data.decode('utf-8'))
-#         for key, value in update_doc['characteristics'].items():
-#             assert result_doc[key] == value
-#         assert result_doc['gender'] == gender
-#         assert result_doc['birthyear'] == birthyear
-#
+    def test_update_record_merge_is_performed(self):
+        self.fail('Not yet implemented.')
+
+    def test_update_anamnesis_merge_is_performed(self):
+        """When a symptoms record is updated, make sure that the data is merged on the DB."""
+        gender = 'f'
+        birthyear = 1960
+        residence = 12345
+        chronic_liver_disease = True
+        initial_data = {'user': {'username': TEST_USER_NAME},
+                        'anamnesis_data': {
+                            'gender': gender,
+                            'residence': residence,
+                            'birthyear': birthyear,
+                            'chronic_liver_disease': chronic_liver_disease
+                            }
+                        }
+        # Now, we update the residence and add a new value for chronic_liver_disease.
+        infection_contact = 'A'
+        update_data = {'user': {'username': TEST_USER_NAME},
+                       'anamnesis_data': {
+                           'gender': gender,
+                           'residence': residence,
+                           'birthyear': birthyear,
+                           'infection_contact': infection_contact,
+                           }
+                       }
+        self.client.post('/api/anamneses', json=initial_data)
+        update_resp = self.client.post('/api/anamneses', json=update_data)
+        assert update_resp.status_code == 200.
+        result_json = update_resp.json()
+        for key, value in update_data['anamnesis_data'].items():
+            assert result_json[key] == value
+            assert result_json['chronic_liver_disease'] is chronic_liver_disease
+            assert result_json['infection_contact'] == infection_contact
 
     @staticmethod
     def create_two_records(client, user_name, dates: List):
