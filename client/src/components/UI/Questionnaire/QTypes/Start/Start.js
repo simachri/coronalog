@@ -13,4 +13,4 @@ const start = ( props ) => (
 );
 
 export default start;
-export const TYPE_OPTIONS = 'type_options';
+export const TYPE_START = 'type_start';

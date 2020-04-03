@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react"
 
 import TabNav from '../../components/navigation/TabNav/TabNav';
 import Navbar from '../../components/navigation/Navbar/Navbar';
-import Bubble from '../../components/UI/Bubble/Bubble';
 import { NAV_BAR_AT } from '../../contentConf/General';
 
 import {ReactComponent as AnalysisIcon} from "../../assets/nav_analysis_icon.svg";

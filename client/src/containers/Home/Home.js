@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { toCss } from '../../util/utility';
 import { HOME_CARDS, HOME_CARDS_BOTTOM } from "../../contentConf/Home";
 import { NavLink } from "react-router-dom";

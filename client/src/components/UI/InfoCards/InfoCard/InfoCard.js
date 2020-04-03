@@ -1,7 +1,6 @@
 import React from "react";
 
 import classes from './InfoCard.module.css';
-import {toCss} from "../../../../util/utility";
 
 const infoCard = ( props ) => (
     <div className={classes.InfoCard}>

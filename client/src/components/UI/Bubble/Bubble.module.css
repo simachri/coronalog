@@ -7,6 +7,33 @@
     text-align: center;
     line-height: 3.5rem;
     border-radius: 15px 15px 0 15px;
+    transition: all 0.1s ease;
+}
+
+.Bubble.Selected {
+    animation: select 0.1s ease;
+}
+
+.Bubble.Selected,
+.Bubble.Selected .Triangle {
+    color: #262C77;
+    background-color: #FFECC3;
+}
+
+@keyframes select {
+    0% {
+        transform: scale(1);
+    }
+    66% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.Bubble.Button {
+    cursor: pointer;
 }
 
 /*.Bubble:before {*/
@@ -59,6 +86,7 @@
     right: -2.4px;
     background-color: #262C77;
     text-align: left;
+    transition: all 0.1s ease;
 }
 
 .Triangle:after{
