@@ -1,13 +1,14 @@
 import datetime
-from typing import List, Tuple
+from typing import List, Tuple, Sequence
 
 from firebase_admin import firestore
 # noinspection PyPackageRequirements
+from google.cloud.firestore_v1 import Client, WriteBatch
 # noinspection PyPackageRequirements
-from google.cloud.firestore_v1 import Client
 from google.cloud.firestore_v1.collection import CollectionReference
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.document import DocumentReference
+# noinspection PyPackageRequirements
 from google.cloud.firestore_v1.transforms import Sentinel
 
 from models import Record, Anamnesis, Symptoms, User
@@ -24,6 +25,27 @@ def get_timestamp() -> Sentinel:
 
 def convert_date_to_str(date: datetime.date) -> str:
     return date.strftime('%Y-%m-%d')
+
+
+def delete_doc(batch: WriteBatch, doc: DocumentReference):
+    """Delete the given document with reference to a WriteBatch.
+
+    Does NOT perform a commit.
+    """
+    batch.delete(doc)
+
+
+def delete_subcolls(batch: WriteBatch, doc: DocumentReference):
+    """Delete documents within all subcollections of the provided document."""
+    colls: Sequence[CollectionReference] = doc.collections()
+    for coll in colls:
+        for subcoll_doc_ref in coll.list_documents():
+            delete_subcolls(batch, subcoll_doc_ref)
+        # The break is required such that the 'else' block below is executed if colls is empty.
+        break
+    else:
+        # No collections within the provided document
+        delete_doc(batch, doc)
 
 
 class UsersDb:
@@ -47,8 +69,15 @@ class UsersDb:
 
     @staticmethod
     def delete_user(username):
-        """Delete a user record."""
-        firestore_client().collection(u'users').document(username).delete()
+        """Delete a user record including all its documents of its subcollections.
+
+        When a document in Firestore is deleted, the documents of its subcollections are not deleted,
+        see https://firebase.google.com/docs/firestore/solutions/delete-collections
+        """
+        batch: WriteBatch = firestore_client().batch()
+        user_doc: DocumentReference = firestore_client().collection(u'users').document(username)
+        delete_subcolls(batch, user_doc)
+        batch.commit()
 
     @staticmethod
     def get_all() -> List[User]:
