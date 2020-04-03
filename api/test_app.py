@@ -182,8 +182,8 @@ class TestApi(unittest.TestCase):
         result_json = update_resp.json()
         for key, value in update_data['anamnesis_data'].items():
             assert result_json[key] == value
-            assert result_json['chronic_liver_disease'] is chronic_liver_disease
-            assert result_json['infection_contact'] == infection_contact
+        assert result_json['chronic_liver_disease'] is chronic_liver_disease
+        assert result_json['infection_contact'] == infection_contact
 
     @staticmethod
     def create_two_records(client, user_name, dates: List):
