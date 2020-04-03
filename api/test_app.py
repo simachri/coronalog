@@ -40,6 +40,7 @@ class TestApi(unittest.TestCase):
                                  ))
 
     def tearDown(self):
+        """Test teardown; is called after every unit test"""
         UsersDb.delete_user(TEST_USER_NAME)
 
     def test_get_all_records_for_user_is_ok(self):
@@ -125,7 +126,7 @@ class TestApi(unittest.TestCase):
         self.fail('Not yet implemented.')
 
     def test_update_anamnesis_merge_is_performed(self):
-        """When a symptoms record is updated, make sure that the data is merged on the DB."""
+        """When an anamnesis record is updated, make sure that the data is merged on the DB."""
         gender = 'f'
         birthyear = 1960
         residence = 12345
