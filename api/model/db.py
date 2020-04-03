@@ -7,24 +7,21 @@ from firebase_admin import firestore
 from google.cloud.firestore_v1.collection import CollectionReference
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.document import DocumentReference
+from google.cloud.firestore_v1.transforms import Sentinel
 
 from models import Record, Anamnesis, Symptoms, User
 
 
-def firestore_client():
+def firestore_client() -> firestore:
     return firestore.client()
 
 
-def registrations_coll():
-    return firestore_client().collection('registrations')
-
-
-def get_timestamp():
+def get_timestamp() -> Sentinel:
     """Returns a server timestamp."""
     return firestore.firestore.SERVER_TIMESTAMP
 
 
-def convert_date_to_str(date: datetime.date):
+def convert_date_to_str(date: datetime.date) -> str:
     return date.strftime('%Y-%m-%d')
 
 
