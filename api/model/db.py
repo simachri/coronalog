@@ -121,7 +121,8 @@ class RecordsDb:
         record_ref: DocumentReference = firestore_client().collection('users/' + user.username + '/records').document(
                 date_str)
         record_ref.set(record.symptoms.dict(), merge=True)
-        return Record.parse_obj(record_ref.get().to_dict())
+        db_data = record_ref.get().to_dict()
+        return Record(date=date_str, symptoms=Symptoms.parse_obj(db_data))
 
 
 class AnamnesesDb:
