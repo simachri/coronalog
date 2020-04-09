@@ -36,4 +36,5 @@ Question.propTypes = {
     valueChanged: propTypes.func,
 };
 
+export const NO_ANSWER = 123456789;
 export default Question;

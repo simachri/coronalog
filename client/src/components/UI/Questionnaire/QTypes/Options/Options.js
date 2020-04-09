@@ -5,6 +5,7 @@ import classes from '../../Questionnaire.module.css';
 import Bubble from "../../../Bubble/Bubble";
 import TextInput from "../../../TextInput/TextInput";
 import {arrToCss} from "../../../../../util/utility";
+import {NO_ANSWER} from '../../Questions/Question/Question';
 
 class Options extends Component {
 
@@ -54,6 +55,11 @@ class Options extends Component {
           );
       });
 
+      const noAnswerClasses = [classes.NoAnswer];
+      if(this.props.value === NO_ANSWER){
+          noAnswerClasses.push(classes.NoAnswerSelected);
+      }
+
       return (
          <div className={classes.Question}>
             <div className={classes.Header}>{this.props.header}</div>
@@ -61,7 +67,10 @@ class Options extends Component {
             <div className={classes.Answers}>
                {answers}
             </div>
-            <div className={classes.NoAnswer} onClick={this.props.onNoAnswer}>
+            <div 
+                className={arrToCss(noAnswerClasses)}
+                onClick={this.props.onNoAnswer}
+                >
                {this.props.noAnswerText}
             </div>
          </div>
@@ -81,7 +90,10 @@ Options.propTypes = {
     noAnswerText: propTypes.string,
     onNoAnswer: propTypes.func,
     extraTextSelected: propTypes.bool,
-    value: propTypes.string.isRequired,
+    value: propTypes.oneOfType([
+        propTypes.string,
+        propTypes.number
+    ]),
     valueChanged: propTypes.func.isRequired,
 };
 

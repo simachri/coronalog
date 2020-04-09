@@ -21,7 +21,7 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             {id: 0, label: 'Weiblich', value: 'w'},
             {id: 1, label: 'Männlich', value: 'm'},
             {id: 2, label: 'Divers', value: 'd'},
-            {id: 3, label: 'Other', value: '', textInput: true}
+            // {id: 3, label: 'Other', value: '', textInput: true}
         ],
         infoHref: 'https://rki.de',
         noAnswerText: 'Möchte ich nicht sagen'

@@ -81,6 +81,28 @@
     bottom: 50px;
     right: 30px;
     cursor: pointer;
+    display: block;
+    padding: 3px 10px;
+
+    transition: background .1s ease;
+}
+
+.NoAnswerSelected {
+    background: #FFECC3;
+    border-radius: 10px;
+    animation: select .1s ease;
+}
+
+@keyframes select {
+    0% {
+        transform: scale(1);
+    }
+    66% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .ResumeButton {

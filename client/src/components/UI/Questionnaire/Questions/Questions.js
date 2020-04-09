@@ -6,7 +6,7 @@ import StartPage, {TYPE_START} from "../QTypes/Start/Start";
 import OptionsPage, {TYPE_OPTIONS} from "../QTypes/Options/Options";
 import SelectPage, {TYPE_SELECT} from '../QTypes/Select/Select';
 import InputPage, {TYPE_TEXT_INPUT} from "../QTypes/TextInput/TextInput";
-import Question from "./Question/Question";
+import Question, { NO_ANSWER } from "./Question/Question";
 
 const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer ) => {
     switch(obj.type){
@@ -157,7 +157,8 @@ class Questions extends Component {
                     (!hideResume ? this.getResumeHandler(refs.slice(-1)[0], refs) : null),
                     (pageSpec.type !== TYPE_START ? this.state[pageSpec.name].value : null),
                     (pageSpec.type === TYPE_OPTIONS ? this.state[pageSpec.name].extraSelected : null),
-                    (value, extraSelected = false) => this.valChangedHandler(pageSpec.name, value, extraSelected)
+                    (value, extraSelected = false) => this.valChangedHandler(pageSpec.name, value, extraSelected),
+                    () => this.valChangedHandler(pageSpec.name, NO_ANSWER)
                 )
             );
         });
