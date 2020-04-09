@@ -23,6 +23,7 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             {id: 2, label: 'Divers', value: 'd'},
             // {id: 3, label: 'Other', value: '', textInput: true}
         ],
+        val: null,
         infoHref: 'https://rki.de',
         noAnswerText: 'Möchte ich nicht sagen'
     },
@@ -34,6 +35,7 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             from: 1900,
             to: 2020
         },
+        val: null,
         header: 'In welchem Jahr bist du geboren?',
         noAnswerText: 'Möchte ich nicht sagen'
     },
@@ -42,7 +44,7 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
         header: 'Wo wohnst du?',
         subHeader: 'Bitte gib deine PLZ ein',
         name: 'plz',
-        verify:  /^[0-9]{0,5}$/, // /^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/, //plz
+        verify:  /^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/, //plz
         placeholder: 'PLZ',
         val: '',
         noAnswerText: 'Möchte ich nicht sagen'

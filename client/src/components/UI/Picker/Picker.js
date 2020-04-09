@@ -42,10 +42,13 @@ export const TYPE_YEAR = 'type_year';
 
 picker.propTypes = {
     type: propTypes.oneOf([TYPE_YEAR]),
-    to: propTypes.number.isRequired,
-    from: propTypes.number.isRequired,
+    to: propTypes.number,
+    from: propTypes.number,
     name: propTypes.string.isRequired,
-    value: propTypes.number,
+    value: propTypes.oneOfType([
+        propTypes.number,
+        propTypes.string
+    ]),
     changed: propTypes.func
 };
 

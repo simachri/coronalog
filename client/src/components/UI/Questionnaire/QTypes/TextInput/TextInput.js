@@ -3,8 +3,16 @@ import propTypes from 'prop-types';
 
 import classes from '../../Questionnaire.module.css';
 import TextInput from "../../../TextInput/TextInput";
+import {NO_ANSWER} from '../../Questions/Question/Question';
+import {arrToCss} from '../../../../../util/utility';
 
 const textInput = ( props ) => {
+
+    const noAnswerClasses = [classes.NoAnswer];
+    if(props.value === NO_ANSWER){
+        noAnswerClasses.push(classes.NoAnswerSelected);
+    }
+
     return(
         <div className={classes.Question}>
             <div className={classes.Header}>{props.header}</div>
@@ -14,10 +22,15 @@ const textInput = ( props ) => {
                     name={props.name}
                     placeholder={props.placeholder}
                     verify={props.verify}
+                    val={props.value !== NO_ANSWER ? props.value : ''}
+                    inputChangedHandler={event => props.valueChanged(event.target.value)}
                 />
             </div>
-            <div className={classes.NoAnswer} onClick={props.onNoAnswer}>
-                {props.noAnswerText}
+            <div 
+                className={arrToCss(noAnswerClasses)}
+                onClick={props.onNoAnswer}
+            >
+               {props.noAnswerText}
             </div>
         </div>
     );
@@ -28,8 +41,14 @@ textInput.propTypes = {
     subHeader: propTypes.string,
     name: propTypes.string.isRequired,
     placeholder: propTypes.string,
+    verify: propTypes.objectOf(RegExp),
     onNoAnswer: propTypes.func,
     noAnswerText: propTypes.string,
+    value: propTypes.oneOfType([
+        propTypes.string,
+        propTypes.number
+    ]).isRequired,
+    valueChanged: propTypes.func.isRequired
 };
 
 export const TYPE_TEXT_INPUT = 'type_text_input';

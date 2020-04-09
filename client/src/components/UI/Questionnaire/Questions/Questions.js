@@ -94,11 +94,12 @@ class Questions extends Component {
         for (let curConf of this.props.qSpecs){
             switch(curConf.type){
                 case TYPE_OPTIONS:
-                    const selectedVal = curConf.answers.find(answer => answer.selected);
+                    const selectedId = curConf.val;
+                    const selectedAnswer = curConf.answers.find(answer => answer.id === selectedId);
                     initState[curConf.name] = {};
-                    if(selectedVal) {
-                        initState[curConf.name].value = selectedVal.value;
-                        initState[curConf.name].extraSelected = selectedVal.textInput === true;
+                    if(selectedAnswer) {
+                        initState[curConf.name].value = selectedAnswer.value;
+                        initState[curConf.name].extraSelected = selectedAnswer.textInput === true;
                     }
                     else {
                         initState[curConf.name].value = '';
@@ -106,10 +107,14 @@ class Questions extends Component {
                     }
                     break;
                 case TYPE_TEXT_INPUT:
-                    initState[curConf.name] = {value: curConf.value};
+                    initState[curConf.name] = {
+                        value: curConf.val ? curConf.val : ''
+                    };
                     break;
                 case TYPE_SELECT:
-                    initState[curConf.name] = {value: curConf.selected};
+                    initState[curConf.name] = {
+                        value: curConf.val ? curConf.val : ''
+                    };
                     break;
                 default:
                     break;

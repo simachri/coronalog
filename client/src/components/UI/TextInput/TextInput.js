@@ -6,7 +6,11 @@ import classes from './TextInput.module.css';
 const TextInput = ( props ) => {
 
     return (
-        <div className={classes.InputWrapper}>
+        <div className={
+            classes.InputWrapper + 
+            ' ' +
+            (!props.val || props.verify.test(props.val) ? classes.Valid : classes.Invalid)
+        }>
            {props.label ? <label>{props.label}</label> : null}
             <input
                 type='text'
@@ -20,7 +24,10 @@ const TextInput = ( props ) => {
 };
 
 TextInput.propTypes = {
-    val: propTypes.string,
+    val: propTypes.oneOfType([
+        propTypes.string,
+        propTypes.number
+    ]),
     inputChangedHandler: propTypes.func,
     label: propTypes.string,
     name: propTypes.string.isRequired,

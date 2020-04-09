@@ -16,6 +16,10 @@
     transition: all 0.3s ease;
 }
 
-.InputWrapper input:focus {
+.InputWrapper.Valid input {
     border-bottom-color: #262C77;
+}
+
+.InputWrapper.Invalid input {
+    border-bottom-color: rgb(255, 64, 64);
 }

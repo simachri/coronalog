@@ -93,7 +93,7 @@ Options.propTypes = {
     value: propTypes.oneOfType([
         propTypes.string,
         propTypes.number
-    ]),
+    ]).isRequired,
     valueChanged: propTypes.func.isRequired,
 };
 
