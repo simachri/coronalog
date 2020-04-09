@@ -1,17 +1,23 @@
 import React from "react";
+import propTypes from 'prop-types';
 
 import classes from '../../Questionnaire.module.css';
 import Picker, {TYPE_YEAR} from '../../../Picker/Picker';
+import {NO_ANSWER} from '../../Questions/Question/Question';
+import {arrToCss} from '../../../../../util/utility';
 
-const mapToComp = ( obj ) => {
-    switch(obj.select_type){
+const mapToComp = ( spec ) => {
+    switch(spec.type){
         case TYPE_YEAR:
             return (
                 <Picker
-                    name={obj.name}
+                    name={spec.name}
                     type={TYPE_YEAR}
-                    from={obj.from}
-                    to={obj.to}
+                    from={spec.from}
+                    to={spec.to}
+                    value={spec.value}
+                    grey={spec.value === NO_ANSWER}
+                    changed={(event) => spec.changeHander(parseInt(event.target.value))}
                 />
             );
         default:
@@ -20,18 +26,46 @@ const mapToComp = ( obj ) => {
 };
 
 const select = ( props ) => {
+
+    const noAnswerClasses = [classes.NoAnswer];
+    if(props.value === NO_ANSWER){
+        noAnswerClasses.push(classes.NoAnswerSelected);
+    }
+
     return(
         <div className={classes.Question}>
             <div className={classes.Header}>{props.header}</div>
             <div className={classes.SubHeader}>{props.subHeader}</div>
             <div className={classes.AnswerSelect}>
-                {mapToComp(props)}
+                {mapToComp({...props.selectSpec,
+                     name: props.name,
+                     changeHander: props.valueChanged,
+                     value: props.value
+                     })}
             </div>
-            <div className={classes.NoAnswer} onClick={props.onNoAnswer}>
-                {props.noAnswerText}
+            <div 
+                className={arrToCss(noAnswerClasses)}
+                onClick={props.onNoAnswer}
+            >
+               {props.noAnswerText}
             </div>
         </div>
     );
+};
+
+select.propTypes = {
+    header: propTypes.string.isRequired,
+    subHeader: propTypes.string,
+    selectSpec: propTypes.shape({
+        type: propTypes.oneOf([TYPE_YEAR]),
+        from: propTypes.number,
+        to: propTypes.number,
+        selected: propTypes.number
+    }).isRequired,
+    name: propTypes.string.isRequired,
+    valueChanged: propTypes.func.isRequired,
+    onNoAnswer: propTypes.func,
+    noAnswerText: propTypes.string,
 };
 
 export const TYPE_SELECT = 'type_select';

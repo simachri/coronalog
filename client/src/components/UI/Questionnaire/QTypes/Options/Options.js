@@ -70,7 +70,7 @@ class Options extends Component {
             <div 
                 className={arrToCss(noAnswerClasses)}
                 onClick={this.props.onNoAnswer}
-                >
+            >
                {this.props.noAnswerText}
             </div>
          </div>

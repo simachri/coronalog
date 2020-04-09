@@ -141,6 +141,7 @@ class Questions extends Component {
     };
 
     render() {
+        console.log(this.state)
         const questions = [];
         const refs = [];
         this.props.qSpecs.forEach( (pageSpec, idx) => {

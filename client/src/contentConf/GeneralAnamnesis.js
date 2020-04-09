@@ -28,11 +28,12 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
     },
     {
         type: TYPE_SELECT,
-        select_type: TYPE_YEAR,
         name: 'year',
-        from: 1900,
-        to: 2020,
-        selected: 1980,
+        selectSpec: {
+            type: TYPE_YEAR,
+            from: 1900,
+            to: 2020
+        },
         header: 'In welchem Jahr bist du geboren?',
         noAnswerText: 'Möchte ich nicht sagen'
     },
