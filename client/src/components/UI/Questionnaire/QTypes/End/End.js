@@ -6,6 +6,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import classes from '../../Questionnaire.module.css';
 import Button from './../../../Button/Button';
 import Spinner from './../../../Spinner/Spinner';
+import {ReactComponent as Header} from "../../../../../assets/end_page_header.svg";
 
 const end = (props) => {
 
@@ -20,6 +21,7 @@ const end = (props) => {
 
     return (
         <div className={classes.Question}>
+            <Header  className={classes.EndPageHeader}/>
             <div className={classes.Header}>{props.header}</div>
             <div className={classes.SubHeader}>{props.subHeader}</div>
             

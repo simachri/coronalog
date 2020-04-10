@@ -170,3 +170,8 @@
     position: absolute;
     bottom: 100px;
 }
+
+.EndPageHeader {
+    width: calc(100% + 40px);
+    transform: translate(-20px, -20px);
+}
