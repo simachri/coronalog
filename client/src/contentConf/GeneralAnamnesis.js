@@ -1,4 +1,6 @@
 import React, {Fragment} from "react";
+import { Link } from 'react-router-dom';
+
 import {TYPE_OPTIONS} from "../components/UI/Questionnaire/QTypes/Options/Options";
 import {TYPE_START} from "../components/UI/Questionnaire/QTypes/Start/Start";
 import { ReactComponent as InfoCircle} from '../assets/info_circle.svg';
@@ -11,7 +13,12 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
         type: TYPE_START,
         name: 'start',
         header: 'Hallo, wir müssen dich näher kennenlernen, um dich besser unterstützen zu können',
-        subHeader: <Fragment>Wozu werden diese Daten benötigt? <InfoCircle /></Fragment>,
+        subHeader: (
+            <Fragment>
+                Wozu werden diese Daten benötigt? 
+                <Link to='/info'><InfoCircle /></Link>
+            </Fragment>
+        ),
     },
     {
         type: TYPE_OPTIONS,

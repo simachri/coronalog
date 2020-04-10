@@ -22,6 +22,7 @@ class App extends Component {
                 <Route path='/dashboard' component={Dashboard} />
                 <Route path='/questionnaire' component={Questionnaire} />
                 <Route path='/user-info' component={GeneralAnamnesis} />
+                <Route path='/info' render={() => <h1>Info Page</h1>} />
                 <Redirect to="/" />
             </Switch>
         );

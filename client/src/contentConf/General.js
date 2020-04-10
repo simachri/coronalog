@@ -1,1 +1,1 @@
-export const NAV_BAR_AT = ['/', '/dashboard'];
+export const NAV_BAR_AT = ['/', '/dashboard', '/info'];
