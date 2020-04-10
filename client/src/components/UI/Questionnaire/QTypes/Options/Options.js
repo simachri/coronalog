@@ -80,7 +80,10 @@ class Options extends Component {
 
 Options.propTypes = {
     header: propTypes.string.isRequired,
-    subHeader: propTypes.string,
+    subHeader: propTypes.oneOfType([
+        propTypes.string,
+        propTypes.element
+    ]),
     answers: propTypes.arrayOf(propTypes.shape({
         id: propTypes.number,
         label: propTypes.string,

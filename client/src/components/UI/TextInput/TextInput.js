@@ -9,7 +9,7 @@ const TextInput = ( props ) => {
         <div className={
             classes.InputWrapper + 
             ' ' +
-            (!props.val || props.verify.test(props.val) ? classes.Valid : classes.Invalid)
+            (!props.val || !props.verify || props.verify.test(props.val) ? classes.Valid : classes.Invalid)
         }>
            {props.label ? <label>{props.label}</label> : null}
             <input

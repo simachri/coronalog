@@ -8,6 +8,7 @@ import SelectPage, {TYPE_SELECT} from '../QTypes/Select/Select';
 import InputPage, {TYPE_TEXT_INPUT} from "../QTypes/TextInput/TextInput";
 import Question, { NO_ANSWER } from "./Question/Question";
 import EndPage, { TYPE_END } from './../QTypes/End/End';
+import MultiOptionsPage, { TYPE_MULTI_OPTIONS } from './../QTypes/MultiOptions/MultiOptions';
 
 const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer ) => {
     switch(obj.type){
@@ -41,6 +42,24 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                         {...obj}
                         value={value}
                         extraTextSelected={extraSelected}
+                        valueChanged={valueChangedHandler}
+                        onNoAnswer={onNoAnswer}
+                    />
+                </Question>
+            );
+        case TYPE_MULTI_OPTIONS:
+            return(
+                <Question
+                    key={obj.name}
+                    outerRef={ref}
+                    onGoBack={onGoBack}
+                    hideBack={hideBack}
+                    onResume={resumeHandler}
+                    hideResume={hideResume}
+                >
+                    <MultiOptionsPage
+                        {...obj}
+                        value={value}
                         valueChanged={valueChangedHandler}
                         onNoAnswer={onNoAnswer}
                     />
@@ -121,6 +140,11 @@ class Questions extends Component {
                         initState[curConf.name].value = '';
                         initState[curConf.name].extraSelected = false;
                     }
+                    break;
+                case TYPE_MULTI_OPTIONS:
+                    initState[curConf.name] = {
+                        value: curConf.val ? curConf.val : []
+                    };
                     break;
                 case TYPE_TEXT_INPUT:
                     initState[curConf.name] = {

@@ -32,7 +32,6 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             // {id: 3, label: 'Other', value: '', textInput: true}
         ],
         val: null,
-        infoHref: 'https://rki.de',
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {
