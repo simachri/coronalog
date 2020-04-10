@@ -164,6 +164,7 @@ class Questions extends Component {
     }
 
     valChangedHandler = (name, val, extraSelected = false) => {
+        console.log(val)
         const newState = {
             [name] : {
                 value: val,
