@@ -7,6 +7,7 @@ import { ReactComponent as InfoCircle} from '../assets/info_circle.svg';
 import {TYPE_SELECT} from "../components/UI/Questionnaire/QTypes/Select/Select";
 import {TYPE_YEAR} from "../components/UI/Picker/Picker";
 import {TYPE_TEXT_INPUT} from "../components/UI/Questionnaire/QTypes/TextInput/TextInput";
+import { TYPE_END } from './../components/UI/Questionnaire/QTypes/End/End';
 
 export const GENERAL_ANAMNESIS_QUESTIONS = [
     {
@@ -55,5 +56,12 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
         placeholder: 'PLZ',
         val: '',
         noAnswerText: 'Möchte ich nicht sagen'
+    },
+    {
+        type: TYPE_END,
+        name: 'end',
+        header: 'Das ist schon alles!',
+        showSaveButton: true,
+        saveButtonText: 'Speichern',
     }
 ];

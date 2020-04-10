@@ -7,6 +7,7 @@ import OptionsPage, {TYPE_OPTIONS} from "../QTypes/Options/Options";
 import SelectPage, {TYPE_SELECT} from '../QTypes/Select/Select';
 import InputPage, {TYPE_TEXT_INPUT} from "../QTypes/TextInput/TextInput";
 import Question, { NO_ANSWER } from "./Question/Question";
+import EndPage, { TYPE_END } from './../QTypes/End/End';
 
 const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer ) => {
     switch(obj.type){
@@ -78,6 +79,21 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                         value={value}
                         valueChanged={valueChangedHandler}
                         onNoAnswer={onNoAnswer}
+                    />
+                </Question>
+            );
+        case TYPE_END:
+            return (
+                <Question
+                    key={obj.name}
+                    outerRef={ref}
+                    onGoBack={onGoBack}
+                    hideBack={hideBack}
+                    onResume={resumeHandler}
+                    hideResume={hideResume}
+                >
+                    <EndPage
+                        {...obj}
                     />
                 </Question>
             );
@@ -161,7 +177,7 @@ class Questions extends Component {
                     (!hideBack ? this.getGoBackHandler(refs.slice(-1)[0], refs) : null),
                     hideResume,
                     (!hideResume ? this.getResumeHandler(refs.slice(-1)[0], refs) : null),
-                    (pageSpec.type !== TYPE_START ? this.state[pageSpec.name].value : null),
+                    (pageSpec.type !== TYPE_START && pageSpec.type !== TYPE_END ? this.state[pageSpec.name].value : null),
                     (pageSpec.type === TYPE_OPTIONS ? this.state[pageSpec.name].extraSelected : null),
                     (value, extraSelected = false) => this.valChangedHandler(pageSpec.name, value, extraSelected),
                     () => this.valChangedHandler(pageSpec.name, NO_ANSWER)
