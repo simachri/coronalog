@@ -4,20 +4,17 @@ import propTypes from 'prop-types';
 import classes from './DayPicker.module.scss';
 import DayItem from './DayItem/DayItem';
 import AddDayItem from './AddDayItem/AddDayItem';
+import { arrContainsDay, sameDay } from './../../../util/utility';
+import { withRouter } from 'react-router-dom';
 
 const dayInMs = 1000*60*60*24;
 
-const sameDay = (d1, d2) => {
-    return d1.getFullYear() === d2.getFullYear() &&
-            d1.getMonth() === d2.getMonth() &&
-            d1.getDate() === d2.getDate();
-}
-
-const arrContainsDay = (arr, day) => {
-    return arr.some(el => sameDay(day, el));
-}
-
 class DayPicker extends Component {
+
+    addDayClickedHandler = () => {
+        this.props.history.push('/daily-q');
+    }
+
     render() {
 
         const startDate = this.props.startAt;
@@ -31,7 +28,7 @@ class DayPicker extends Component {
                     <DayItem key={startDate.getTime()} date={startDate} blueBg checked />
                 );
             } else {
-                days.push(<AddDayItem key={startDate.getTime()} />);
+                days.push(<AddDayItem key={startDate.getTime()} onClick={this.addDayClickedHandler} />);
             }
             startIdx = 1;
         }
@@ -42,7 +39,7 @@ class DayPicker extends Component {
             if(this.props.checkedDays){
                 checked = arrContainsDay(this.props.checkedDays, date);
             }
-            
+
             days.push(
                 <DayItem key={date.getTime()} date={date} checked={checked}/>
             );
@@ -61,4 +58,4 @@ DayPicker.propTypes = {
     checkedDays: propTypes.arrayOf(Date)
 };
 
-export default DayPicker;
+export default withRouter(DayPicker);

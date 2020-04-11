@@ -41,3 +41,13 @@ export const checkValidity = ( value, rules ) => {
 
 export const toCss = ( ...classNames) => classNames.join(' ');
 export const arrToCss = arr => arr.join(' ');
+
+export const sameDay = (d1, d2) => {
+    return d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getDate() === d2.getDate();
+}
+
+export const arrContainsDay = (arr, day) => {
+    return arr.some(el => sameDay(day, el));
+}

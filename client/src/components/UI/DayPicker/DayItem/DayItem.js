@@ -21,7 +21,7 @@ const DayItem = (props) => {
     const checkClasses = [classes.Checkmark];
     if(!props.checked){
         checkClasses.push(classes.hidden);
-    }    
+    }
 
     const itemClasses = [classes.DayItem];
     if(props.blueBg){
