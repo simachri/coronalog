@@ -64,7 +64,7 @@ class Dashboard extends Component {
                     <p className={classes.dmSerifDisplay}>Hallo,</p>
                     <p>deine tägliche Auswertung <br/> wartet auf dich</p>
                 </div>
-                <DayPicker startAt={new Date()} amountDays={30}/>
+                <DayPicker startAt={new Date()} amountDays={30} checkedDays={[]}/>
                 <div className={classes.RadarChart}>
                     <RadarChart size={300} dashboardData={this.mapStateToDashboard()}/>
                 </div>

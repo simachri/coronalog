@@ -6,6 +6,12 @@
     text-align: center;
     min-width: 3rem;
     min-height: 4rem;
+
+    &.BlueBg {
+        color: #fff;
+        background-color: #252A7C;
+        margin-right: .8rem;
+    }
     
     &:not(:last-child) {
         margin-left: .5rem;

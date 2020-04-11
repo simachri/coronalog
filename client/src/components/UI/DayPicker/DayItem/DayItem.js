@@ -23,8 +23,13 @@ const DayItem = (props) => {
         checkClasses.push(classes.hidden);
     }    
 
+    const itemClasses = [classes.DayItem];
+    if(props.blueBg){
+        itemClasses.push(classes.BlueBg);
+    }
+
     return (
-        <div className={classes.DayItem}>
+        <div className={arrToCss(itemClasses)}>
             <div className={arrToCss(checkClasses)}>
                 <FontAwesomeIcon icon={faCheck} />
             </div>
@@ -36,7 +41,8 @@ const DayItem = (props) => {
 };
 DayItem.propTypes = {
     checked: propTypes.bool,
-    date: propTypes.objectOf(Date).isRequired
+    date: propTypes.objectOf(Date).isRequired,
+    blueBg: propTypes.bool,
 };
 
 export default DayItem;
