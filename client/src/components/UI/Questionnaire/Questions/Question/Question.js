@@ -13,13 +13,13 @@ class Question extends Component {
                 {this.props.children}
                 {!this.props.hideBack
                     ?   <div className={classes.Back} onClick={this.props.onGoBack}>
-                        <FontAwesomeIcon icon={faAngleDoubleUp} />
-                    </div>
+                            <FontAwesomeIcon icon={faAngleDoubleUp} />
+                        </div>
                     : null}
                 {!this.props.hideResume
                     ?   <div className={classes.Resume} onClick={this.props.onResume}>
-                        <FontAwesomeIcon icon={faAngleDoubleDown} />
-                    </div>
+                            <FontAwesomeIcon icon={faAngleDoubleDown} />
+                        </div>
                     : null}
             </div>
         );

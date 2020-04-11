@@ -7,18 +7,20 @@
     overflow: hidden;
 }
 
-.Resume {
+.Resume,
+.Back {
     position: absolute;
-    bottom: 50px;
     left: 20px;
     cursor: pointer;
+    font-size: 2rem;
+}
+
+.Resume {
+    bottom: 50px;
 }
 
 .Back {
-    position: absolute;
-    bottom: 80px;
-    left: 20px;
-    cursor: pointer;
+    bottom: calc(70px + 2rem);
 }
 
 .Anamnesis {

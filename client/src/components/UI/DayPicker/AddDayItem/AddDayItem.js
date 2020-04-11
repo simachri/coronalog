@@ -1,12 +1,12 @@
 import React from "react";
 
-import classes from './AddDayItem.module.css';
+import classes from './AddDayItem.module.scss';
 
-const addDayItem = ( props ) => (
+const AddDayItem = ( props ) => (
     <div className={classes.AddDayItem}>
         <div className={classes.AddSymbol}>+</div>
         <div className={classes.AddDescr}>Heute</div>
     </div>
 );
 
-export default addDayItem;
+export default AddDayItem;

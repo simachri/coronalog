@@ -1,0 +1,22 @@
+.AddDayItem {
+    background-color: #FB4B62;
+    border-radius: 13px;
+    color: #fff;
+    padding: 0 .8rem;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    margin: 0 .8rem;
+
+    .AddSymbol {
+        font-size: 1.8rem;
+        line-height: 1.8rem;
+        text-align: center;
+    }
+    
+    .AddDescr {
+        font-size: .9rem;
+        line-height: .9rem;
+    }
+
+}

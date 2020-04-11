@@ -1,0 +1,30 @@
+.DayItem {
+    background-color: #FFECC8;
+    border-radius: 10px;
+    color: #252A7C;
+    padding: .3rem .8rem;
+    text-align: center;
+    min-width: 3rem;
+    min-height: 4rem;
+    
+    &:not(:last-child) {
+        margin-left: .5rem;
+    }
+
+    .Checkmark {
+        font-size: .8rem;
+    }
+    
+    .WeekdayLabel {
+        font-size: 1rem;
+    }
+    
+    .DayLabel {
+        font-size: 0.7rem;
+    }
+
+}
+
+.hidden {
+    visibility: hidden;
+}

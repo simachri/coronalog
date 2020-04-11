@@ -1,11 +1,11 @@
 import React, {Component, Fragment} from "react";
 
-import HorizontalDayPicker from "../../components/UI/HorizontalDayPicker/HorizontalDayPicker";
 import RadarChart from '../../components/UI/RadarChart/RadarChart';
 
 import classes from './Dashboard.module.css';
-
-const axios = require('axios').default;
+import axios from 'axios';
+import DayPicker from './../../components/UI/DayPicker/DayPicker';
+// const axios = require('axios').default;
 
 class Dashboard extends Component {
 
@@ -64,7 +64,7 @@ class Dashboard extends Component {
                     <p className={classes.dmSerifDisplay}>Hallo,</p>
                     <p>deine tägliche Auswertung <br/> wartet auf dich</p>
                 </div>
-                <HorizontalDayPicker/>
+                <DayPicker startAt={new Date()} amountDays={30}/>
                 <div className={classes.RadarChart}>
                     <RadarChart size={300} dashboardData={this.mapStateToDashboard()}/>
                 </div>
