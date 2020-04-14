@@ -1,5 +1,9 @@
 export {
     signin,
     signinSuccess,
-    signinFail
+    signinFail,
+    logout,
+    signup,
+    signupFail,
+    signupSuccess
 } from './auth';

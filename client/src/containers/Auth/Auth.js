@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
-import propTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
 import classes from './Auth.module.scss';
 import TextInput from '../../components/UI/TextInput/TextInput';
@@ -10,15 +10,75 @@ import Spinner from './../../components/UI/Spinner/Spinner';
 
 class Auth extends Component {
 
-    state = {
-        username: '',
+    constructor(props){
+        super(props);
+        this.state = {
+            username: '',
+            isSignin: this.getIsSignin()
+        }
+    }
+
+    getIsSignin = () => {
+        const params = new URLSearchParams(this.props.location.search);
+        switch(params.get('method')){
+            case 'signin':
+                return true;
+            case 'signup':
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    changeMethodHandler = () => {
+        this.setState(prevState => {
+            const newMethod = prevState.isSignin ? 'signup' : 'signin';
+            this.props.history.replace({
+                search: '?method=' + newMethod
+            });
+            return {isSignin: !prevState.isSignin};
+        })
     }
 
     render() {
 
+        let error = null;
+        if(this.props.errorMsg){
+            error = <p>{this.props.errorMsg}</p>;
+        }
+
+        let inputArea = null;
+        if(this.props.isSignedIn){
+            inputArea = 'Angemeldet als ' + this.props.username;
+        } else {
+            inputArea = (
+                <TextInput 
+                    val={this.state.username}
+                    inputChangedHandler={event => this.setState({username: event.target.value})}
+                    name='username'
+                    placeholder='Dein Nutzername'
+                    verify={/^(?!\s*$).+/}
+                />
+            );
+        }
+
+        let submitCaption = '';
+        let submitMethod = null;
+        if(this.props.isSignedIn){
+            submitCaption = 'Logout';
+            submitMethod = () => this.props.logout();
+        } else {
+            if(this.state.isSignin){
+                submitCaption = 'Anmelden';
+                submitMethod = () => this.props.signin(this.state.username);
+            } else {
+                submitCaption = 'Registrieren';
+                submitMethod = () => this.props.signup(this.state.username);
+            }
+        }
         let submitButton = (
-            <Button click={() => this.props.signin(this.state.username)}>
-                {this.props.isSignup ? 'Registrieren' : 'Anmelden'}
+            <Button click={submitMethod}>
+                {submitCaption}
             </Button>
         );
         if(this.props.loading){
@@ -31,41 +91,39 @@ class Auth extends Component {
                     Coronalog
                 </h1>
                 <div className={classes.Card}>
+                    {error}
                     <div className={classes.UsernameInput}>
-                        <TextInput 
-                            val={this.state.username}
-                            inputChangedHandler={event => this.setState({username: event.target.value})}
-                            name='username'
-                            placeholder='Dein Nutzername'
-                            verify={/^(?!\s*$).+/}
-                        />
+                        {inputArea}
                     </div>
                     <div className={classes.Submit}>
                         {submitButton}
                     </div>
-                    <div className={classes.SwitchMode}>
-                        {this.props.isSignup ? 'Bereits registriert?' : 'Jetzt registrieren'}
+                    <div className={classes.SwitchMode} onClick={this.changeMethodHandler}>
+                        {this.state.isSignin ? 'Jetzt registrieren' : 'Bereits registriert?'}
                     </div>
                 </div>
             </div>
         )
     }
 }
-Auth.propTypes = {
-    isSignup: propTypes.bool
-};
 
 const mapStateToProps = state => {
     return {
         isSignedIn: state.auth.username !== null,
-        loading: state.auth.loading
+        username: state.auth.username,
+        loading: state.auth.loading,
+        errorMsg: state.auth.errorMsg
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        signin: (username) => dispatch(actions.signin(username))
+        signin: (username) => dispatch(actions.signin(username)),
+        signup: (username) => dispatch(actions.signup(username)),
+        logout: () => dispatch(actions.logout())
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(
+    withRouter(Auth)
+);

@@ -7,16 +7,43 @@ export const signin = (username) => {
     };
 };
 
-export const signinFail = (err) => {
+export const signinFail = (msg) => {
     return {
         type: actionTypes.AUTH_SIGNIN_FAIL,
-        error: err
+        msg: msg
     };
 };
 
 export const signinSuccess = (username) => {
     return {
         type: actionTypes.AUTH_SIGNIN_SUCCESS,
+        username: username
+    };
+};
+
+export const logout = (username) => {
+    return {
+        type: actionTypes.AUTH_LOGOUT
+    };
+};
+
+export const signup = (username) => {
+    return {
+        type: actionTypes.AUTH_SIGNUP,
+        username: username
+    };
+};
+
+export const signupFail = (msg) => {
+    return {
+        type: actionTypes.AUTH_SIGNUP_FAIL,
+        msg: msg
+    };
+};
+
+export const signupSuccess = (username) => {
+    return {
+        type: actionTypes.AUTH_SIGNUP_SUCCESS,
         username: username
     };
 };

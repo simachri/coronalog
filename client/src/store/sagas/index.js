@@ -6,5 +6,6 @@ import { takeEvery, all } from 'redux-saga/effects';
 export function* authWatcher() {
     yield all([
         takeEvery(actionTypes.AUTH_SIGNIN, authSagas.signin),
+        takeEvery(actionTypes.AUTH_SIGNUP, authSagas.signup)
     ]);
 }
