@@ -87,7 +87,11 @@ Options.propTypes = {
     answers: propTypes.arrayOf(propTypes.shape({
         id: propTypes.number,
         label: propTypes.string,
-        value: propTypes.string,
+        value: propTypes.oneOfType([
+            propTypes.string,
+            propTypes.number,
+            propTypes.bool
+        ]),
         textInput: propTypes.bool,
     })).isRequired,
     noAnswerText: propTypes.string,
@@ -95,7 +99,8 @@ Options.propTypes = {
     extraTextSelected: propTypes.bool,
     value: propTypes.oneOfType([
         propTypes.string,
-        propTypes.number
+        propTypes.number,
+        propTypes.bool
     ]).isRequired,
     valueChanged: propTypes.func.isRequired,
 };

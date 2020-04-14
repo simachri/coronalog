@@ -58,6 +58,51 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {
+        type: TYPE_OPTIONS,
+        name: 'positive_tested',
+        header: 'Wurdest du positiv auf Covid-19 getestet?',
+        answers: [
+            {id: 0, label: 'Ja', value: true},
+            {id: 1, label: 'Nein', value: false},
+        ],
+        val: null,
+        noAnswerText: 'Möchte ich nicht sagen'
+    },
+    {
+        type: TYPE_OPTIONS,
+        name: 'risk_area_stay',
+        header: 'Hast du dich in den letzen 2 Wochen (vor der Erkrankung) in einem Risikogebiet aufgehalten?',
+        answers: [
+            {id: 0, label: 'Ja', value: true},
+            {id: 1, label: 'Nein', value: false},
+        ],
+        val: null,
+        noAnswerText: 'Möchte ich nicht sagen'
+    },
+    {
+        type: TYPE_OPTIONS,
+        name: 'infection_contact',
+        header: 'Hattest du in den letzten zwei Wochen Kontakt zu einer infizierten Person?',
+        answers: [
+            {id: 0, label: 'Ja', value: 'yes'},
+            {id: 1, label: 'Nein', value: 'no'},
+            {id: 2, label: 'Weiß nicht', value: 'don\'t know'},
+        ],
+        val: null,
+        noAnswerText: 'Möchte ich nicht sagen'
+    },
+    {
+        type: TYPE_OPTIONS,
+        name: 'medication',
+        header: 'Nimmst du Medikamente?',
+        answers: [
+            {id: 0, label: 'Nein', value: 'no'},
+            {id: 1, label: 'Ja', value: '', textInput: true}
+        ],
+        val: null,
+        noAnswerText: 'Möchte ich nicht sagen'
+    },
+    {
         type: TYPE_MULTI_OPTIONS,
         name: 'pre_existing_conditions',
         header: 'Hast du eine oder mehrere der folgenden Vorerkrankungen?',
@@ -74,6 +119,18 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             id: 'miscellaneous',
             label: 'Sonstige'
         },
+        val: {},
+        noAnswerText: 'Möchte ich nicht sagen'
+    }, 
+    {
+        type: TYPE_MULTI_OPTIONS,
+        name: 'personal_conditions',
+        header: 'Was hiervon trifft auf dich zu?',
+        subHeader: 'some info',
+        options: [
+            {id: 'smoker', label: 'Raucher'},
+            {id: 'pregnant', label: 'Schwanger'},
+        ],
         val: {},
         noAnswerText: 'Möchte ich nicht sagen'
     },
