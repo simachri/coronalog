@@ -122,7 +122,7 @@
     transition: opacity 0.5s ease;
 }
 
-.AnswerInput.Show {
+.Show {
     opacity: 1;
     z-index: auto;
 }
@@ -161,7 +161,7 @@
     }
 }
 
-.AnswerInput.Hide {
+.Hide {
     opacity: 0;
 }
 

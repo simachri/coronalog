@@ -60,6 +60,7 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                     <MultiOptionsPage
                         {...obj}
                         value={value}
+                        extraSelected={extraSelected}
                         valueChanged={valueChangedHandler}
                         onNoAnswer={onNoAnswer}
                     />
@@ -142,9 +143,17 @@ class Questions extends Component {
                     }
                     break;
                 case TYPE_MULTI_OPTIONS:
-                    initState[curConf.name] = {
-                        value: curConf.val ? curConf.val : []
-                    };
+                    initState[curConf.name] = { value: {}};
+                    for (let option of curConf.options) {
+                        initState[curConf.name].value[option.id] = curConf.val[option.id] ? true : false;
+                    }
+                    if (curConf.addOptions) {
+                        initState[curConf.name].value[curConf.addOptions.id] = curConf.val[curConf.addOptions.id];
+                        initState[curConf.name].extraSelected = curConf.val[curConf.addOptions.id] ? true : false;
+                    } else {
+                        initState[curConf.name].extraSelected = false;
+                    }
+                    console.log(initState[curConf.name])
                     break;
                 case TYPE_TEXT_INPUT:
                     initState[curConf.name] = {
@@ -203,7 +212,7 @@ class Questions extends Component {
                     hideResume,
                     (!hideResume ? this.getResumeHandler(refs.slice(-1)[0], refs) : null),
                     (pageSpec.type !== TYPE_START && pageSpec.type !== TYPE_END ? this.state[pageSpec.name].value : null),
-                    (pageSpec.type === TYPE_OPTIONS ? this.state[pageSpec.name].extraSelected : null),
+                    (pageSpec.type === TYPE_OPTIONS || pageSpec.type === TYPE_MULTI_OPTIONS ? this.state[pageSpec.name].extraSelected : null),
                     (value, extraSelected = false) => this.valChangedHandler(pageSpec.name, value, extraSelected),
                     () => this.valChangedHandler(pageSpec.name, NO_ANSWER)
                 )

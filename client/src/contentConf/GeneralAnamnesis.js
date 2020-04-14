@@ -8,6 +8,7 @@ import {TYPE_SELECT} from "../components/UI/Questionnaire/QTypes/Select/Select";
 import {TYPE_YEAR} from "../components/UI/Picker/Picker";
 import {TYPE_TEXT_INPUT} from "../components/UI/Questionnaire/QTypes/TextInput/TextInput";
 import { TYPE_END } from './../components/UI/Questionnaire/QTypes/End/End';
+import { TYPE_MULTI_OPTIONS } from './../components/UI/Questionnaire/QTypes/MultiOptions/MultiOptions';
 
 export const GENERAL_ANAMNESIS_QUESTIONS = [
     {
@@ -23,7 +24,7 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
     },
     {
         type: TYPE_OPTIONS,
-        name: 'sex',
+        name: 'gender',
         header: 'Welches Geschlecht hast du?',
         answers: [
             {id: 0, label: 'Weiblich', value: 'w'},
@@ -36,7 +37,7 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
     },
     {
         type: TYPE_SELECT,
-        name: 'year',
+        name: 'birthyear',
         selectSpec: {
             type: TYPE_YEAR,
             from: 1900,
@@ -48,12 +49,32 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
     },
     {
         type: TYPE_TEXT_INPUT,
+        name: 'residence',
         header: 'Wo wohnst du?',
         subHeader: 'Bitte gib deine PLZ ein',
-        name: 'plz',
         verify:  /^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/, //plz
         placeholder: 'PLZ',
         val: '',
+        noAnswerText: 'Möchte ich nicht sagen'
+    },
+    {
+        type: TYPE_MULTI_OPTIONS,
+        name: 'pre_existing_conditions',
+        header: 'Hast du eine oder mehrere der folgenden Vorerkrankungen?',
+        subHeader: 'some info',
+        options: [
+            {id: 'cardiovascular_desease', label: 'Herzkreislauferkrankung'},
+            {id: 'pulmonary_problems', label: 'Lungenprobleme'},
+            {id: 'chronic_liver_disease', label: 'Lebererkrankung'},
+            {id: 'diabetes_mellitus', label: 'Diabetes'},
+            {id: 'cancer', label: 'Krebs'},
+            {id: 'immunodeficiency', label: 'Immunschwäche'},
+        ],
+        addOptions: {
+            id: 'miscellaneous',
+            label: 'Sonstige'
+        },
+        val: {},
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {

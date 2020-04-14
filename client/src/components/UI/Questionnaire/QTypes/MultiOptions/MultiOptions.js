@@ -5,37 +5,80 @@ import classes from './MultiOptions.module.css';
 import qClasses from '../../Questionnaire.module.css';
 import { arrToCss } from './../../../../../util/utility';
 import { NO_ANSWER } from './../../Questions/Question/Question';
+import TextInput from './../../../TextInput/TextInput';
 
 class MultiOptions extends Component {
+
+    state = {
+        textInput: ''
+    };
+
+    optionSelected = (optionId, extraOption) => {
+        const newVal = {...this.props.value};
+        
+        if(!extraOption){
+            newVal[optionId] = !this.props.value[optionId];
+            this.props.valueChanged(newVal, this.props.extraSelected);
+        } else {
+            if(this.props.extraSelected){
+                newVal[optionId] =  null;
+                this.props.valueChanged(newVal, false);
+            } else {
+                newVal[optionId] =  this.state.textInput;
+                this.props.valueChanged(newVal, true);
+            }
+        }
+    }
+
+    textTyped = (event) => {
+        this.setState({textInput: event.target.value});
+        const newVal = {...this.props.value};
+        newVal[this.props.addOptions.id] = event.target.value;
+        this.props.valueChanged(newVal, true);
+    }
 
     render() {
 
         let options = this.props.options.map(option => (
             <div 
                 key={option.id} 
-                onClick={() => {
-                    if(this.props.value.constructor === Array && this.props.value.includes(option.id)){
-                        const newValue = [...this.props.value];
-                        newValue.splice(newValue.indexOf(option.id), 1);
-                        this.props.valueChanged(newValue);
-                    } else {
-                        this.props.valueChanged(
-                            this.props.value.constructor === Array 
-                                ? [...new Set([...this.props.value, option.id])]
-                                : [option.id]
-                        )
-                    }
-                }}
-                className={classes.Option + ' ' + (this.props.value.constructor === Array && this.props.value.includes(option.id) ? classes.Selected : '')}
+                onClick={() => this.optionSelected(option.id)}
+                className={classes.Option + ' ' + (this.props.value[option.id] ? classes.Selected : '')}
             >
                 {option.label}
             </div>
         ));
 
+        if(this.props.addOptions){
+            options.push(
+                <div
+                    key={this.props.addOptions.id}
+                    onClick={() => this.optionSelected(this.props.addOptions.id, true)}
+                    className={classes.Option + ' ' + (this.props.extraSelected ? classes.Selected : '')}
+                >
+                    {this.props.addOptions.label}
+                </div>
+            )
+        }
+
         const noAnswerClasses = [qClasses.NoAnswer];
         if(this.props.value === NO_ANSWER){
             noAnswerClasses.push(qClasses.NoAnswerSelected);
         }
+
+        const inputClass = this.props.extraSelected ? qClasses.Show : qClasses.Hide;
+
+        const textInput = (
+            this.props.addOptions ?
+                <div className={inputClass}>
+                    <TextInput
+                        name={this.props.addOptions.id}
+                        val={this.state.textInput}
+                        inputChangedHandler={(event) => this.textTyped(event)}
+                />
+                </div>
+                : null
+        );
 
         return (
             <div className={qClasses.Question}>
@@ -45,6 +88,8 @@ class MultiOptions extends Component {
                 <div className={classes.Options}>
                     {options}
                 </div>
+
+                {textInput}
 
                 <div 
                     className={arrToCss(noAnswerClasses)}
@@ -64,16 +109,20 @@ MultiOptions.propTypes = {
         propTypes.element
     ]),
     options: propTypes.arrayOf(propTypes.shape({
-        id: propTypes.number,
+        id: propTypes.string,
         label: propTypes.string,
     })).isRequired,
+    addOptions: propTypes.shape({
+        id: propTypes.string,
+        label: propTypes.string,
+    }),
+    extraSelected: propTypes.bool,
+    val: propTypes.shape({
+        id: propTypes.string,
+        val: propTypes.oneOfType([propTypes.bool, propTypes.string])
+    }).isRequired,
     noAnswerText: propTypes.string,
     onNoAnswer: propTypes.func,
-    value: propTypes.oneOfType([
-        propTypes.string,
-        propTypes.arrayOf(propTypes.number),
-        propTypes.number
-    ]).isRequired,
     valueChanged: propTypes.func.isRequired,
 };
 
