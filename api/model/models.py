@@ -31,6 +31,9 @@ class Record(BaseModel):
 class User(BaseModel):
     username: str
 
+class UserExists(BaseModel):
+    exists: bool
+
 
 class Anamnesis(BaseModel):
     gender: str

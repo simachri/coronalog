@@ -1,13 +1,14 @@
 import os
-from typing import List
+from typing import List, Tuple
 
 import uvicorn
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from firebase_admin import initialize_app
+from google.cloud.firestore_v1 import DocumentReference
 from pydantic.main import BaseModel
 
-from model.models import Record, Anamnesis, User
+from model.models import Record, Anamnesis, User, UserExists
 from model.db import RecordsDb, AnamnesesDb, UsersDb
 
 app = FastAPI()
@@ -18,6 +19,10 @@ firebase_app = initialize_app()
 class ReturnMessage(BaseModel):
     message: str
 
+@app.get('/api/check', response_model=UserExists, status_code=200)
+async def get_check(username: str):
+    exists, ref = UsersDb.exists(username)
+    return UserExists(exists=exists)
 
 @app.get('/api/records', response_model=List[Record], status_code=200)
 async def get_records(username: str):
