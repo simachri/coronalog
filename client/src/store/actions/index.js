@@ -7,8 +7,13 @@ export {
     signupFail,
     signupSuccess,
     startSignupProcess,
-    endSignupProcess
+    endSignupProcess,
+    resetRedirect
 } from './auth';
 export {
-    setAnamnesisData
+    setAnamnesisData,
+    resetAnamnesisData,
+    fetchAnamnesisData,
+    fetchAnamnesisDataSuccess,
+    fetchAnamnesisDataFail
 } from './anamnesis';

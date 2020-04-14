@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
@@ -10,7 +11,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import authReducer from './store/reducers/auth';
 import anamnesisReducer from './store/reducers/anamnesis';
-import { authWatcher } from './store/sagas/index';
+import { authWatcher, anamnesisWatcher } from './store/sagas/index';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -22,7 +23,7 @@ const rootReducer = combineReducers({
 const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(rootReducer, composeEnhancers(
-    applyMiddleware(sagaMiddleware)
+    applyMiddleware(sagaMiddleware, thunk)
 ));
 
 const app = (
@@ -34,6 +35,7 @@ const app = (
 );
 
 sagaMiddleware.run(authWatcher);
+sagaMiddleware.run(anamnesisWatcher);
 
 ReactDOM.render(app, document.getElementById('root'));
 

@@ -62,3 +62,9 @@ export const endSignupProcess = (username, anamnesisData) => {
         username: username
     };
 };
+
+export const resetRedirect = () => {
+    return {
+        type: actionTypes.RESET_REDIRECT,
+    };
+};

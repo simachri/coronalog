@@ -20,7 +20,7 @@ class Home extends Component {
                     <div className={classes.Logo}><Logo width={null} height={null} /></div>
                     <div className={classes.HeaderBg}><HeaderBg width={null} height={null} /></div>
                     <NavLink
-                        to='/user'
+                        to='/auth'
                         exact={true}>
                         <div className={classes.SignIn}>Anmelden</div>
                     </NavLink>
@@ -31,7 +31,7 @@ class Home extends Component {
 
                 <div className={classes.StartButton}>
                     <NavLink
-                        to='/user'
+                        to='/auth'
                         exact={true}>
                         <Button>Jetzt mitmachen</Button>
                     </NavLink>

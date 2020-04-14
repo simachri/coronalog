@@ -46,6 +46,11 @@ class Auth extends Component {
             return <Redirect to='user-info' />;
         }
 
+        if(this.props.redirect) {
+            this.props.resetRedirect();
+            return <Redirect to={this.props.redirect} />
+        }
+
         let error = null;
         if(this.props.errorMsg){
             error = <p>{this.props.errorMsg}</p>;
@@ -102,9 +107,12 @@ class Auth extends Component {
                     <div className={classes.Submit}>
                         {submitButton}
                     </div>
-                    <div className={classes.SwitchMode} onClick={this.changeMethodHandler}>
-                        {this.state.isSignin ? 'Jetzt registrieren' : 'Bereits registriert?'}
-                    </div>
+                    {!this.props.isSignedIn 
+                        ? 
+                            <div className={classes.SwitchMode} onClick={this.changeMethodHandler}>
+                                {this.state.isSignin ? 'Jetzt registrieren' : 'Bereits registriert?'}
+                            </div>
+                        : null}
                 </div>
             </div>
         )
@@ -117,7 +125,8 @@ const mapStateToProps = state => {
         username: state.auth.username,
         loading: state.auth.loading,
         errorMsg: state.auth.errorMsg,
-        inSignupProcess: state.auth.currentlySignup
+        inSignupProcess: state.auth.currentlySignup,
+        redirect: state.auth.redirectTo
     };
 };
 
@@ -125,7 +134,8 @@ const mapDispatchToProps = dispatch => {
     return {
         signin: (username) => dispatch(actions.signin(username)),
         signup: (username) => dispatch(actions.signup(username)),
-        logout: () => dispatch(actions.logout())
+        logout: () => dispatch(actions.logout()),
+        resetRedirect: () => dispatch(actions.resetRedirect())
     };
 };
 

@@ -5,7 +5,8 @@ const initialState = {
     username: null,
     loading: false,
     errorMsg: null,
-    currentlySignup: null
+    currentlySignup: null,
+    redirectTo: null
 };
 
 export default (state = initialState, action) => {
@@ -19,6 +20,7 @@ export default (state = initialState, action) => {
         case actionTypes.AUTH_LOGOUT: return logout(state, action);
         case actionTypes.START_SIGNUP_PROCESS: return startSignupProcess(state, action);
         case actionTypes.END_SIGNUP_PROCESS: return endSignupProcess(state, action);
+        case actionTypes.RESET_REDIRECT: return resetRedirect(state, action);
         default: return state;
     }
 };
@@ -34,7 +36,8 @@ const signinSuccess = (state, action) => {
     return updateObject(state, {
         username: action.username,
         loading: false,
-        errorMsg: null
+        errorMsg: null,
+        redirectTo: '/dashboard'
     });
 };
 
@@ -74,7 +77,8 @@ const signupSuccess = (state, action) => {
         username: action.username,
         loading: false,
         errorMsg: null,
-        currentlySignup: false
+        currentlySignup: false,
+        redirectTo: '/dashboard'
     });
 };
 
@@ -91,5 +95,11 @@ const endSignupProcess = (state, action) => {
     const loading = state.currentlySignup ? true : false;
     return updateObject(state, {
         loading: loading,
+    });
+};
+
+const resetRedirect = (state, action) => {
+    return updateObject(state, {
+        redirectTo: null,
     });
 };

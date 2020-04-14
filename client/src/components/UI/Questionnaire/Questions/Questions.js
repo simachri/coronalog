@@ -10,7 +10,7 @@ import Question, { NO_ANSWER } from "./Question/Question";
 import EndPage, { TYPE_END } from './../QTypes/End/End';
 import MultiOptionsPage, { TYPE_MULTI_OPTIONS } from './../QTypes/MultiOptions/MultiOptions';
 
-const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer, onSave ) => {
+const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer, onSave, loading ) => {
     switch(obj.type){
         case TYPE_START:
             return (
@@ -114,6 +114,7 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                 >
                     <EndPage
                         onSave={onSave}
+                        showLoading={loading}
                         {...obj}
                     />
                 </Question>
@@ -233,7 +234,8 @@ class Questions extends Component {
                     (pageSpec.type === TYPE_OPTIONS || pageSpec.type === TYPE_MULTI_OPTIONS ? this.state[pageSpec.name].extraSelected : null),
                     (value, extraSelected = false) => this.valChangedHandler(pageSpec.name, value, extraSelected),
                     () => this.valChangedHandler(pageSpec.name, NO_ANSWER),
-                    () => this.props.onSave(this.getFlattennedState())
+                    () => this.props.onSave(this.getFlattennedState()),
+                    this.props.loading
                 )
             );
         });

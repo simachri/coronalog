@@ -6,6 +6,7 @@ export function* signin(action) {
     try {
         const res = yield server.get('/api/check?username=' + action.username);
         if(res.data.exists){ 
+            yield put(actions.fetchAnamnesisData(action.username));
             yield put(actions.signinSuccess(action.username));
         } else {
             yield put(actions.signinFail('Nutzer existiert nicht'));
@@ -42,4 +43,8 @@ export function* fetchUserAnamnesis(action){
     } catch (err) {
         yield put(actions.signupFail(err));
     }
+}
+
+export function* logout(action){
+    yield put(actions.resetAnamnesisData());
 }
