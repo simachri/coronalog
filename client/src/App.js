@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-// import asyncComponent from './hoc/asyncComponent/asyncComponent';
 
 import AboutUs from './containers/AboutUs/AboutUs';
 import Home from './containers/Home/Home';
@@ -18,21 +16,20 @@ class App extends Component {
 
         let routes = (
             <Switch>
-                <Route path="/" exact component={Home} />
-                <Route path="/about-us" component={AboutUs} />
-                <Route path='/dashboard' component={Dashboard} />
-                <Route path='/questionnaire' component={Questionnaire} />
-                <Route path='/user-info' component={GeneralAnamnesis} />
-                <Route path='/daily-q' component={SymptomAnamnesis} />
-                <Route path='/info' render={() => <h1>Info Page</h1>} />
+                <Route exact path="/" component={Home} />
+                <Route exact path="/about-us" component={AboutUs} />
+                <Route exact path='/dashboard' component={Dashboard} />
+                <Route exact path='/questionnaire' component={Questionnaire} />
+                <Route exact path='/user-info' component={GeneralAnamnesis} />
+                <Route exact path='/daily-q' component={SymptomAnamnesis} />
+                <Route exact path='/info' render={() => <h1>Info Page</h1>} />
                 <Redirect to="/" />
             </Switch>
         );
 
         return (
             <div>
-                <Layout
-                    currentLocation={this.props.location}>
+                <Layout>
                     {routes}
                 </Layout>
             </div>
@@ -41,7 +38,7 @@ class App extends Component {
 
 }
 
-export default withRouter(connect()(App));
+export default withRouter(App);
 
 // function App() {
 //
