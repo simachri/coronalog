@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 
 import classes from './Auth.module.scss';
 import TextInput from '../../components/UI/TextInput/TextInput';
@@ -41,6 +41,10 @@ class Auth extends Component {
     }
 
     render() {
+
+        if (this.props.inSignupProcess){
+            return <Redirect to='user-info' />;
+        }
 
         let error = null;
         if(this.props.errorMsg){
@@ -112,7 +116,8 @@ const mapStateToProps = state => {
         isSignedIn: state.auth.username !== null,
         username: state.auth.username,
         loading: state.auth.loading,
-        errorMsg: state.auth.errorMsg
+        errorMsg: state.auth.errorMsg,
+        inSignupProcess: state.auth.currentlySignup
     };
 };
 

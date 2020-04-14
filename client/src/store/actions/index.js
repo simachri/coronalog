@@ -5,5 +5,6 @@ export {
     logout,
     signup,
     signupFail,
-    signupSuccess
+    signupSuccess,
+    startSignupProcess
 } from './auth';

@@ -18,11 +18,10 @@ export function* signin(action) {
 export function* signup(action){
     try {
         const res = yield server.get('/api/check?username=' + action.username);
-        if(res.data.exists){ 
-            yield put(actions.signupFail('Nutzername existiert bereits'));
+        if(!res.data.exists){ 
+            yield put(actions.startSignupProcess(action.username));
         } else {
-            yield put(actions.signupSuccess(action.username));
-            //ToDo 
+            yield put(actions.signupFail('Nutzername existiert bereits'));
         }
     } catch (err) {
         yield put(actions.signupFail('Server Error'));

@@ -47,3 +47,10 @@ export const signupSuccess = (username) => {
         username: username
     };
 };
+
+export const startSignupProcess = (username) => {
+    return {
+        type: actionTypes.START_SIGNUP_PROCESS,
+        username: username
+    };
+};

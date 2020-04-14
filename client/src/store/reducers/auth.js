@@ -4,7 +4,8 @@ import { updateObject } from './../../util/utility';
 const initialState = {
     username: null,
     loading: false,
-    errorMsg: null
+    errorMsg: null,
+    currentlySignup: false
 };
 
 export default (state = initialState, action) => {
@@ -16,6 +17,7 @@ export default (state = initialState, action) => {
         case actionTypes.AUTH_SIGNUP_SUCCESS: return signupSuccess(state, action);
         case actionTypes.AUTH_SIGNUP_FAIL: return signupFail(state, action);
         case actionTypes.AUTH_LOGOUT: return logout(state, action);
+        case actionTypes.START_SIGNUP_PROCESS: return startSignupProcess(state, action);
         default: return state;
     }
 };
@@ -61,7 +63,8 @@ const signupFail = (state, action) => {
     return updateObject(state, {
         username: null,
         loading: false,
-        errorMsg: action.msg
+        errorMsg: action.msg,
+        currentlySignup: false
     });
 };
 
@@ -69,6 +72,15 @@ const signupSuccess = (state, action) => {
     return updateObject(state, {
         username: action.username,
         loading: false,
-        errorMsg: null
+        errorMsg: null,
+        currentlySignup: false
+    });
+};
+
+const startSignupProcess = (state, action) => {
+    return updateObject(state, {
+        loading: false,
+        username: action.username,
+        currentlySignup: true
     });
 };
