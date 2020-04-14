@@ -8,6 +8,7 @@ import Layout from "./hoc/Layout/Layout";
 import Questionnaire from "./containers/Questionnaire/Questionnaire";
 import GeneralAnamnesis from "./containers/GeneralAnamnesis/GeneralAnamnesis";
 import SymptomAnamnesis from './containers/SmyptomAnamnesis/SymptomAnamnesis';
+import Auth from './containers/Auth/Auth';
 
 class App extends Component {
 
@@ -23,6 +24,7 @@ class App extends Component {
                 <Route exact path='/user-info' component={GeneralAnamnesis} />
                 <Route exact path='/daily-q' component={SymptomAnamnesis} />
                 <Route exact path='/info' render={() => <h1>Info Page</h1>} />
+                <Route exact path='/auth' component={Auth} />
                 <Redirect to="/" />
             </Switch>
         );

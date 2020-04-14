@@ -32,6 +32,7 @@ TextInput.propTypes = {
     label: propTypes.string,
     name: propTypes.string.isRequired,
     placeholder: propTypes.string,
+    verify: propTypes.objectOf(RegExp)
 };
 
 export default TextInput;

@@ -1,9 +1,10 @@
 .InputWrapper {
     display: flex;
-    width: 80%;
+    /* width: 80%; */
     padding: 5px;
     flex-flow: column;
     justify-content: space-between;
+    align-items: center;
 }
 
 .InputWrapper label {

@@ -1,0 +1,38 @@
+.Auth {
+    margin: 4rem 2rem;
+    text-align: center;
+    
+    h1 {
+        font-family: 'DM Serif Display', serif;
+        font-size: 3.7rem;
+        text-shadow: 0 2px 3px rgba(#000, .2);
+        margin-bottom: 3rem;
+    }
+
+    .Card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-radius: 10px;
+        border: 1px solid rgba(#eee, .5);
+        box-shadow: 0 5px 5px rgba(#000, .1);
+        padding: 1rem;
+
+        :not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        .UsernameInput {
+            text-align: center;
+        }
+
+        .Submit {
+
+        }
+
+        .SwitchMode {
+
+        }
+    }
+
+}

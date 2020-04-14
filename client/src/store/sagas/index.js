@@ -5,6 +5,6 @@ import { takeEvery, all } from 'redux-saga/effects';
 
 export function* authWatcher() {
     yield all([
-        takeEvery(actionTypes.AUTH_CHECK_USER_EXISTS, authSagas.checkUserExists),
+        takeEvery(actionTypes.AUTH_SIGNIN, authSagas.signin),
     ]);
 }

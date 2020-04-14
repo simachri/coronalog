@@ -12,7 +12,7 @@
 .Loader {
   color: #1d206a;
   font-size: 10px;
-  margin: 80px auto;
+  margin: 0 auto 40px auto;
   position: relative;
   text-indent: -9999em;
   -webkit-transform: translateZ(0);
