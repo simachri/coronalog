@@ -1,5 +1,5 @@
 import server from "../../axios-main";
-import { put } from 'redux-saga/effects';
+import { put, all } from 'redux-saga/effects';
 import * as actions from '../actions';
 
 export function* signin(action) {
@@ -25,5 +25,21 @@ export function* signup(action){
         }
     } catch (err) {
         yield put(actions.signupFail('Server Error'));
+    }
+}
+
+export function* fetchUserAnamnesis(action){
+    try {
+        const data = {
+            user: {username: action.username},
+            anamnesis_data: action.anamnesisData
+        }
+        const res = yield server.post('/api/anamneses', data);
+        yield all([
+            put(actions.signupSuccess(action.username)),
+            put(actions.setAnamnesisData(res.data))
+        ]);
+    } catch (err) {
+        yield put(actions.signupFail(err));
     }
 }

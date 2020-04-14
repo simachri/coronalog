@@ -5,7 +5,7 @@ const initialState = {
     username: null,
     loading: false,
     errorMsg: null,
-    currentlySignup: false
+    currentlySignup: null
 };
 
 export default (state = initialState, action) => {
@@ -18,6 +18,7 @@ export default (state = initialState, action) => {
         case actionTypes.AUTH_SIGNUP_FAIL: return signupFail(state, action);
         case actionTypes.AUTH_LOGOUT: return logout(state, action);
         case actionTypes.START_SIGNUP_PROCESS: return startSignupProcess(state, action);
+        case actionTypes.END_SIGNUP_PROCESS: return endSignupProcess(state, action);
         default: return state;
     }
 };
@@ -80,7 +81,15 @@ const signupSuccess = (state, action) => {
 const startSignupProcess = (state, action) => {
     return updateObject(state, {
         loading: false,
-        username: action.username,
-        currentlySignup: true
+        currentlySignup: {
+            username: action.username
+        }
+    });
+};
+
+const endSignupProcess = (state, action) => {
+    const loading = state.currentlySignup ? true : false;
+    return updateObject(state, {
+        loading: loading,
     });
 };

@@ -14,7 +14,18 @@ class MultiOptions extends Component {
     };
 
     optionSelected = (optionId, extraOption) => {
-        const newVal = {...this.props.value};
+        let newVal = {};
+
+        if(this.props.value === NO_ANSWER){
+            for (let option of this.props.options){
+                newVal[option.id] = false;
+            }
+            if (this.props.addOptions){
+                newVal[this.props.addOptions.id] = null;
+            }
+        } else {
+            newVal = {...this.props.value};
+        }
         
         if(!extraOption){
             newVal[optionId] = !this.props.value[optionId];

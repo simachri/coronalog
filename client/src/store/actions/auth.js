@@ -54,3 +54,11 @@ export const startSignupProcess = (username) => {
         username: username
     };
 };
+
+export const endSignupProcess = (username, anamnesisData) => {
+    return {
+        type: actionTypes.END_SIGNUP_PROCESS,
+        anamnesisData: anamnesisData,
+        username: username
+    };
+};

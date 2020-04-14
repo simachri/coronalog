@@ -16,7 +16,7 @@ const end = (props) => {
     } else if (props.showFinished){
         button = <FontAwesomeIcon icon={faCheck} />
     } else if (props.showSaveButton) {
-        button = <Button click={() => console.log('Saved')} >{props.saveButtonText}</Button>
+        button = <Button click={props.onSave} >{props.saveButtonText}</Button>
     }
 
     return (

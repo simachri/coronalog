@@ -6,5 +6,9 @@ export {
     signup,
     signupFail,
     signupSuccess,
-    startSignupProcess
+    startSignupProcess,
+    endSignupProcess
 } from './auth';
+export {
+    setAnamnesisData
+} from './anamnesis';

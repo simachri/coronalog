@@ -10,7 +10,7 @@ import Question, { NO_ANSWER } from "./Question/Question";
 import EndPage, { TYPE_END } from './../QTypes/End/End';
 import MultiOptionsPage, { TYPE_MULTI_OPTIONS } from './../QTypes/MultiOptions/MultiOptions';
 
-const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer ) => {
+const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer, onSave ) => {
     switch(obj.type){
         case TYPE_START:
             return (
@@ -113,6 +113,7 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                     hideResume={hideResume}
                 >
                     <EndPage
+                        onSave={onSave}
                         {...obj}
                     />
                 </Question>
@@ -148,7 +149,7 @@ class Questions extends Component {
                         initState[curConf.name].value[option.id] = curConf.val[option.id] ? true : false;
                     }
                     if (curConf.addOptions) {
-                        initState[curConf.name].value[curConf.addOptions.id] = curConf.val[curConf.addOptions.id];
+                        initState[curConf.name].value[curConf.addOptions.id] = curConf.val[curConf.addOptions.id] || null;
                         initState[curConf.name].extraSelected = curConf.val[curConf.addOptions.id] ? true : false;
                     } else {
                         initState[curConf.name].extraSelected = false;
@@ -172,8 +173,25 @@ class Questions extends Component {
         return initState;
     }
 
+    getFlattennedState = () => {
+        const flatState = {};
+        for (let key in this.state){
+            if (this.state[key].value.constructor.name === 'Object'){
+                for (let deepKey in this.state[key].value){
+                    if(this.state[key].value !== NO_ANSWER && this.state[key].value[deepKey] !== ''){ 
+                        flatState[deepKey] = this.state[key].value[deepKey];
+                    }
+                }
+            } else {
+                if(this.state[key].value !== NO_ANSWER&& this.state[key].value !== ''){
+                    flatState[key] = this.state[key].value;
+                }
+            }
+        }
+        return flatState;
+    }
+
     valChangedHandler = (name, val, extraSelected = false) => {
-        console.log(val)
         const newState = {
             [name] : {
                 value: val,
@@ -214,7 +232,8 @@ class Questions extends Component {
                     (pageSpec.type !== TYPE_START && pageSpec.type !== TYPE_END ? this.state[pageSpec.name].value : null),
                     (pageSpec.type === TYPE_OPTIONS || pageSpec.type === TYPE_MULTI_OPTIONS ? this.state[pageSpec.name].extraSelected : null),
                     (value, extraSelected = false) => this.valChangedHandler(pageSpec.name, value, extraSelected),
-                    () => this.valChangedHandler(pageSpec.name, NO_ANSWER)
+                    () => this.valChangedHandler(pageSpec.name, NO_ANSWER),
+                    () => this.props.onSave(this.getFlattennedState())
                 )
             );
         });
