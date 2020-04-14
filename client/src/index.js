@@ -2,24 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { createStore, combineReducers, compose } from 'redux';
-// import thunk from 'redux-thunk';
+import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
 
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import dailyLogReducer from './store/reducers/dailyLog';
+import authReducer from './store/reducers/auth';
+import { authWatcher } from './store/sagas/index';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
-    dailyLog: dailyLogReducer,
+    auth: authReducer,
 });
 
-const store = createStore(rootReducer, composeEnhancers());
-//, composeEnhancers(
-//     applyMiddleware(thunk)
-// ));
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(rootReducer, composeEnhancers(
+    applyMiddleware(sagaMiddleware)
+));
 
 const app = (
     <Provider store={store}>
@@ -28,6 +30,8 @@ const app = (
         </BrowserRouter>
     </Provider>
 );
+
+sagaMiddleware.run(authWatcher);
 
 ReactDOM.render(app, document.getElementById('root'));
 
