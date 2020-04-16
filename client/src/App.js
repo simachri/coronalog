@@ -15,6 +15,11 @@ import ProtectedRoute from './hoc/ProtectedRoute/ProtectedRoute';
 
 class App extends Component {
 
+    constructor(props) {
+        super(props);
+        props.tryAutoSignin();
+    }
+
 
     render() {
 
@@ -56,7 +61,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        resetRedirect: () => dispatch(actions.resetRedirect())
+        resetRedirect: () => dispatch(actions.resetRedirect()),
+        tryAutoSignin: () => dispatch(actions.checkAuthState()),
     };
 };
 

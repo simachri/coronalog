@@ -16,6 +16,7 @@ export function* signin(action) {
             if(anamnesesResult.type === actionTypes.FETCH_ANAMNESIS_DATA_FAIL || recordsResult.type === actionTypes.FETCH_RECORDS_FAIL){
                 yield put(actions.signinFail('Server Error'));
             } else {
+                localStorage.setItem('username', action.username);
                 yield all([
                     put(actions.signinSuccess(action.username)),
                     put(actions.redirect('/dashboard'))
@@ -27,6 +28,12 @@ export function* signin(action) {
     } catch (err) {
         yield put(actions.signinFail('Server Error'));
     }
+}
+
+export function* logout(action) {
+    localStorage.removeItem('username');
+    localStorage.removeItem('records');
+    yield localStorage.removeItem('anamnesis');
 }
 
 export function* signup(action){
@@ -64,5 +71,14 @@ export function* endSignupProcess(action){
         }
     } catch (err) {
         yield put(actions.signupFail(err));
+    }
+}
+
+export function* checkAuthState(action) {
+    const username = localStorage.getItem('username');
+    if (username === null) {
+        yield put(actions.logout());
+    } else {
+        yield put(actions.signinSuccess(username));
     }
 }

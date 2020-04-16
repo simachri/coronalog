@@ -62,3 +62,9 @@ export const endSignupProcess = (username, anamnesisData) => {
         username: username
     };
 };
+
+export const checkAuthState = () => {
+    return {
+        type: actionTypes.CHECK_AUTH_STATE,
+    };
+};

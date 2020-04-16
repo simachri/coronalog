@@ -8,6 +8,7 @@ export {
     signupSuccess,
     startSignupProcess,
     endSignupProcess,
+    checkAuthState
 } from './auth';
 export {
     setAnamnesisData,

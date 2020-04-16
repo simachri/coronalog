@@ -10,6 +10,7 @@ export function* authWatcher() {
         takeEvery(actionTypes.AUTH_SIGNIN, authSagas.signin),
         takeEvery(actionTypes.AUTH_SIGNUP, authSagas.signup),
         takeEvery(actionTypes.END_SIGNUP_PROCESS, authSagas.endSignupProcess),
+        takeEvery(actionTypes.AUTH_LOGOUT, authSagas.logout),
         takeEvery([
             actionTypes.AUTH_LOGOUT,
             actionTypes.AUTH_SIGNIN_FAIL,
@@ -22,6 +23,7 @@ export function* authWatcher() {
             actionTypes.AUTH_SIGNUP_FAIL
          ],
          recordsSagas.resetRecords),
+         takeEvery(actionTypes.CHECK_AUTH_STATE, authSagas.checkAuthState)
     ]);
 }
 
