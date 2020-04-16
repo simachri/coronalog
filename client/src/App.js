@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from './store/actions';
 
 import AboutUs from './containers/AboutUs/AboutUs';
 import Home from './containers/Home/Home';
@@ -15,6 +17,11 @@ class App extends Component {
 
 
     render() {
+
+        if(this.props.redirect) {
+            this.props.resetRedirect();
+            return <Redirect to={this.props.redirect} />
+        }
 
         let routes = (
             <Switch>
@@ -41,7 +48,19 @@ class App extends Component {
 
 }
 
-export default withRouter(App);
+const mapStateToProps = state => {
+    return {
+        redirect: state.general.redirectTo
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        resetRedirect: () => dispatch(actions.resetRedirect())
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));
 
 // function App() {
 //

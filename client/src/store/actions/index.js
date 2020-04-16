@@ -8,7 +8,6 @@ export {
     signupSuccess,
     startSignupProcess,
     endSignupProcess,
-    resetRedirect
 } from './auth';
 export {
     setAnamnesisData,
@@ -24,3 +23,7 @@ export {
     fetchRecordsSuccess,
     fetchRecordsFail
 } from './records';
+export {
+    redirect,
+    resetRedirect
+} from './general';

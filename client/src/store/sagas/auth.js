@@ -16,7 +16,10 @@ export function* signin(action) {
             if(anamnesesResult.type === actionTypes.FETCH_ANAMNESIS_DATA_FAIL || recordsResult.type === actionTypes.FETCH_RECORDS_FAIL){
                 yield put(actions.signinFail('Server Error'));
             } else {
-                yield put(actions.signinSuccess(action.username));
+                yield all([
+                    put(actions.signinSuccess(action.username)),
+                    put(actions.redirect('/dashboard'))
+                ]);
             }
         } else {
             yield put(actions.signinFail('Nutzer existiert nicht'));
@@ -52,7 +55,10 @@ export function* endSignupProcess(action){
             fetchResult:    take([actionTypes.FETCH_RECORDS_SUCCESS, actionTypes.FETCH_RECORDS_FAIL])
         });
         if (fetchResult.type === actionTypes.FETCH_RECORDS_SUCCESS){
-            yield put(actions.signupSuccess(action.username));
+            yield all([
+                put(actions.signupSuccess(action.username)),
+                put(actions.redirect('/dashboard'))
+            ]);
         } else {
             yield put(actions.signupFail('Server Error'));
         }

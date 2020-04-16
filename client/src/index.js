@@ -12,6 +12,7 @@ import * as serviceWorker from './serviceWorker';
 import authReducer from './store/reducers/auth';
 import anamnesisReducer from './store/reducers/anamnesis';
 import recordsReducer from './store/reducers/records';
+import generalReducer from './store/reducers/general';
 import { authWatcher, anamnesisWatcher, recordsWatcher } from './store/sagas/index';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -19,7 +20,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
     auth: authReducer,
     anamnesis: anamnesisReducer,
-    records: recordsReducer
+    records: recordsReducer,
+    general: generalReducer
 });
 
 const sagaMiddleware = createSagaMiddleware();
