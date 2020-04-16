@@ -19,7 +19,6 @@ class GeneralAnamnesis extends Component {
     }
 
     render() {
-
         return (
             <Questions 
                 onSave={this.saveHandler}

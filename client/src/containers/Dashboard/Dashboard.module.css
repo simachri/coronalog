@@ -14,3 +14,9 @@
 .RadarChart {
     text-align: center;
 }
+
+.Logout {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}

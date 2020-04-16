@@ -1,4 +1,6 @@
 import React, {Component, Fragment} from "react";
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions';
 
 import RadarChart from '../../components/UI/RadarChart/RadarChart';
 
@@ -60,6 +62,7 @@ class Dashboard extends Component {
     render() {
         return (
             <Fragment>
+                <div className={classes.Logout} onClick={() => this.props.logout()}>Logout</div>
                 <div className={classes.blueish + ' ' + classes.DashboardHeader}>
                     <p className={classes.dmSerifDisplay}>Hallo,</p>
                     <p>deine tägliche Auswertung <br/> wartet auf dich</p>
@@ -93,4 +96,10 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+const mapDispatchToProps = dispatch => {
+    return {
+        logout: () => dispatch(actions.logout())
+    };
+};
+
+export default connect(null, mapDispatchToProps)(Dashboard);
