@@ -10,3 +10,7 @@ export function* fetchAnamnesisData(action) {
         yield put(actions.fetchAnamnesisDataFail(err));
     }
 }
+
+export function* resetAnamnesisData(action) {
+    yield put(actions.resetAnamnesisData());
+}

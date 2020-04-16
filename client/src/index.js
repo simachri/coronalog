@@ -11,13 +11,15 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import authReducer from './store/reducers/auth';
 import anamnesisReducer from './store/reducers/anamnesis';
-import { authWatcher, anamnesisWatcher } from './store/sagas/index';
+import recordsReducer from './store/reducers/records';
+import { authWatcher, anamnesisWatcher, recordsWatcher } from './store/sagas/index';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    anamnesis: anamnesisReducer
+    anamnesis: anamnesisReducer,
+    records: recordsReducer
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -36,6 +38,7 @@ const app = (
 
 sagaMiddleware.run(authWatcher);
 sagaMiddleware.run(anamnesisWatcher);
+sagaMiddleware.run(recordsWatcher);
 
 ReactDOM.render(app, document.getElementById('root'));
 

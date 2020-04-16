@@ -17,3 +17,10 @@ export {
     fetchAnamnesisDataSuccess,
     fetchAnamnesisDataFail
 } from './anamnesis';
+export {
+    setRecords,
+    resetRecords,
+    fetchRecords,
+    fetchRecordsSuccess,
+    fetchRecordsFail
+} from './records';
