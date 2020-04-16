@@ -33,3 +33,23 @@ export const fetchAnamnesisDataFail = (msg) => {
         errorMsg: msg
     };
 };
+
+export const postAnamnesisData = (username) => {
+    return {
+        type: actionTypes.POST_ANAMNESIS_DATA,
+        username: username
+    };
+};
+
+export const postAnamnesisDataSuccess = () => {
+    return {
+        type: actionTypes.POST_ANAMENSIS_DATA_SUCCESS,
+    };
+};
+
+export const postAnamnesisDataFail = (msg) => {
+    return {
+        type: actionTypes.POST_ANAMNESIS_DATA_FAIL,
+        errorMsg: msg
+    };
+};

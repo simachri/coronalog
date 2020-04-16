@@ -11,6 +11,19 @@ export function* fetchAnamnesisData(action) {
     }
 }
 
+export function* postAnamnesisData(action) {
+    try {
+        const data = {
+            user: {username: action.username},
+            anamnesis_data: action.anamnesisData
+        }
+        yield server.post('/api/anamneses', data);
+        yield put(actions.postAnamnesisDataSuccess());
+    } catch (err) {
+        yield put(actions.postAnamnesisDataFail(err));
+    }
+}
+
 export function* resetAnamnesisData(action) {
     yield put(actions.resetAnamnesisData());
 }

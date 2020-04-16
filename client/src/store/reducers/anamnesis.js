@@ -14,6 +14,9 @@ export default (state = initialState, action) => {
         case actionTypes.FETCH_ANAMNESIS_DATA: return fetchAnamnesisData(state, action);
         case actionTypes.FETCH_ANAMNESIS_DATA_SUCCESS: return fetchAnamnesisDataSuccess(state, action);
         case actionTypes.FETCH_ANAMNESIS_DATA_FAIL: return fetchAnamnesisDataFail(state, action);
+        case actionTypes.POST_ANAMNESIS_DATA: return postAnamnesisData(state, action);
+        case actionTypes.POST_ANAMENSIS_DATA_SUCCESS: return postAnamnesisDataSuccess(state, action);
+        case actionTypes.POST_ANAMNESIS_DATA_FAIL: return postAnamnesisDataFail(state, action);
         default: return state;
     }
 }
@@ -49,6 +52,26 @@ const fetchAnamnesisDataSuccess = (state, action) => {
 const fetchAnamnesisDataFail = (state, action) => {
     return updateObject(state, {
         data: null,
+        loading: false,
+        errorMsg: action.errorMsg
+    });
+};
+
+const postAnamnesisData = (state, action) => {
+    return updateObject(state, {
+        loading: true,
+    });
+};
+
+const postAnamnesisDataSuccess = (state, action) => {
+    return updateObject(state, {
+        loading: false,
+        errorMsg: null
+    });
+};
+
+const postAnamnesisDataFail = (state, action) => {
+    return updateObject(state, {
         loading: false,
         errorMsg: action.errorMsg
     });

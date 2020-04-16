@@ -14,7 +14,10 @@ export {
     resetAnamnesisData,
     fetchAnamnesisData,
     fetchAnamnesisDataSuccess,
-    fetchAnamnesisDataFail
+    fetchAnamnesisDataFail,
+    postAnamnesisData,
+    postAnamnesisDataSuccess,
+    postAnamnesisDataFail,
 } from './anamnesis';
 export {
     setRecords,

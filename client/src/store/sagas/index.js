@@ -28,6 +28,7 @@ export function* authWatcher() {
 export function* anamnesisWatcher() {
     yield all([
         takeEvery(actionTypes.FETCH_ANAMNESIS_DATA, anamnesisSagas.fetchAnamnesisData),
+        takeEvery(actionTypes.POST_ANAMNESIS_DATA, anamnesisSagas.postAnamnesisData)
     ])
 }
 
