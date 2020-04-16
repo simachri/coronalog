@@ -22,7 +22,8 @@ class GeneralAnamnesis extends Component {
             <Questions 
                 onSave={this.saveHandler}
                 loading={this.props.loading}
-                qSpecs={GENERAL_ANAMNESIS_QUESTIONS}  
+                qSpecs={GENERAL_ANAMNESIS_QUESTIONS}
+                values={this.props.userAnamnesis}
             />
         );
     }
@@ -33,6 +34,7 @@ const mapStateToProps = state => {
     return {
         currentlySignup: state.auth.currentlySignup,
         loading: state.auth.loading,
+        userAnamnesis: state.anamnesis.data
     };
 };
 

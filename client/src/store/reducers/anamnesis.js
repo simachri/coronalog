@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from './../../util/utility';
 
 const initialState = {
-    anamnesisData: null,
+    data: null,
     loading: false,
     errorMsg: null
 };
@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
 
 const setAnamnesisData = (state, action) => {
     return updateObject(state, {
-        anamnesisData: action.anamnesisData,
+        data: action.anamnesisData,
         loading: false,
         errorMsg: null
     });
@@ -28,7 +28,7 @@ const setAnamnesisData = (state, action) => {
 
 const resetAnamnesisData = (state, action) => {
     return updateObject(state, {
-        anamnesisData: null,
+        data: null,
     });
 };
 
@@ -40,7 +40,7 @@ const fetchAnamnesisData = (state, action) => {
 
 const fetchAnamnesisDataSuccess = (state, action) => {
     return updateObject(state, {
-        anamnesisData: action.anamnesisData,
+        data: action.anamnesisData,
         loading: false,
         errorMsg: null
     });
@@ -48,7 +48,7 @@ const fetchAnamnesisDataSuccess = (state, action) => {
 
 const fetchAnamnesisDataFail = (state, action) => {
     return updateObject(state, {
-        anamnesisData: null,
+        data: null,
         loading: false,
         errorMsg: action.errorMsg
     });

@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import propTypes from 'prop-types';
 import { scrollTo } from "../../../../util/utility";
 
 import classes from '../Questionnaire.module.css';
@@ -129,42 +130,83 @@ class Questions extends Component {
 
     initState() {
         const initState = {};
+
         for (let curConf of this.props.qSpecs){
+
+            const curName = curConf.name;
+            initState[curName] = {};
             switch(curConf.type){
+
                 case TYPE_OPTIONS:
-                    const selectedId = curConf.val;
-                    const selectedAnswer = curConf.answers.find(answer => answer.id === selectedId);
-                    initState[curConf.name] = {};
-                    if(selectedAnswer) {
-                        initState[curConf.name].value = selectedAnswer.value;
-                        initState[curConf.name].extraSelected = selectedAnswer.textInput === true;
-                    }
-                    else {
-                        initState[curConf.name].value = '';
-                        initState[curConf.name].extraSelected = false;
+
+                    if (this.props.values && this.props.values[curName]) {
+                        //if specified in props.values
+                        const curVal = this.props.values[curName];
+                        initState[curName].value = curVal;
+                        initState[curName].extraSelected = !curConf.answers.some(answer => !answer.textInput && answer.value === curVal);
+
+                    } else {
+                        //if not specified in props.values
+                        const selectedId = curConf.val;
+                        const selectedAnswer = curConf.answers.find(answer => answer.id === selectedId);
+                        if(selectedAnswer) {
+                            initState[curName].value = selectedAnswer.value;
+                            initState[curName].extraSelected = selectedAnswer.textInput === true;
+                        }
+                        else {
+                            initState[curName].value = '';
+                            initState[curName].extraSelected = false;
+                        }
                     }
                     break;
+
                 case TYPE_MULTI_OPTIONS:
-                    initState[curConf.name] = { value: {}};
-                    for (let option of curConf.options) {
-                        initState[curConf.name].value[option.id] = curConf.val[option.id] ? true : false;
-                    }
-                    if (curConf.addOptions) {
-                        initState[curConf.name].value[curConf.addOptions.id] = curConf.val[curConf.addOptions.id] || null;
-                        initState[curConf.name].extraSelected = curConf.val[curConf.addOptions.id] ? true : false;
+
+                    initState[curName] = { value: {}};
+                    if (this.props.values) {
+                        //if specified in props.values
+                        for (let option of curConf.options) {
+                            if (this.props.values[option.id] !== undefined) {
+                                initState[curName].value[option.id] = this.props.values[option.id] ? true : false;
+                            } else {
+                                initState[curName].value[option.id] = curConf.val[option.id] ? true : false;
+                            }
+                            if (curConf.addOptions) {
+                                if (this.props.values[curConf.addOptions.id]) {
+                                    initState[curName].value[curConf.addOptions.id] = this.props.values[curConf.addOptions.id];
+                                    initState[curName].extraSelected = true;
+                                } else {
+                                    initState[curName].value[curConf.addOptions.id] = '';
+                                    initState[curName].extraSelected = false;
+                                }
+                            }
+                        }
+
                     } else {
-                        initState[curConf.name].extraSelected = false;
+                        //if not specified in props.values
+                        for (let option of curConf.options) {
+                            initState[curName].value[option.id] = curConf.val[option.id] ? true : false;
+                        }
+                        if (curConf.addOptions) {
+                            initState[curName].value[curConf.addOptions.id] = curConf.val[curConf.addOptions.id] || null;
+                            initState[curName].extraSelected = curConf.val[curConf.addOptions.id] ? true : false;
+                        } else {
+                            initState[curName].extraSelected = false;
+                        }
                     }
-                    console.log(initState[curConf.name])
                     break;
                 case TYPE_TEXT_INPUT:
-                    initState[curConf.name] = {
-                        value: curConf.val ? curConf.val : ''
+                    initState[curName] = {
+                        value: this.props.values && this.props.values[curName] 
+                            ? this.props.values[curName]
+                            : curConf.val ? curConf.val : ''
                     };
                     break;
                 case TYPE_SELECT:
-                    initState[curConf.name] = {
-                        value: curConf.val ? curConf.val : ''
+                    initState[curName] = {
+                        value: this.props.values && this.props.values[curName] 
+                        ? this.props.values[curName]
+                        : curConf.val ? curConf.val : ''
                     };
                     break;
                 default:
@@ -239,13 +281,20 @@ class Questions extends Component {
                 )
             );
         });
-
+        
+        console.log(this.state)
         return (
             <div className={classes.Anamnesis}>
                 {questions}
             </div>
         );
     }
+};
+Questions.propTypes = {
+    qSpecs: propTypes.array.isRequired,
+    onSave: propTypes.func,
+    loading: propTypes.bool,
+    values: propTypes.object
 };
 
 export default Questions;

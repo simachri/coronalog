@@ -7,7 +7,7 @@ class ProtectedRoute extends Component {
         if(this.props.isAuth){
             return <Route {...this.props} />;
         } else {
-            return <Redirect exact path={this.props.orElse} />;
+            return <Redirect exact to={this.props.orElse} />;
         }
     }
 }
