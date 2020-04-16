@@ -7,7 +7,6 @@ import AboutUs from './containers/AboutUs/AboutUs';
 import Home from './containers/Home/Home';
 import Dashboard from './containers/Dashboard/Dashboard';
 import Layout from "./hoc/Layout/Layout";
-import Questionnaire from "./containers/Questionnaire/Questionnaire";
 import GeneralAnamnesis from "./containers/GeneralAnamnesis/GeneralAnamnesis";
 import SymptomAnamnesis from './containers/SmyptomAnamnesis/SymptomAnamnesis';
 import Auth from './containers/Auth/Auth';
@@ -33,7 +32,6 @@ class App extends Component {
                 <Route exact path="/" component={Home} />
                 <Route exact path="/about-us" component={AboutUs} />
                 <ProtectedRoute exact path='/dashboard' component={Dashboard} orElse='/auth' />
-                <ProtectedRoute exact path='/questionnaire' component={Questionnaire} orElse='/auth' />
                 <ProtectedRoute exact path='/user-info' component={GeneralAnamnesis} orElse='/auth' />
                 <ProtectedRoute exact path='/daily-q' component={SymptomAnamnesis} orElse='/auth' />
                 <Route exact path='/info' render={() => <h1>Info Page</h1>} />
