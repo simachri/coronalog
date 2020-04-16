@@ -9,6 +9,7 @@ import Questionnaire from "./containers/Questionnaire/Questionnaire";
 import GeneralAnamnesis from "./containers/GeneralAnamnesis/GeneralAnamnesis";
 import SymptomAnamnesis from './containers/SmyptomAnamnesis/SymptomAnamnesis';
 import Auth from './containers/Auth/Auth';
+import ProtectedRoute from './hoc/ProtectedRoute/ProtectedRoute';
 
 class App extends Component {
 
@@ -19,10 +20,10 @@ class App extends Component {
             <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/about-us" component={AboutUs} />
-                <Route exact path='/dashboard' component={Dashboard} />
-                <Route exact path='/questionnaire' component={Questionnaire} />
-                <Route exact path='/user-info' component={GeneralAnamnesis} />
-                <Route exact path='/daily-q' component={SymptomAnamnesis} />
+                <ProtectedRoute exact path='/dashboard' component={Dashboard} orElse='/auth' />
+                <ProtectedRoute exact path='/questionnaire' component={Questionnaire} orElse='/auth' />
+                <ProtectedRoute exact path='/user-info' component={GeneralAnamnesis} orElse='/auth' />
+                <ProtectedRoute exact path='/daily-q' component={SymptomAnamnesis} orElse='/auth' />
                 <Route exact path='/info' render={() => <h1>Info Page</h1>} />
                 <Route exact path='/auth' component={Auth} />
                 <Redirect to="/" />
