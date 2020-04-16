@@ -1,5 +1,5 @@
 import server from "../../axios-main";
-import { put } from 'redux-saga/effects';
+import { put, select } from 'redux-saga/effects';
 import * as actions from '../actions';
 
 export function* fetchAnamnesisData(action) {
@@ -12,10 +12,11 @@ export function* fetchAnamnesisData(action) {
 }
 
 export function* postAnamnesisData(action) {
+    const state = yield select();
     try {
         const data = {
             user: {username: action.username},
-            anamnesis_data: action.anamnesisData
+            anamnesis_data: state.anamnesis.data
         }
         yield server.post('/api/anamneses', data);
         yield put(actions.postAnamnesisDataSuccess());

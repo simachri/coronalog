@@ -13,6 +13,8 @@ class GeneralAnamnesis extends Component {
                 this.props.currentlySignup.username,
                 anamnesisData
             );
+        } else {
+            this.props.saveAndPostAnamnesis(this.props.username, anamnesisData);
         }
     }
 
@@ -33,14 +35,19 @@ class GeneralAnamnesis extends Component {
 const mapStateToProps = state => {
     return {
         currentlySignup: state.auth.currentlySignup,
-        loading: state.auth.loading,
-        userAnamnesis: state.anamnesis.data
+        loading: state.auth.loading || state.anamnesis.loading,
+        userAnamnesis: state.anamnesis.data,
+        username: state.auth.username
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         endSignupProcess: (username, data) => dispatch(actions.endSignupProcess(username, data)),
+        saveAndPostAnamnesis: (username, data) => {
+            dispatch(actions.setAnamnesisData(data));
+            dispatch(actions.postAnamnesisData(username));
+        }
     };
 };
 

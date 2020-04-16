@@ -134,10 +134,10 @@ class Questions extends Component {
         for (let curConf of this.props.qSpecs){
 
             const curName = curConf.name;
-            initState[curName] = {};
             switch(curConf.type){
 
                 case TYPE_OPTIONS:
+                    initState[curName] = {};
 
                     if (this.props.values && this.props.values[curName]) {
                         //if specified in props.values
