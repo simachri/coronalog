@@ -63,3 +63,50 @@ export const parseItem = (key) => {
 export const delItem = (key) => {
     localStorage.removeItem(key);
 }
+
+// data: {
+//     breathlessness: .6,
+//     diarrhoea: .5,
+//     cough_intensity: .1,
+//     limb_pain: .2,
+//     fatigued: .4,
+//     sore_throat: .5,
+//     fewer: .2,
+//     sniffles: .8,
+// },
+const MAX_VAL = 0.8;
+const MIN_VAL = 0.1;
+
+const MAX_NUMBER = 4;
+const MIN_NUMBER = 0;
+const mapNumberFromRange = (nr, minScale = MIN_NUMBER, maxScale = MAX_NUMBER) => {
+    return MAX_VAL - (maxScale - nr) / (maxScale - minScale) * (MAX_VAL - MIN_VAL);
+}
+export const mapSymptomsToFloats = (symptoms) => {
+    const floatData = {};
+    for (let key in symptoms) {
+        let val = null;
+
+        switch (key) {
+            case 'fever':
+                val = mapNumberFromRange(symptoms[key], 36, 42);
+                break;
+            default:
+                switch (typeof symptoms[key]) {
+                    case 'boolean':
+                        val = symptoms[key] ? MAX_VAL : MIN_VAL;
+                        break;
+                    case 'number':
+                        val = mapNumberFromRange(symptoms[key]);
+                        break;
+                    default:
+                        val = MIN_VAL;
+                        break;
+                }
+        }
+
+        floatData[key] = val;
+    }
+    return floatData;
+}
+

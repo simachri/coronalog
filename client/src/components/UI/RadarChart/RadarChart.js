@@ -1,12 +1,9 @@
 import React from "react";
 import RadarChart from 'react-svg-radar-chart';
+import propTypes from 'prop-types';
 
 import 'react-svg-radar-chart/build/css/index.css';
 // import classes from './RadarChart.module.css';
-
-// function setData(json) {
-//
-// }
 
 //example data
 // const data_ex = [
@@ -32,28 +29,35 @@ import 'react-svg-radar-chart/build/css/index.css';
 //       }
 //     ];
 
-const captions_ex = {
+const CAPTIONS = {
       // columns
-      breathlessness: 'Atemnot',
-      diarrhoea: 'Durchfall',
       cough_intensity: 'Husten',
-      limb_pain: 'Glieder- & Kopfschmerzen',
+      breathlessness: 'Atemnot',
       fatigued: 'Müdigkeit',
-      sore_throat: 'Halsschmerzen',
-      fewer: 'Fieber',
+      limb_pain: 'Glieder- & Kopfschmerzen',
       sniffles: 'Schnupfen',
+      sore_throat: 'Halsschmerzen',
+      fever: 'Fieber',
+      diarrhoea: 'Durchfall',
 };
 
 const radarChart = ( props ) => {
 
     return (
         <RadarChart
-            captions={captions_ex}
-            data={props.dashboardData}
+            captions={CAPTIONS}
+            data={props.data}
             size={props.size}
         />
     );
 
+};
+radarChart.propTypes = {
+    data: propTypes.arrayOf(propTypes.shape({
+        data: propTypes.object,
+        meta: propTypes.object
+    })).isRequired,
+    size: propTypes.number.isRequired
 };
 
 export default radarChart;

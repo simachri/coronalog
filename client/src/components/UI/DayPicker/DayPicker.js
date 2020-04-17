@@ -7,7 +7,7 @@ import AddDayItem from './AddDayItem/AddDayItem';
 import { arrContainsDay, sameDay } from './../../../util/utility';
 import { withRouter } from 'react-router-dom';
 
-const dayInMs = 1000*60*60*24;
+export const DAY_MS = 1000*60*60*24;
 
 class DayPicker extends Component {
 
@@ -34,7 +34,7 @@ class DayPicker extends Component {
         }
 
         for(let i = startIdx; i < this.props.amountDays; i++) {
-            let date = new Date(startDate.getTime() - i * dayInMs);
+            let date = new Date(startDate.getTime() - i * DAY_MS);
             let checked = false;
             if(this.props.checkedDays){
                 checked = arrContainsDay(this.props.checkedDays, date);
