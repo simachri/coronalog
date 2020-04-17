@@ -5,6 +5,7 @@ import classes from './DayItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { arrToCss } from './../../../../util/utility';
+import { Link } from 'react-router-dom';
 
 const getDay = {
     0: 'So',
@@ -34,7 +35,8 @@ const DayItem = (props) => {
     }
 
     return (
-        <div 
+        <Link
+            to={props.linkTo} 
             className={arrToCss(itemClasses)}
             style={borderStyle}
         >
@@ -43,7 +45,7 @@ const DayItem = (props) => {
             </div>
             <div className={classes.WeekdayLabel}>{getDay[props.date.getDay()]}</div>
             <div className={classes.DayLabel}>{props.date.getDate()}</div>
-        </div>
+        </Link>
     );
 
 };
@@ -51,7 +53,8 @@ DayItem.propTypes = {
     checked: propTypes.bool,
     date: propTypes.objectOf(Date).isRequired,
     blueBg: propTypes.bool,
-    border: propTypes.string
+    border: propTypes.string,
+    linkTo: propTypes.string
 };
 
 export default DayItem;

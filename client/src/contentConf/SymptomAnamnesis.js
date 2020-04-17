@@ -31,9 +31,9 @@ export const SYMPTOM_ANAMNESIS_QUESTIONS = [
         answers: [
             {id: 0, label: 'Nein', value: 0},
             {id: 1, label: 'leicht', value: 1},
-            {id: 1, label: 'moderat', value: 2},
-            {id: 1, label: 'stark', value: 3},
-            {id: 1, label: 'sehr stark', value: 4},
+            {id: 2, label: 'moderat', value: 2},
+            {id: 3, label: 'stark', value: 3},
+            {id: 4, label: 'sehr stark', value: 4},
         ],
         val: null,
         noAnswerText: 'Möchte ich nicht sagen'
@@ -46,9 +46,9 @@ export const SYMPTOM_ANAMNESIS_QUESTIONS = [
         answers: [
             {id: 0, label: 'Nein', value: 0},
             {id: 1, label: 'leicht', value: 1},
-            {id: 1, label: 'moderat', value: 2},
-            {id: 1, label: 'stark', value: 3},
-            {id: 1, label: 'sehr stark', value: 4},
+            {id: 2, label: 'moderat', value: 2},
+            {id: 3, label: 'stark', value: 3},
+            {id: 4, label: 'sehr stark', value: 4},
         ],
         val: null,
         noAnswerText: 'Möchte ich nicht sagen'
@@ -61,9 +61,9 @@ export const SYMPTOM_ANAMNESIS_QUESTIONS = [
         answers: [
             {id: 0, label: 'Nein', value: 0},
             {id: 1, label: 'leicht', value: 1},
-            {id: 1, label: 'moderat', value: 2},
-            {id: 1, label: 'stark', value: 3},
-            {id: 1, label: 'sehr stark', value: 4},
+            {id: 2, label: 'moderat', value: 2},
+            {id: 3, label: 'stark', value: 3},
+            {id: 4, label: 'sehr stark', value: 4},
         ],
         val: null,
         noAnswerText: 'Möchte ich nicht sagen'

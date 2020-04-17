@@ -22,10 +22,14 @@ export {
 } from './anamnesis';
 export {
     setRecords,
+    setRecord,
     resetRecords,
     fetchRecords,
     fetchRecordsSuccess,
-    fetchRecordsFail
+    fetchRecordsFail,
+    postRecord,
+    postRecordSuccess,
+    postRecordFail
 } from './records';
 export {
     redirect,

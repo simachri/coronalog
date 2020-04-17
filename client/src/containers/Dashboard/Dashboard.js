@@ -49,7 +49,6 @@ class Dashboard extends Component {
                 meta: {color: COL_2}
             });
         }
-        console.log(data)
 
         return (
             <Fragment>
@@ -64,7 +63,7 @@ class Dashboard extends Component {
                 <DayPicker 
                     startAt={new Date()} 
                     amountDays={30} 
-                    checkedDays={[]} 
+                    checkedDays={this.props.records.map(rec => new Date(rec.date))} 
                     selectDays={[
                         {date: this.state.selectedDay1, color: COL_1},
                         {date: this.state.selectedDay2, color: COL_2},

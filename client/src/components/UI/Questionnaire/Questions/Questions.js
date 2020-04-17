@@ -129,6 +129,7 @@ class Questions extends Component {
     state = this.initState();
 
     initState() {
+        console.log(this.props.values)
         const initState = {};
 
         for (let curConf of this.props.qSpecs){

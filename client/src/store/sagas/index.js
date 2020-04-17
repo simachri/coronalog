@@ -42,8 +42,10 @@ export function* anamnesisWatcher() {
 export function* recordsWatcher() {
     yield all([
         takeEvery(actionTypes.FETCH_RECORDS, recordsSagas.fetchRecords),
+        takeEvery(actionTypes.POST_RECORD, recordsSagas.postRecord),
         takeEvery([
             actionTypes.SET_RECORDS,
+            actionTypes.SET_RECORD,
             actionTypes.FETCH_RECORDS_SUCCESS
          ], 
          recordsSagas.saveRecords)

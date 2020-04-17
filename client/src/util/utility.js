@@ -66,16 +66,6 @@ export const delItem = (key) => {
     localStorage.removeItem(key);
 }
 
-// data: {
-//     breathlessness: .6,
-//     diarrhoea: .5,
-//     cough_intensity: .1,
-//     limb_pain: .2,
-//     fatigued: .4,
-//     sore_throat: .5,
-//     fewer: .2,
-//     sniffles: .8,
-// },
 const MAX_VAL = 0.8;
 const MIN_VAL = 0.1;
 
@@ -112,3 +102,13 @@ export const mapSymptomsToFloats = (symptoms) => {
     return floatData;
 }
 
+export const sortRecords = records => {
+    const sortedRecords = [...records];
+    sortedRecords.sort( (first, second) => Date.parse(first.date) < Date.parse(second.date) ? -1 : 1 );
+    return sortedRecords;
+}
+
+export const getFormattedDate = (date) => {
+    const arr = [date.getFullYear(), date.getMonth()+1, date.getDate()];
+    return arr.join('-');
+}
