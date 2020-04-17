@@ -40,8 +40,16 @@ class DayPicker extends Component {
                 checked = arrContainsDay(this.props.checkedDays, date);
             }
 
+            let border = null;
+            if (this.props.selectDays) {
+                const selectEl = this.props.selectDays.find(el => sameDay(date, el.date));
+                if (selectEl) {
+                    border = selectEl.color;
+                }
+            }
+
             days.push(
-                <DayItem key={date.getTime()} date={date} checked={checked}/>
+                <DayItem key={date.getTime()} date={date} checked={checked} border={border}/>
             );
         }
 
@@ -55,7 +63,11 @@ class DayPicker extends Component {
 DayPicker.propTypes = {
     startAt: propTypes.objectOf(Date).isRequired,
     amountDays: propTypes.number.isRequired,
-    checkedDays: propTypes.arrayOf(Date)
+    checkedDays: propTypes.arrayOf(Date),
+    selectDays: propTypes.arrayOf(propTypes.shape({
+        date: propTypes.Date,
+        color: propTypes.string
+    }))
 };
 
 export default withRouter(DayPicker);

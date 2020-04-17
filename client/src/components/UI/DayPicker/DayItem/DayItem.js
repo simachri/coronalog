@@ -28,8 +28,16 @@ const DayItem = (props) => {
         itemClasses.push(classes.BlueBg);
     }
 
+    const borderStyle = {};
+    if (props.border) {
+        borderStyle.border = '2px solid ' + props.border;
+    }
+
     return (
-        <div className={arrToCss(itemClasses)}>
+        <div 
+            className={arrToCss(itemClasses)}
+            style={borderStyle}
+        >
             <div className={arrToCss(checkClasses)}>
                 <FontAwesomeIcon icon={faCheck} />
             </div>
@@ -43,6 +51,7 @@ DayItem.propTypes = {
     checked: propTypes.bool,
     date: propTypes.objectOf(Date).isRequired,
     blueBg: propTypes.bool,
+    border: propTypes.string
 };
 
 export default DayItem;

@@ -61,7 +61,15 @@ class Dashboard extends Component {
                     <p>deine tägliche Auswertung <br/> wartet auf dich</p>
                 </div>
 
-                <DayPicker startAt={new Date()} amountDays={30} checkedDays={[]}/>
+                <DayPicker 
+                    startAt={new Date()} 
+                    amountDays={30} 
+                    checkedDays={[]} 
+                    selectDays={[
+                        {date: this.state.selectedDay1, color: COL_1},
+                        {date: this.state.selectedDay2, color: COL_2},
+                    ]}
+                />
 
                 <div className={classes.RadarChart}>
                     <RadarChart size={300} data={data}/>
