@@ -25,26 +25,57 @@ export const SYMPTOM_ANAMNESIS_QUESTIONS = [
     },
     {
         type: TYPE_OPTIONS,
-        name: 'coughing',
+        name: 'cough_intensity',
         header: 'Leidest du an Husten?',
         subHeader: subHeaderRKI,
         answers: [
-            {id: 0, label: 'Ja', value: 'yes'},
-            {id: 1, label: 'Nein', value: 'no'},
+            {id: 0, label: 'Nein', value: 0},
+            {id: 1, label: 'leicht', value: 1},
+            {id: 1, label: 'moderat', value: 2},
+            {id: 1, label: 'stark', value: 3},
+            {id: 1, label: 'sehr stark', value: 4},
         ],
         val: null,
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {
         type: TYPE_OPTIONS,
-        name: 'coughinh-intensity',
-        header: 'Wie stark is dein Husten?',
+        name: 'limb_pain',
+        header: 'Leidest du an Gliederschmerzen?',
         subHeader: subHeaderRKI,
         answers: [
-            {id: 0, label: 'leicht', value: '0'},
-            {id: 1, label: 'moderat', value: '1'},
-            {id: 2, label: 'stark', value: '2'},
-            {id: 3, label: 'sehr stark', value: '3'},
+            {id: 0, label: 'Nein', value: 0},
+            {id: 1, label: 'leicht', value: 1},
+            {id: 1, label: 'moderat', value: 2},
+            {id: 1, label: 'stark', value: 3},
+            {id: 1, label: 'sehr stark', value: 4},
+        ],
+        val: null,
+        noAnswerText: 'Möchte ich nicht sagen'
+    },
+    {
+        type: TYPE_OPTIONS,
+        name: 'sore_throat',
+        header: 'Leidest du an Halsschmerzen?',
+        subHeader: subHeaderRKI,
+        answers: [
+            {id: 0, label: 'Nein', value: 0},
+            {id: 1, label: 'leicht', value: 1},
+            {id: 1, label: 'moderat', value: 2},
+            {id: 1, label: 'stark', value: 3},
+            {id: 1, label: 'sehr stark', value: 4},
+        ],
+        val: null,
+        noAnswerText: 'Möchte ich nicht sagen'
+    },
+    {
+        type: TYPE_OPTIONS,
+        name: 'fever',
+        header: 'Hast du Fieber?',
+        subHeader: 'Wenn ja, welche Temperatur?',
+        answers: [
+            {id: 0, label: 'Nein', value: 0},
+            {id: 1, label: 'Ja', value: '38.0', textInput: true}
         ],
         val: null,
         noAnswerText: 'Möchte ich nicht sagen'
@@ -55,30 +86,12 @@ export const SYMPTOM_ANAMNESIS_QUESTIONS = [
         header: 'Hast du weitere Symptome?',
         subHeader: subHeaderRKI,
         options: [
-            {id: 0, label: 'Verlust des Geschmakssinns'},
-            {id: 1, label: 'Übelkeit'},
-            {id: 2, label: 'Bauchschmerzen'},
-            {id: 3, label: 'Apathie'},
-            {id: 4, label: 'Appetitlosigkeit'},
-            {id: 5, label: 'Gewichtsverlust'},
-            {id: 6, label: 'Hautausschlag'},
-            {id: 7, label: 'Juckreiz'},
-            {id: 8, label: 'Bindehautentzündung'},
-            {id: 9, label: 'Lymphknotenschwellung'},
-            {id: 10, label: 'Erbrechen'},
+            {id: 'breathlessness', label: 'Atemnot'},
+            {id: 'fatigued', label: 'Müdigkeit'},
+            {id: 'sniffles', label: 'Schnupfen'},
+            {id: 'diarrhoea', label: 'Durchfall'},
         ],
-        val: [1,4],
-        noAnswerText: 'Möchte ich nicht sagen'
-    },
-    {
-        type: TYPE_OPTIONS,
-        name: 'add_own_symptoms',
-        header: 'Hast du sonstige Beschwerden, welche noch nicht aufgeführt wurden?',
-        answers: [
-            {id: 0, label: 'Nein', value: 'no'},
-            {id: 1, label: 'Ja', value: '', textInput: true}
-        ],
-        val: null,
+        val: {},
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {
