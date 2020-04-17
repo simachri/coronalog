@@ -43,9 +43,11 @@ export const toCss = ( ...classNames) => classNames.join(' ');
 export const arrToCss = arr => arr.join(' ');
 
 export const sameDay = (d1, d2) => {
-    return d1.getFullYear() === d2.getFullYear() &&
-            d1.getMonth() === d2.getMonth() &&
-            d1.getDate() === d2.getDate();
+    const date1 = typeof d1 === 'string' ? new Date(d1) : d1;
+    const date2 = typeof d2 === 'string' ? new Date(d2) : d2;
+    return date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate();
 }
 
 export const arrContainsDay = (arr, day) => {
