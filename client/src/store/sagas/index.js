@@ -30,12 +30,22 @@ export function* authWatcher() {
 export function* anamnesisWatcher() {
     yield all([
         takeEvery(actionTypes.FETCH_ANAMNESIS_DATA, anamnesisSagas.fetchAnamnesisData),
-        takeEvery(actionTypes.POST_ANAMNESIS_DATA, anamnesisSagas.postAnamnesisData)
+        takeEvery(actionTypes.POST_ANAMNESIS_DATA, anamnesisSagas.postAnamnesisData),
+        takeEvery([
+            actionTypes.SET_ANAMNESIS_DATA,
+            actionTypes.FETCH_ANAMNESIS_DATA_SUCCESS
+         ], 
+         anamnesisSagas.saveAnamnesisData)
     ])
 }
 
 export function* recordsWatcher() {
     yield all([
         takeEvery(actionTypes.FETCH_RECORDS, recordsSagas.fetchRecords),
+        takeEvery([
+            actionTypes.SET_RECORDS,
+            actionTypes.FETCH_RECORDS_SUCCESS
+         ], 
+         recordsSagas.saveRecords)
     ])
 }

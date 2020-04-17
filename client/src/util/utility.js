@@ -51,3 +51,15 @@ export const sameDay = (d1, d2) => {
 export const arrContainsDay = (arr, day) => {
     return arr.some(el => sameDay(day, el));
 }
+
+export const saveItem = (key, item) => {
+    localStorage.setItem(key, JSON.stringify(item));
+}
+
+export const parseItem = (key) => {
+    return JSON.parse(localStorage.getItem(key));
+}
+
+export const delItem = (key) => {
+    localStorage.removeItem(key);
+}

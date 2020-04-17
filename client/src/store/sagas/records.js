@@ -1,6 +1,7 @@
 import server from "../../axios-main";
 import { put } from 'redux-saga/effects';
 import * as actions from '../actions';
+import { saveItem } from '../../util/utility';
 
 export function* fetchRecords(action) {
     try {
@@ -13,4 +14,8 @@ export function* fetchRecords(action) {
 
 export function* resetRecords(action) {
     yield put(actions.resetRecords());
+}
+
+export function* saveRecords(action) {
+    yield saveItem('records', action.data);
 }

@@ -2,6 +2,7 @@ import server from "../../axios-main";
 import { put, all, take } from 'redux-saga/effects';
 import * as actions from '../actions';
 import * as actionTypes from '../actions/actionTypes';
+import { saveItem, parseItem, delItem } from '../../util/utility';
 
 export function* signin(action) {
     try {
@@ -16,7 +17,7 @@ export function* signin(action) {
             if(anamnesesResult.type === actionTypes.FETCH_ANAMNESIS_DATA_FAIL || recordsResult.type === actionTypes.FETCH_RECORDS_FAIL){
                 yield put(actions.signinFail('Server Error'));
             } else {
-                localStorage.setItem('username', action.username);
+                saveItem('username', action.username);
                 yield all([
                     put(actions.signinSuccess(action.username)),
                     put(actions.redirect('/dashboard'))
@@ -31,9 +32,9 @@ export function* signin(action) {
 }
 
 export function* logout(action) {
-    localStorage.removeItem('username');
-    localStorage.removeItem('records');
-    yield localStorage.removeItem('anamnesis');
+    delItem('username');
+    delItem('records');
+    yield delItem('anamnesis');
 }
 
 export function* signup(action){
@@ -75,10 +76,44 @@ export function* endSignupProcess(action){
 }
 
 export function* checkAuthState(action) {
-    const username = localStorage.getItem('username');
+    const username = parseItem('username');
+    const anamnesis = parseItem('anamnesis');
+    const records = parseItem('records');
     if (username === null) {
         yield put(actions.logout());
     } else {
-        yield put(actions.signinSuccess(username));
+        
+        let signinSuccess = true;
+        if(anamnesis === null) {
+            const {fetchResult} = yield all({
+                fData: put(actions.fetchAnamnesisData(username)),
+                fetchResult: take([actionTypes.FETCH_ANAMNESIS_DATA_SUCCESS, actionTypes.FETCH_ANAMNESIS_DATA_FAIL])
+            });
+            if (fetchResult.type === actionTypes.FETCH_ANAMNESIS_DATA_FAIL) {
+                signinSuccess = false;
+            }
+        } else {
+            yield put(actions.setAnamnesisData(anamnesis));
+        }
+
+        if (signinSuccess) {
+            if (records === null) {
+                const {fetchResult} = yield all({
+                    fData: put(actions.fetchRecords(username)),
+                    fetchResult: take([actionTypes.FETCH_RECORDS_SUCCESS, actionTypes.FETCH_RECORDS_FAIL])
+                });
+                if (fetchResult.type === actionTypes.FETCH_RECORDS_FAIL) {
+                    signinSuccess = false;
+                }
+            } else {
+                yield put(actions.setRecords(records));
+            }
+        }
+
+        if (signinSuccess) {
+            yield put(actions.signinSuccess(username));
+        } else {
+            yield put(actions.logout());
+        }
     }
 }

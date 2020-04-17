@@ -1,6 +1,7 @@
 import server from "../../axios-main";
 import { put, select } from 'redux-saga/effects';
 import * as actions from '../actions';
+import { saveItem } from '../../util/utility';
 
 export function* fetchAnamnesisData(action) {
     try {
@@ -27,4 +28,8 @@ export function* postAnamnesisData(action) {
 
 export function* resetAnamnesisData(action) {
     yield put(actions.resetAnamnesisData());
+}
+
+export function* saveAnamnesisData(action) {
+    yield saveItem('anamnesis', action.anamnesisData);
 }
