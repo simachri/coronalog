@@ -10,16 +10,16 @@ def get_timestamp():
 
 
 class Symptoms(BaseModel):
-    cough_intensity: int = 0
+    cough_intensity: int = None
     cough_type: str = None
     cough_color: str = None
-    breathlessness: bool = False
-    fatigued: bool = False
-    limb_pain: int = 0
-    sniffles: bool = False
-    sore_throat: int = 0
-    fever: float = 0.0
-    diarrhoea: bool = False
+    breathlessness: bool = None
+    fatigued: bool = None
+    limb_pain: int = None
+    sniffles: bool = None
+    sore_throat: int = None
+    fever: float = None
+    diarrhoea: bool = None
 
 
 class Record(BaseModel):
@@ -39,16 +39,16 @@ class Anamnesis(BaseModel):
     gender: str
     residence: int
     birthyear: int
-    smoker: bool = False
-    pregnant: bool = False
-    positive_tested: bool = False
+    smoker: bool = None
+    pregnant: bool = None
+    positive_tested: bool = None
     infection_contact: str = None
-    risk_area_stay: bool = False
+    risk_area_stay: bool = None
     medication: str = None
-    cardiovascular_desease: bool = False
-    pulmonary_problems: bool = False
-    chronic_liver_disease: bool = False
-    diabetes_mellitus: bool = False
-    cancer: bool = False
-    immunodeficiency: bool = False
+    cardiovascular_desease: bool = None
+    pulmonary_problems: bool = None
+    chronic_liver_disease: bool = None
+    diabetes_mellitus: bool = None
+    cancer: bool = None
+    immunodeficiency: bool = None
     miscellaneous: str = None
