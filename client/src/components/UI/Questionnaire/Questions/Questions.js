@@ -129,7 +129,6 @@ class Questions extends Component {
     state = this.initState();
 
     initState() {
-        console.log(this.props.values)
         const initState = {};
 
         for (let curConf of this.props.qSpecs){
@@ -148,16 +147,8 @@ class Questions extends Component {
 
                     } else {
                         //if not specified in props.values
-                        const selectedId = curConf.val;
-                        const selectedAnswer = curConf.answers.find(answer => answer.id === selectedId);
-                        if(selectedAnswer) {
-                            initState[curName].value = selectedAnswer.value;
-                            initState[curName].extraSelected = selectedAnswer.textInput === true;
-                        }
-                        else {
-                            initState[curName].value = '';
-                            initState[curName].extraSelected = false;
-                        }
+                        initState[curName].value = curConf.defaultVal ? curConf.defaultVal : NO_ANSWER;
+                        initState[curName].extraSelected = false;
                     }
                     break;
 
@@ -166,14 +157,17 @@ class Questions extends Component {
                     initState[curName] = { value: {}};
                     if (this.props.values) {
                         //if specified in props.values
+                        let contained = false;
                         for (let option of curConf.options) {
-                            if (this.props.values[option.id] !== undefined) {
+                            if (this.props.values[option.id] !== undefined && this.props.values[option.id] !== null) {
+                                contained = true;
                                 initState[curName].value[option.id] = this.props.values[option.id] ? true : false;
                             } else {
-                                initState[curName].value[option.id] = curConf.val[option.id] ? true : false;
+                                initState[curName].value[option.id] = false;
                             }
                             if (curConf.addOptions) {
                                 if (this.props.values[curConf.addOptions.id]) {
+                                    contained = true;
                                     initState[curName].value[curConf.addOptions.id] = this.props.values[curConf.addOptions.id];
                                     initState[curName].extraSelected = true;
                                 } else {
@@ -182,32 +176,28 @@ class Questions extends Component {
                                 }
                             }
                         }
+                        if (!contained) {
+                            initState[curName].value = NO_ANSWER;
+                        }
 
                     } else {
-                        //if not specified in props.values
-                        for (let option of curConf.options) {
-                            initState[curName].value[option.id] = curConf.val[option.id] ? true : false;
-                        }
-                        if (curConf.addOptions) {
-                            initState[curName].value[curConf.addOptions.id] = curConf.val[curConf.addOptions.id] || null;
-                            initState[curName].extraSelected = curConf.val[curConf.addOptions.id] ? true : false;
-                        } else {
-                            initState[curName].extraSelected = false;
-                        }
+                        //if not specified props.values
+                        initState[curName].value = curConf.defaultVal ? curConf.defaultVal : NO_ANSWER;
+                        initState[curName].extraSelected = false;
                     }
                     break;
                 case TYPE_TEXT_INPUT:
                     initState[curName] = {
                         value: this.props.values && this.props.values[curName] 
                             ? this.props.values[curName]
-                            : curConf.val ? curConf.val : ''
+                            : curConf.defaultVal ? curConf.defaultVal : NO_ANSWER
                     };
                     break;
                 case TYPE_SELECT:
                     initState[curName] = {
                         value: this.props.values && this.props.values[curName] 
                         ? this.props.values[curName]
-                        : curConf.val ? curConf.val : ''
+                        : curConf.defaultVal ? curConf.defaultVal : NO_ANSWER
                     };
                     break;
                 default:
@@ -222,17 +212,40 @@ class Questions extends Component {
         for (let key in this.state){
             if (this.state[key].value.constructor.name === 'Object'){
                 for (let deepKey in this.state[key].value){
-                    if(this.state[key].value !== NO_ANSWER && this.state[key].value[deepKey] !== ''){ 
+                    if (!this.state[key].value[deepKey] && this.props.qSpecs.find(conf => conf.name === key).addOptions && deepKey === this.props.qSpecs.find(conf => conf.name === key).addOptions.id) {
+                        flatState[deepKey] = null;
+                    } else {
                         flatState[deepKey] = this.state[key].value[deepKey];
                     }
                 }
+            } else if(this.state[key].value !== NO_ANSWER && this.state[key].value !== ''){
+                flatState[key] = this.state[key].value;
             } else {
-                if(this.state[key].value !== NO_ANSWER&& this.state[key].value !== ''){
-                    flatState[key] = this.state[key].value;
+                flatState[key] = NO_ANSWER;
+            }
+        }
+
+        const flatStateFull = {};
+        //map NO_ANSWER to null values
+        for (let key in flatState) {
+            if (flatState[key] !== NO_ANSWER) {
+                flatStateFull[key] = flatState[key];
+            } else {
+                const config = this.props.qSpecs.find(conf => conf.name === key);
+                if (config && config.type === TYPE_MULTI_OPTIONS) {
+                    for (let option of config.options) {
+                        flatStateFull[option.id] = null;
+                    }
+                    if (config.addOptions) {
+                        flatStateFull[config.addOptions.id] = null;
+                    }
+                } else {
+                    flatStateFull[key] = null;
                 }
             }
         }
-        return flatState;
+
+        return flatStateFull;
     }
 
     valChangedHandler = (name, val, extraSelected = false) => {
@@ -258,7 +271,7 @@ class Questions extends Component {
     };
 
     render() {
-        console.log(this.state)
+        console.log(this.state, this.props, this.getFlattennedState())
         const questions = [];
         const refs = [];
         this.props.qSpecs.forEach( (pageSpec, idx) => {

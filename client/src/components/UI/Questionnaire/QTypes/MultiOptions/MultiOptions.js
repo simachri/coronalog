@@ -148,10 +148,10 @@ MultiOptions.propTypes = {
         label: propTypes.string,
     }),
     extraSelected: propTypes.bool,
-    val: propTypes.shape({
+    value: propTypes.oneOfType([propTypes.shape({
         id: propTypes.string,
         val: propTypes.oneOfType([propTypes.bool, propTypes.string])
-    }).isRequired,
+    }), propTypes.oneOf([NO_ANSWER])]).isRequired,
     noAnswerText: propTypes.string,
     onNoAnswer: propTypes.func,
     valueChanged: propTypes.func.isRequired,

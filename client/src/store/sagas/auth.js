@@ -72,7 +72,7 @@ export function* endSignupProcess(action){
             yield put(actions.signupFail('Server Error'));
         }
     } catch (err) {
-        yield put(actions.signupFail(err));
+        yield put(actions.signupFail(err.message));
     }
 }
 

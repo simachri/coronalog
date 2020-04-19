@@ -32,8 +32,8 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             {id: 2, label: 'Divers', value: 'd'},
             // {id: 3, label: 'Other', value: '', textInput: true}
         ],
-        val: null,
-        noAnswerText: 'Möchte ich nicht sagen'
+        noAnswerText: 'Möchte ich nicht sagen',
+        required: true
     },
     {
         type: TYPE_SELECT,
@@ -43,9 +43,9 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             from: 1900,
             to: 2020
         },
-        val: null,
         header: 'In welchem Jahr bist du geboren?',
-        noAnswerText: 'Möchte ich nicht sagen'
+        noAnswerText: 'Möchte ich nicht sagen',
+        required: true
     },
     {
         type: TYPE_TEXT_INPUT,
@@ -54,8 +54,8 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
         subHeader: 'Bitte gib deine PLZ ein',
         verify:  /^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/, //plz
         placeholder: 'PLZ',
-        val: '',
-        noAnswerText: 'Möchte ich nicht sagen'
+        noAnswerText: 'Möchte ich nicht sagen',
+        required: true
     },
     {
         type: TYPE_OPTIONS,
@@ -65,7 +65,6 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             {id: 0, label: 'Ja', value: true},
             {id: 1, label: 'Nein', value: false},
         ],
-        val: null,
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {
@@ -76,7 +75,6 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             {id: 0, label: 'Ja', value: true},
             {id: 1, label: 'Nein', value: false},
         ],
-        val: null,
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {
@@ -88,7 +86,6 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             {id: 1, label: 'Nein', value: 'no'},
             {id: 2, label: 'Weiß nicht', value: 'don\'t know'},
         ],
-        val: null,
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {
@@ -99,7 +96,6 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             {id: 0, label: 'Nein', value: 'no'},
             {id: 1, label: 'Ja', value: '', textInput: true}
         ],
-        val: null,
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {
@@ -119,7 +115,6 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             id: 'miscellaneous',
             label: 'Sonstige'
         },
-        val: {},
         allFalseLabel: 'Nein',
         noAnswerText: 'Möchte ich nicht sagen'
     }, 
@@ -132,7 +127,6 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             {id: 'smoker', label: 'Raucher'},
             {id: 'pregnant', label: 'Schwanger'},
         ],
-        val: {},
         allFalseLabel: 'Nichts',
         noAnswerText: 'Möchte ich nicht sagen'
     },

@@ -54,7 +54,7 @@ class App extends Component {
 const mapStateToProps = state => {
     return {
         redirect: state.general.redirectTo,
-        inSignupProcess: state.auth.currentlySignup
+        inSignupProcess: state.auth.currentlySignup ? true : false
     };
 };
 
@@ -66,37 +66,3 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));
-
-// function App() {
-//
-//     const[registrations, setRegistrations] = useState('');
-//
-//   //  useEffect is called after rendering
-//     useEffect(() => {
-//         fetch('/registrations').then(res => res.json()).then(data => {
-//             setRegistrations(JSON.stringify(data));
-//         });
-//     }, []);
-//
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//           <p>These registrations exists: {registrations}</p>
-//       </header>
-//     </div>
-//   );
-// }
-//
-// export default App;
