@@ -40,7 +40,7 @@ class SymptomAnamnesis extends Component {
     render() {
 
         if (!this.state.date || new Date().getTime() < new Date(this.state.date).getTime()
-            || this.state.successfullySaved && !this.props.loading &&!this.props.errorMsg) {
+            || (this.state.successfullySaved && !this.props.loading &&!this.props.errorMsg)) {
             return <Redirect to='/dashboard' />;
         }
 
