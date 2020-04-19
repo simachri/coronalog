@@ -6,19 +6,22 @@ import {SYMPTOM_ANAMNESIS_QUESTIONS} from "../../contentConf/SymptomAnamnesis";
 import Questions from "../../components/UI/Questionnaire/Questions/Questions";
 import { sameDay } from '../../util/utility';
 import { withRouter, Redirect } from 'react-router-dom';
+import { POST_RECORD_SUCCESS } from './../../store/actions/actionTypes';
 
 class SymptomAnamnesis extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            date: this.getDateFromSearch()
+            date: this.getDateFromSearch(),
+            successfullySaved: false
         };
     }
 
     getDateFromSearch = () => {
         const params = new URLSearchParams(this.props.location.search);
         const date = params.get('date');
+
         return date;
     }
 
@@ -36,7 +39,8 @@ class SymptomAnamnesis extends Component {
 
     render() {
 
-        if (!this.state.date) {
+        if (!this.state.date || new Date().getTime() < new Date(this.state.date).getTime()
+            || this.state.successfullySaved && !this.props.loading &&!this.props.errorMsg) {
             return <Redirect to='/dashboard' />;
         }
 
@@ -55,6 +59,7 @@ class SymptomAnamnesis extends Component {
 const mapStateToProps = state => {
     return {
         loading: state.records.loading,
+        error: state.records.errorMsg,
         records: state.records.data
     };
 };
@@ -62,6 +67,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         saveAndPostRecord: (date, symptoms) => {
+            dispatch(actions.redirectOn('/dashboard', POST_RECORD_SUCCESS));
             dispatch(actions.setRecord(date, symptoms));
             dispatch(actions.postRecord(date, symptoms));
         }

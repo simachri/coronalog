@@ -7,6 +7,14 @@ export const redirect = (path) => {
     };
 };
 
+export const redirectOn = (path, actionType) => {
+    return {
+        type: actionTypes.REDIRECT_ON,
+        path: path,
+        onAction: actionType
+    };
+};
+
 export const resetRedirect = () => {
     return {
         type: actionTypes.RESET_REDIRECT,

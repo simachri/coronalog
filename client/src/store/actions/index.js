@@ -33,5 +33,6 @@ export {
 } from './records';
 export {
     redirect,
+    redirectOn,
     resetRedirect
 } from './general';

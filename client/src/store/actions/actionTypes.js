@@ -29,4 +29,5 @@ export const POST_RECORD_SUCCESS = 'POST_RECORD_SUCCESS';
 export const POST_RECORD_FAIL = 'POST_RECORD_FAIL';
 
 export const REDIRECT = 'REDIRECT';
+export const REDIRECT_ON = 'REDIRECT_ON';
 export const RESET_REDIRECT = 'RESET_REDIRECT';

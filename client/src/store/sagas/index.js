@@ -1,6 +1,7 @@
 import * as authSagas from './auth';
 import * as anamnesisSagas from './anamnesis';
 import * as recordsSagas from './records';
+import * as generalSagas from './general';
 import * as actionTypes from '../actions/actionTypes';
 
 import { takeEvery, all } from 'redux-saga/effects';
@@ -50,4 +51,10 @@ export function* recordsWatcher() {
          ], 
          recordsSagas.saveRecords)
     ])
+}
+
+export function* generalWatcher() {
+    yield all([
+        takeEvery(actionTypes.REDIRECT_ON, generalSagas.redirectOn)
+    ]);
 }
