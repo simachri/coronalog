@@ -5,7 +5,7 @@ import { Route, Redirect } from 'react-router-dom';
 
 class ProtectedRoute extends Component {
     render() {
-        if(this.props.ofIf || this.props.isAuth){
+        if(this.props.orIf || this.props.isAuth){
             return <Route {...this.props} />;
         } else {
             return <Redirect exact to={this.props.orElse} />;
