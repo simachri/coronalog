@@ -92,6 +92,7 @@ export const SYMPTOM_ANAMNESIS_QUESTIONS = [
             {id: 'diarrhoea', label: 'Durchfall'},
         ],
         val: {},
+        allFalseLabel: 'Nein',
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {

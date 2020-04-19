@@ -120,6 +120,7 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             label: 'Sonstige'
         },
         val: {},
+        allFalseLabel: 'Nein',
         noAnswerText: 'Möchte ich nicht sagen'
     }, 
     {
@@ -132,6 +133,7 @@ export const GENERAL_ANAMNESIS_QUESTIONS = [
             {id: 'pregnant', label: 'Schwanger'},
         ],
         val: {},
+        allFalseLabel: 'Nichts',
         noAnswerText: 'Möchte ich nicht sagen'
     },
     {

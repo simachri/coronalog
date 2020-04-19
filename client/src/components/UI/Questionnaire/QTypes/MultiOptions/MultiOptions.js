@@ -16,6 +16,7 @@ class MultiOptions extends Component {
     optionSelected = (optionId, extraOption) => {
         let newVal = {};
 
+        //init options when NO_ANSWER was previously selected
         if(this.props.value === NO_ANSWER){
             for (let option of this.props.options){
                 newVal[option.id] = false;
@@ -27,7 +28,12 @@ class MultiOptions extends Component {
             newVal = {...this.props.value};
         }
         
-        if(!extraOption){
+        if(optionId === NONE_ANSWER) {
+            for (let optionId in newVal) {
+                newVal[optionId] = false;
+            }
+            this.props.valueChanged(newVal, false);
+        } else if(!extraOption){
             newVal[optionId] = !this.props.value[optionId];
             this.props.valueChanged(newVal, this.props.extraSelected);
         } else {
@@ -72,6 +78,13 @@ class MultiOptions extends Component {
             )
         }
 
+        let noneSelected = this.props.value !== NO_ANSWER;
+        for (let optionId in this.props.value) {
+            noneSelected = noneSelected && !this.props.value[optionId];
+        }
+        const noneClasses = [classes.Option];
+        if (noneSelected) noneClasses.push(classes.Selected);
+
         const noAnswerClasses = [qClasses.NoAnswer];
         if(this.props.value === NO_ANSWER){
             noAnswerClasses.push(qClasses.NoAnswerSelected);
@@ -97,6 +110,13 @@ class MultiOptions extends Component {
                 <div className={qClasses.SubHeader}>{this.props.subHeader}</div>
 
                 <div className={classes.Options}>
+                    <div 
+                        className={arrToCss(noneClasses)}
+                        onClick={() => this.optionSelected(NONE_ANSWER)}
+                    >
+                        {this.props.allFalseLabel}
+                    </div> 
+                    <br />
                     {options}
                 </div>
 
@@ -135,7 +155,9 @@ MultiOptions.propTypes = {
     noAnswerText: propTypes.string,
     onNoAnswer: propTypes.func,
     valueChanged: propTypes.func.isRequired,
+    allFalseLabel: propTypes.string.isRequired
 };
 
+export const NONE_ANSWER = 'NONE_ANSWER_H6fg!?/h&f';
 export const TYPE_MULTI_OPTIONS = 'type_multi_options';
 export default MultiOptions;
