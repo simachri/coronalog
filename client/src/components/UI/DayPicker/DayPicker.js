@@ -22,6 +22,7 @@ class DayPicker extends Component {
                 return selectEl.color;
             }
         }
+        return null;
     }
 
     render() {

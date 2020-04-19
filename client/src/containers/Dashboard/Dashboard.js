@@ -84,6 +84,14 @@ class Dashboard extends Component {
             });
         }
 
+        const selectedDays = [];
+        if (this.state.selectedDay1) {
+            selectedDays.push({date: this.state.selectedDay1, color: this.getCol(0)});
+        }
+        if (this.state.selectedDay2) {
+            selectedDays.push({date: this.state.selectedDay2, color: this.getCol(1)});
+        }
+
         return (
             <Fragment>
 
@@ -98,10 +106,7 @@ class Dashboard extends Component {
                     startAt={new Date()} 
                     amountDays={30} 
                     checkedDays={this.props.records.map(rec => new Date(rec.date))} 
-                    selectDays={[
-                        {date: this.state.selectedDay1, color: this.getCol(0)},
-                        {date: this.state.selectedDay2, color: this.getCol(1)},
-                    ]}
+                    selectDays={selectedDays}
                     onDaySelected={this.daySelectedHandler}
                 />
 

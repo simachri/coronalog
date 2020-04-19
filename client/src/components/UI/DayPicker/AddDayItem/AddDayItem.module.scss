@@ -8,6 +8,11 @@
     justify-content: center;
     margin: 0 .8rem;
 
+    &:hover {
+        text-decoration: none;
+        color: #fff;
+    }
+
     .AddSymbol {
         font-size: 1.8rem;
         line-height: 1.8rem;

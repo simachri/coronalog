@@ -43,6 +43,7 @@ export const toCss = ( ...classNames) => classNames.join(' ');
 export const arrToCss = arr => arr.join(' ');
 
 export const sameDay = (d1, d2) => {
+    if (!d1 || !d2) return false;
     const date1 = typeof d1 === 'string' ? new Date(d1) : d1;
     const date2 = typeof d2 === 'string' ? new Date(d2) : d2;
     return date1.getFullYear() === date2.getFullYear() &&
