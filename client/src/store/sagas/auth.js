@@ -63,6 +63,7 @@ export function* endSignupProcess(action){
             fetchResult:    take([actionTypes.FETCH_RECORDS_SUCCESS, actionTypes.FETCH_RECORDS_FAIL])
         });
         if (fetchResult.type === actionTypes.FETCH_RECORDS_SUCCESS){
+            saveItem('username', action.username);
             yield all([
                 put(actions.signupSuccess(action.username)),
                 put(actions.redirect('/dashboard'))
