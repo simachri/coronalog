@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import * as actions from './../../store/actions/index';
+import * as actions from '../../store/actions/index';
 
 import {SYMPTOM_ANAMNESIS_QUESTIONS} from "../../contentConf/SymptomAnamnesis";
 import Questions from "../../components/UI/Questionnaire/Questions/Questions";
 import { sameDay } from '../../util/utility';
 import { withRouter, Redirect } from 'react-router-dom';
-import { POST_RECORD_SUCCESS } from './../../store/actions/actionTypes';
+import { POST_RECORD_SUCCESS, POST_RECORD_FAIL } from '../../store/actions/actionTypes';
 
 class SymptomAnamnesis extends Component {
 
@@ -67,7 +67,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         saveAndPostRecord: (date, symptoms) => {
-            dispatch(actions.redirectOn('/dashboard', POST_RECORD_SUCCESS));
+            dispatch(actions.redirectOn('/dashboard', POST_RECORD_SUCCESS, POST_RECORD_FAIL));
             dispatch(actions.setRecord(date, symptoms));
             dispatch(actions.postRecord(date, symptoms));
         }

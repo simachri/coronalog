@@ -7,11 +7,12 @@ export const redirect = (path) => {
     };
 };
 
-export const redirectOn = (path, actionType) => {
+export const redirectOn = (path, actionType, fallbackActionType) => {
     return {
         type: actionTypes.REDIRECT_ON,
         path: path,
-        onAction: actionType
+        onAction: actionType,
+        fallbackAction: fallbackActionType
     };
 };
 
