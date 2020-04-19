@@ -1,34 +1,93 @@
 .DayItem {
-    background-color: #FFECC8;
+    background-color: #ffecc8;
     border-radius: 10px;
     color: #252A7C;
-    padding: .3rem .8rem;
     text-align: center;
     min-width: 3rem;
     min-height: 4rem;
+    position: relative;
+    cursor: pointer;
+    transition: all .2s;
+
+    &:not(:last-child) {
+        margin-left: .6rem;
+    }
+
+    &.Selected {
+        transform: scale(1.1);
+
+        .Checkmark,
+        .DayLabel {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .WeekdayLabel {
+            top: .3rem;
+            font-weight: 600;
+            transform: translate(-50%, 0);
+        }
+
+        .LinkToQ {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
 
     &.BlueBg {
         color: #fff;
         background-color: #252A7C;
         margin-right: .8rem;
     }
-    
-    &:not(:last-child) {
-        margin-left: .5rem;
+
+    .Checkmark, 
+    .WeekdayLabel,
+    .DayLabel,
+    .LinkToQ {
+        position: absolute;
+        transition: all .2s;
     }
 
     .Checkmark {
         font-size: .8rem;
+        line-height: .8rem;
+        left: 50%;
+        top: .3rem;
+        transform: translateX(-50%);
     }
     
     .WeekdayLabel {
         font-size: 1rem;
+        line-height: 1rem;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transition-delay: .2s;
     }
     
     .DayLabel {
         font-size: 0.7rem;
+        line-height: .7rem;
+        left: 50%;
+        bottom: .3rem;
+        transform: translateX(-50%);
     }
 
+    .LinkToQ {
+        font-size: .9rem;
+        line-height: .9rem;
+        color: inherit;
+        left: 50%;
+        bottom: .7rem;
+        transform: translateX(-50%);
+        visibility: hidden;
+        opacity: 0;
+        transition-delay: .3s;
+    }
+}
+
+a.DayItem {
+    text-decoration: none;
 }
 
 .hidden {

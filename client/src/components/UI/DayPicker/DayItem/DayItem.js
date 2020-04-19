@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 
 import classes from './DayItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faPen, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { arrToCss } from './../../../../util/utility';
 import { Link } from 'react-router-dom';
 
@@ -28,15 +28,21 @@ const DayItem = (props) => {
     if(props.blueBg){
         itemClasses.push(classes.BlueBg);
     }
+    if(props.checked) {
+        itemClasses.push(classes.Checked);
+    }
+    if(props.selected) {
+        itemClasses.push(classes.Selected);
+    }
 
     const borderStyle = {};
-    if (props.border) {
-        borderStyle.border = '2px solid ' + props.border;
+    if (props.selected) {
+        borderStyle.border = '3px solid ' + props.selected;
     }
 
     return (
-        <Link
-            to={props.linkTo} 
+        <div
+            onClick={props.onSelect}
             className={arrToCss(itemClasses)}
             style={borderStyle}
         >
@@ -45,7 +51,11 @@ const DayItem = (props) => {
             </div>
             <div className={classes.WeekdayLabel}>{getDay[props.date.getDay()]}</div>
             <div className={classes.DayLabel}>{props.date.getDate()}</div>
-        </Link>
+
+            <Link to={props.linkTo} className={classes.LinkToQ}>
+                <FontAwesomeIcon icon={props.checked ? faPen : faPlus} />
+            </Link>
+        </div>
     );
 
 };
@@ -53,8 +63,9 @@ DayItem.propTypes = {
     checked: propTypes.bool,
     date: propTypes.objectOf(Date).isRequired,
     blueBg: propTypes.bool,
-    border: propTypes.string,
-    linkTo: propTypes.string
+    selected: propTypes.string,
+    linkTo: propTypes.string,
+    onSelect: propTypes.func
 };
 
 export default DayItem;

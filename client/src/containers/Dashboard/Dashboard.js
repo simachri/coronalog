@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from "react";
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
-import { DAY_MS } from '../../components/UI/DayPicker/DayPicker';
 import { sameDay, mapSymptomsToFloats } from '../../util/utility';
 
 import RadarChart from '../../components/UI/RadarChart/RadarChart';
@@ -9,14 +8,28 @@ import RadarChart from '../../components/UI/RadarChart/RadarChart';
 import classes from './Dashboard.module.css';
 import DayPicker from './../../components/UI/DayPicker/DayPicker';
 
-const COL_1 = 'blue';
-const COL_2 = 'red';
+const COL_0 = 'salmon';
+const COL_1 = 'darkred';
 
 class Dashboard extends Component {
 
-    state = {
-        selectedDay1: new Date( new Date().getTime() - DAY_MS),     //yesterday
-        selectedDay2: new Date( new Date().getTime() - 2 * DAY_MS)  //day before yesterday
+    state = this.initState();
+
+    initState() {
+        const initState = { 
+            swapCols: false,
+            selectedDay1: null,
+            selectedDay2: null
+        };
+        for (let i = this.props.records.length - 1; i >= 0; i--) {
+            if (!initState.selectedDay1) {
+                initState.selectedDay1 = this.props.records[i].date;
+            } else if (!initState.selectedDay2) {
+                initState.selectedDay2 = this.props.records[i].date;
+                break;
+            }
+        }
+        return initState;
     }
 
     componentDidMount() {
@@ -32,21 +45,42 @@ class Dashboard extends Component {
         return this.props.records.find(record => sameDay(date, new Date(record.date)));
     }
 
+    daySelectedHandler = date => {
+        if (
+            !sameDay(this.state.selectedDay1, date) &&
+            !sameDay(this.state.selectedDay2, date)
+        ) {
+            this.setState(prevState => ({
+                selectedDay1: date,
+                selectedDay2: prevState.selectedDay1,
+                swapCols: !prevState.swapCols
+            }));
+        }
+    }
+
+    getCol = i => {
+        switch(i) {
+            case 0: return this.state.swapCols ? COL_0 : COL_1;
+            case 1: return this.state.swapCols ? COL_1 : COL_0;
+            default: return COL_0;
+        }
+    }
+
     render() {
 
         let data = [];
-        let dataDay1 = this.getRecord(this.state.selectedDay1);
+        const dataDay1 = this.getRecord(this.state.selectedDay1);
         if (dataDay1) {
             data.push({
                 data: mapSymptomsToFloats(dataDay1.symptoms),
-                meta: {color: COL_1}
+                meta: {color: this.getCol(0)}
             });
         }
         const dataDay2 = this.getRecord(this.state.selectedDay2);
         if (dataDay2) {
             data.push({
                 data: mapSymptomsToFloats(dataDay2.symptoms),
-                meta: {color: COL_2}
+                meta: {color: this.getCol(1)}
             });
         }
 
@@ -65,9 +99,10 @@ class Dashboard extends Component {
                     amountDays={30} 
                     checkedDays={this.props.records.map(rec => new Date(rec.date))} 
                     selectDays={[
-                        {date: this.state.selectedDay1, color: COL_1},
-                        {date: this.state.selectedDay2, color: COL_2},
+                        {date: this.state.selectedDay1, color: this.getCol(0)},
+                        {date: this.state.selectedDay2, color: this.getCol(1)},
                     ]}
+                    onDaySelected={this.daySelectedHandler}
                 />
 
                 <div className={classes.RadarChart}>

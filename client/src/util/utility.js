@@ -116,3 +116,14 @@ export const getFormattedDate = (date) => {
     const arr = [date.getFullYear(), date.getMonth()+1, date.getDate()];
     return arr.join('-');
 }
+
+export const resetDateToStartOfDay = date => {
+    const d = new Date(date);
+
+    d.setMilliseconds(0);
+    d.setSeconds(0);
+    d.setMinutes(0);
+    d.setHours(0);
+    
+    return d;
+}

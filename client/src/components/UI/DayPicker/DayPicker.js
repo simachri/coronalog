@@ -4,7 +4,7 @@ import propTypes from 'prop-types';
 import classes from './DayPicker.module.scss';
 import DayItem from './DayItem/DayItem';
 import AddDayItem from './AddDayItem/AddDayItem';
-import { arrContainsDay, sameDay, getFormattedDate } from './../../../util/utility';
+import { arrContainsDay, sameDay, getFormattedDate, resetDateToStartOfDay } from './../../../util/utility';
 import { withRouter } from 'react-router-dom';
 
 export const DAY_MS = 1000*60*60*24;
@@ -15,9 +15,18 @@ class DayPicker extends Component {
         this.props.history.push('/daily-q');
     }
 
+    getIsSelected = date => {
+        if (this.props.selectDays) {
+            const selectEl = this.props.selectDays.find(el => sameDay(date, el.date));
+            if (selectEl) {
+                return selectEl.color;
+            }
+        }
+    }
+
     render() {
 
-        const startDate = this.props.startAt;
+        const startDate = resetDateToStartOfDay(this.props.startAt);
         const days = [];
 
         let startIdx = 0;
@@ -25,11 +34,22 @@ class DayPicker extends Component {
             //whether symptoms of today were already entered
             if(this.props.checkedDays && arrContainsDay(this.props.checkedDays, startDate)){
                 days.push(
-                    <DayItem key={startDate.getTime()} linkTo={'/daily-q?date=' + getFormattedDate(startDate)} date={startDate} blueBg checked />
+                    <DayItem 
+                        key={startDate.getTime()} 
+                        linkTo={'/daily-q?date=' + getFormattedDate(startDate)} 
+                        date={startDate} 
+                        onSelect={() => this.props.onDaySelected(startDate)}
+                        selected={this.getIsSelected(startDate)}
+                        blueBg 
+                        checked 
+                    />
                 );
             } else {
                 days.push(
-                    <AddDayItem key={startDate.getTime()} linkTo={'/daily-q?date=' + getFormattedDate(startDate)}/>
+                    <AddDayItem 
+                        key={startDate.getTime()} 
+                        linkTo={'/daily-q?date=' + getFormattedDate(startDate)}
+                    />
                 );
             }
             startIdx = 1;
@@ -42,16 +62,15 @@ class DayPicker extends Component {
                 checked = arrContainsDay(this.props.checkedDays, date);
             }
 
-            let border = null;
-            if (this.props.selectDays) {
-                const selectEl = this.props.selectDays.find(el => sameDay(date, el.date));
-                if (selectEl) {
-                    border = selectEl.color;
-                }
-            }
-
             days.push(
-                <DayItem key={date.getTime()} date={date} linkTo={'/daily-q?date=' + getFormattedDate(date)} checked={checked} border={border}/>
+                <DayItem 
+                    key={date.getTime()} 
+                    date={date} 
+                    linkTo={'/daily-q?date=' + getFormattedDate(date)} 
+                    checked={checked} 
+                    selected={this.getIsSelected(date)}
+                    onSelect={() => this.props.onDaySelected(date)}
+                />
             );
         }
 
@@ -69,7 +88,8 @@ DayPicker.propTypes = {
     selectDays: propTypes.arrayOf(propTypes.shape({
         date: propTypes.Date,
         color: propTypes.string
-    }))
+    })),
+    onDaySelected: propTypes.func
 };
 
 export default withRouter(DayPicker);
