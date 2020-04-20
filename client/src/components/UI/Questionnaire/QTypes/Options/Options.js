@@ -62,17 +62,20 @@ class Options extends Component {
 
       return (
          <div className={classes.Question}>
-            <div className={classes.Header}>{this.props.header}</div>
+            <div className={classes.Header}>{this.props.header + (this.props.required ? ' *' : '')}</div>
             <div className={classes.SubHeader}>{this.props.subHeader}</div>
             <div className={classes.Answers}>
                {answers}
             </div>
-            <div 
-                className={arrToCss(noAnswerClasses)}
-                onClick={this.props.onNoAnswer}
-            >
-               {this.props.noAnswerText}
-            </div>
+
+            {!this.props.required ? (
+                <div 
+                    className={arrToCss(noAnswerClasses)}
+                    onClick={this.props.onNoAnswer}
+                >
+                {this.props.noAnswerText}
+                </div>
+            ) : null}
          </div>
       );
    }
@@ -103,6 +106,7 @@ Options.propTypes = {
         propTypes.bool
     ]).isRequired,
     valueChanged: propTypes.func.isRequired,
+    required: propTypes.bool
 };
 
 export default Options;

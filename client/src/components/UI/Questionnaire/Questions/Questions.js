@@ -11,7 +11,7 @@ import Question, { NO_ANSWER } from "./Question/Question";
 import EndPage, { TYPE_END } from './../QTypes/End/End';
 import MultiOptionsPage, { TYPE_MULTI_OPTIONS } from './../QTypes/MultiOptions/MultiOptions';
 
-const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer, onSave, loading ) => {
+const mapToComp = ( obj, ref, onGoBack, resumeHandler, value, extraSelected, valueChangedHandler, onNoAnswer, onSave, loading ) => {
     switch(obj.type){
         case TYPE_START:
             return (
@@ -19,9 +19,7 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                     key={obj.name}
                     outerRef={ref}
                     onGoBack={onGoBack}
-                    hideBack={hideBack}
                     onResume={resumeHandler}
-                    hideResume={hideResume}
                 >
                     <StartPage
                         {...obj}
@@ -35,9 +33,7 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                     key={obj.name}
                     outerRef={ref}
                     onGoBack={onGoBack}
-                    hideBack={hideBack}
                     onResume={resumeHandler}
-                    hideResume={hideResume}
                 >
                     <OptionsPage
                         {...obj}
@@ -54,9 +50,7 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                     key={obj.name}
                     outerRef={ref}
                     onGoBack={onGoBack}
-                    hideBack={hideBack}
                     onResume={resumeHandler}
-                    hideResume={hideResume}
                 >
                     <MultiOptionsPage
                         {...obj}
@@ -73,9 +67,7 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                     key={obj.name}
                     outerRef={ref}
                     onGoBack={onGoBack}
-                    hideBack={hideBack}
                     onResume={resumeHandler}
-                    hideResume={hideResume}
                 >
                     <SelectPage
                         {...obj}
@@ -91,9 +83,7 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                     key={obj.name}
                     outerRef={ref}
                     onGoBack={onGoBack}
-                    hideBack={hideBack}
                     onResume={resumeHandler}
-                    hideResume={hideResume}
                 >
                     <InputPage
                         {...obj}
@@ -109,9 +99,7 @@ const mapToComp = ( obj, ref, hideBack, onGoBack, hideResume, resumeHandler, val
                     key={obj.name}
                     outerRef={ref}
                     onGoBack={onGoBack}
-                    hideBack={hideBack}
                     onResume={resumeHandler}
-                    hideResume={hideResume}
                 >
                     <EndPage
                         onSave={onSave}
@@ -204,22 +192,25 @@ class Questions extends Component {
                     break;
             }
         }
-        return initState;
+        return {
+            values: initState,
+            refs: this.props.qSpecs.map(config => React.createRef())
+        };
     }
 
     getFlattennedState = () => {
         const flatState = {};
-        for (let key in this.state){
-            if (this.state[key].value.constructor.name === 'Object'){
-                for (let deepKey in this.state[key].value){
-                    if (!this.state[key].value[deepKey] && this.props.qSpecs.find(conf => conf.name === key).addOptions && deepKey === this.props.qSpecs.find(conf => conf.name === key).addOptions.id) {
+        for (let key in this.state.values){
+            if (this.state.values[key].value.constructor.name === 'Object'){
+                for (let deepKey in this.state.values[key].value){
+                    if (!this.state.values[key].value[deepKey] && this.props.qSpecs.find(conf => conf.name === key).addOptions && deepKey === this.props.qSpecs.find(conf => conf.name === key).addOptions.id) {
                         flatState[deepKey] = null;
                     } else {
-                        flatState[deepKey] = this.state[key].value[deepKey];
+                        flatState[deepKey] = this.state.values[key].value[deepKey];
                     }
                 }
-            } else if(this.state[key].value !== NO_ANSWER && this.state[key].value !== ''){
-                flatState[key] = this.state[key].value;
+            } else if(this.state.values[key].value !== NO_ANSWER && this.state.values[key].value !== ''){
+                flatState[key] = this.state.values[key].value;
             } else {
                 flatState[key] = NO_ANSWER;
             }
@@ -249,48 +240,56 @@ class Questions extends Component {
     }
 
     valChangedHandler = (name, val, extraSelected = false) => {
-        const newState = {
-            [name] : {
-                value: val,
-                extraSelected: extraSelected
-            },
-        };
-        this.setState(newState);
+        this.setState({ 
+            values: {
+                ...this.state.values,
+                [name] : {
+                    value: val,
+                    extraSelected: extraSelected
+                }
+            } 
+        });
     };
 
-    getResumeHandler = ( elementRef, allRefs ) => {
-        const idx = allRefs.findIndex( ref => ref === elementRef);
-        if(idx < 0 || idx >= allRefs.length) return null;
-        return () => scrollTo(allRefs[idx + 1]);
-    };
-
-    getGoBackHandler = ( elementRef, allRefs ) => {
-        const idx = allRefs.findIndex( ref => ref === elementRef);
-        if(idx < 0 || idx >= allRefs.length) return null;
-        return () => scrollTo(allRefs[idx - 1]);
-    };
+    saveHandler = () => {
+        //check if all required fields are set to !NO_ANSWER
+        const answerNeeded = [];
+        for (let key in this.state.values) {
+            const idx = this.props.qSpecs.findIndex(config => config.name === key);
+            if (this.props.qSpecs[idx].required
+                && this.state.values[key].value === NO_ANSWER) {
+                    answerNeeded.push(idx);
+            } else if ( this.props.qSpecs[idx].verify && this.state.values[key].value !== NO_ANSWER
+                && !this.props.qSpecs[idx].verify.test(this.state.values[key].value)) {
+                    answerNeeded.push(idx);
+                }
+        }
+        
+        if (answerNeeded.length > 0) {
+            scrollTo(this.state.refs[answerNeeded[0]]);
+        } else {
+            this.props.onSave(this.getFlattennedState());
+        }
+    }
 
     render() {
-        console.log(this.state, this.props, this.getFlattennedState())
+        
         const questions = [];
-        const refs = [];
         this.props.qSpecs.forEach( (pageSpec, idx) => {
-            refs.push(React.createRef());
+            
             const hideBack = idx === 0;
             const hideResume = this.props.qSpecs.slice(-1)[0] === pageSpec ? true : false;
             questions.push(
                 mapToComp(
                     pageSpec,
-                    refs.slice(-1)[0],
-                    hideBack,
-                    (!hideBack ? this.getGoBackHandler(refs.slice(-1)[0], refs) : null),
-                    hideResume,
-                    (!hideResume ? this.getResumeHandler(refs.slice(-1)[0], refs) : null),
-                    (pageSpec.type !== TYPE_START && pageSpec.type !== TYPE_END ? this.state[pageSpec.name].value : null),
-                    (pageSpec.type === TYPE_OPTIONS || pageSpec.type === TYPE_MULTI_OPTIONS ? this.state[pageSpec.name].extraSelected : null),
+                    this.state.refs[idx],
+                    hideBack ? null : () => scrollTo(this.state.refs[idx-1]),
+                    hideResume ? null : () => scrollTo(this.state.refs[idx+1]),
+                    (pageSpec.type !== TYPE_START && pageSpec.type !== TYPE_END ? this.state.values[pageSpec.name].value : null),
+                    (pageSpec.type === TYPE_OPTIONS || pageSpec.type === TYPE_MULTI_OPTIONS ? this.state.values[pageSpec.name].extraSelected : null),
                     (value, extraSelected = false) => this.valChangedHandler(pageSpec.name, value, extraSelected),
                     () => this.valChangedHandler(pageSpec.name, NO_ANSWER),
-                    () => this.props.onSave(this.getFlattennedState()),
+                    this.saveHandler,
                     this.props.loading
                 )
             );

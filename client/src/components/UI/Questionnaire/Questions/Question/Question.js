@@ -11,12 +11,12 @@ class Question extends Component {
         return (
             <div ref={this.props.outerRef} className={classes.Page}>
                 {this.props.children}
-                {!this.props.hideBack
+                {this.props.onGoBack
                     ?   <div className={classes.Back} onClick={this.props.onGoBack}>
                             <FontAwesomeIcon icon={faAngleDoubleUp} />
                         </div>
                     : null}
-                {!this.props.hideResume
+                {this.props.onResume
                     ?   <div className={classes.Resume} onClick={this.props.onResume}>
                             <FontAwesomeIcon icon={faAngleDoubleDown} />
                         </div>
@@ -28,9 +28,7 @@ class Question extends Component {
 
 Question.propTypes = {
     outerRef: propTypes.instanceOf(Object),
-    hideBack: propTypes.bool,
     onGoBack: propTypes.func,
-    hideResume: propTypes.bool,
     onResume: propTypes.func,
     value: propTypes.string,
     valueChanged: propTypes.func,

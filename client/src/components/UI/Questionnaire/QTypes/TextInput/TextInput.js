@@ -15,7 +15,7 @@ const textInput = ( props ) => {
 
     return(
         <div className={classes.Question}>
-            <div className={classes.Header}>{props.header}</div>
+            <div className={classes.Header}>{props.header + (props.required ? ' *' : '')}</div>
             <div className={classes.SubHeader}>{props.subHeader}</div>
             <div className={classes.AnswerTextInput}>
                 <TextInput
@@ -26,12 +26,15 @@ const textInput = ( props ) => {
                     inputChangedHandler={event => props.valueChanged(event.target.value)}
                 />
             </div>
-            <div 
-                className={arrToCss(noAnswerClasses)}
-                onClick={props.onNoAnswer}
-            >
-               {props.noAnswerText}
-            </div>
+            
+            {!props.required ? (
+                <div 
+                    className={arrToCss(noAnswerClasses)}
+                    onClick={this.props.onNoAnswer}
+                >
+                {props.noAnswerText}
+                </div>
+            ) : null}
         </div>
     );
 };
@@ -48,7 +51,8 @@ textInput.propTypes = {
         propTypes.string,
         propTypes.number
     ]).isRequired,
-    valueChanged: propTypes.func.isRequired
+    valueChanged: propTypes.func.isRequired,
+    required: propTypes.bool
 };
 
 export const TYPE_TEXT_INPUT = 'type_text_input';

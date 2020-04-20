@@ -106,7 +106,7 @@ class MultiOptions extends Component {
 
         return (
             <div className={qClasses.Question}>
-                <div className={qClasses.Header}>{this.props.header}</div>
+                <div className={qClasses.Header}>{this.props.header + (this.props.required ? ' *' : '')}</div>
                 <div className={qClasses.SubHeader}>{this.props.subHeader}</div>
 
                 <div className={classes.Options}>
@@ -122,12 +122,14 @@ class MultiOptions extends Component {
 
                 {textInput}
 
-                <div 
-                    className={arrToCss(noAnswerClasses)}
-                    onClick={this.props.onNoAnswer}
-                >
+                {!this.props.required ? (
+                    <div 
+                        className={arrToCss(noAnswerClasses)}
+                        onClick={this.props.onNoAnswer}
+                    >
                     {this.props.noAnswerText}
-                </div>
+                    </div>
+                ) : null}
             </div>
         );
     }
@@ -155,7 +157,8 @@ MultiOptions.propTypes = {
     noAnswerText: propTypes.string,
     onNoAnswer: propTypes.func,
     valueChanged: propTypes.func.isRequired,
-    allFalseLabel: propTypes.string.isRequired
+    allFalseLabel: propTypes.string.isRequired,
+    required: propTypes.bool
 };
 
 export const NONE_ANSWER = 'NONE_ANSWER_H6fg!?/h&f';

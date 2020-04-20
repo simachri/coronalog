@@ -34,7 +34,7 @@ const select = ( props ) => {
 
     return(
         <div className={classes.Question}>
-            <div className={classes.Header}>{props.header}</div>
+            <div className={classes.Header}>{props.header + (props.required ? ' *' : '')}</div>
             <div className={classes.SubHeader}>{props.subHeader}</div>
             <div className={classes.AnswerSelect}>
                 {mapToComp({...props.selectSpec,
@@ -43,12 +43,15 @@ const select = ( props ) => {
                      value: props.value
                      })}
             </div>
-            <div 
-                className={arrToCss(noAnswerClasses)}
-                onClick={props.onNoAnswer}
-            >
-               {props.noAnswerText}
-            </div>
+
+            {!props.required ? (
+                <div 
+                    className={arrToCss(noAnswerClasses)}
+                    onClick={this.props.onNoAnswer}
+                >
+                {props.noAnswerText}
+                </div>
+            ) : null}
         </div>
     );
 };
@@ -66,6 +69,7 @@ select.propTypes = {
     valueChanged: propTypes.func.isRequired,
     onNoAnswer: propTypes.func,
     noAnswerText: propTypes.string,
+    required: propTypes.bool
 };
 
 export const TYPE_SELECT = 'type_select';
