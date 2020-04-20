@@ -1,7 +1,8 @@
 import React from "react";
+import propTypes from 'prop-types';
 import  { NavLink } from 'react-router-dom';
 
-import classes from './TabNav.module.css';
+import classes from './TabNav.module.scss';
 
 const tabNav = ( props ) => {
 
@@ -10,6 +11,7 @@ const tabNav = ( props ) => {
     const navItems = props.items.map( (item, idx) =>  (
         <NavLink
             className={classes.TabNavItem}
+            activeClassName={classes.ActiveItem}
             key={idx}
             to={item.link}
             exact={item.exact}>
@@ -28,5 +30,14 @@ const tabNav = ( props ) => {
     );
 
 };
+tabNav.propTypes = {
+    items: propTypes.arrayOf(propTypes.exact({
+        title: propTypes.string,
+        link: propTypes.string,
+        exact: propTypes.bool,
+        svgIcon: propTypes.element,
+    })).isRequired,
+    showTitle: propTypes.bool,
+}
 
 export default tabNav;

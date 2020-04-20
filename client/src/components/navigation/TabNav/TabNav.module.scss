@@ -1,0 +1,38 @@
+.TabNav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #fff;
+    box-shadow: -5px 0 3px #ddd;
+
+    .TabNavItem {
+        width: 18%;
+        height: 100%;
+        margin: 1%;
+        padding: 5px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .TabNavItem svg {
+        height: 45px;
+        color: #26238B;
+    }
+
+    .ActiveItem svg path[fill="none"] {
+        fill: #FFECC3;
+    }
+}
+
+@media (min-width: 500px) {
+    .MobileOnly {
+        display: none;
+    }
+}
