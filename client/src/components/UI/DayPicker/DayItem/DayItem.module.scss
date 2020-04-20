@@ -31,6 +31,7 @@
         .LinkToQ {
             visibility: visible;
             opacity: 1;
+            clip-path: circle(100% at 50% 50%);
         }
     }
 
@@ -45,7 +46,7 @@
     .DayLabel,
     .LinkToQ {
         position: absolute;
-        transition: all .2s;
+        transition: all .15s;
     }
 
     .Checkmark {
@@ -62,7 +63,7 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        transition-delay: .2s;
+        transition-delay: .15s;
     }
     
     .DayLabel {
@@ -82,7 +83,8 @@
         transform: translateX(-50%);
         visibility: hidden;
         opacity: 0;
-        transition-delay: .3s;
+        clip-path: circle(0 at 50% 50%);
+        transition-delay: .2s;
     }
 }
 
