@@ -128,3 +128,11 @@ export const resetDateToStartOfDay = date => {
     
     return d;
 }
+
+export const isNumeric = val => {
+    return !isNaN(val);
+}
+
+export const asNumOrOriginal = val => {
+    return isNumeric(val) ? +val : val;
+}

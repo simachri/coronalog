@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import propTypes from 'prop-types';
-import { scrollTo } from "../../../../util/utility";
+import { scrollTo, asNumOrOriginal } from "../../../../util/utility";
 
 import classes from '../Questionnaire.module.css';
 import StartPage, {TYPE_START} from "../QTypes/Start/Start";
@@ -220,7 +220,7 @@ class Questions extends Component {
         //map NO_ANSWER to null values
         for (let key in flatState) {
             if (flatState[key] !== NO_ANSWER) {
-                flatStateFull[key] = flatState[key];
+                flatStateFull[key] = asNumOrOriginal( flatState[key] ); //convert to number if possible
             } else {
                 const config = this.props.qSpecs.find(conf => conf.name === key);
                 if (config && config.type === TYPE_MULTI_OPTIONS) {
@@ -255,14 +255,22 @@ class Questions extends Component {
         //check if all required fields are set to !NO_ANSWER
         const answerNeeded = [];
         for (let key in this.state.values) {
+
             const idx = this.props.qSpecs.findIndex(config => config.name === key);
-            if (this.props.qSpecs[idx].required
+            const thisSpec = this.props.qSpecs[idx];
+            if (thisSpec.required
                 && this.state.values[key].value === NO_ANSWER) {
                     answerNeeded.push(idx);
-            } else if ( this.props.qSpecs[idx].verify && this.state.values[key].value !== NO_ANSWER
-                && !this.props.qSpecs[idx].verify.test(this.state.values[key].value)) {
+            } else if ( thisSpec.verify && this.state.values[key].value !== NO_ANSWER) {
+                if ( thisSpec.type === TYPE_TEXT_INPUT
+                    && !thisSpec.verify.test(this.state.values[key].value)) {
+                        answerNeeded.push(idx);
+                } else if ( (thisSpec.type === TYPE_OPTIONS || thisSpec.type === TYPE_MULTI_OPTIONS)
+                    && this.state.values[key].extraSelected && !thisSpec.verify.test(this.state.values[key].value) ){
                     answerNeeded.push(idx);
                 }
+            }
+
         }
         
         if (answerNeeded.length > 0) {
@@ -273,6 +281,7 @@ class Questions extends Component {
     }
 
     render() {
+        console.log(this.state.values)
         
         const questions = [];
         this.props.qSpecs.forEach( (pageSpec, idx) => {

@@ -77,6 +77,7 @@ export const SYMPTOM_ANAMNESIS_QUESTIONS = [
             {id: 0, label: 'Nein', value: 0},
             {id: 1, label: 'Ja', value: '38.0', textInput: true}
         ],
+        verify: /^[3,4][0-9](\.[0-9]?[0-9]?)?$/,
         val: null,
         noAnswerText: 'Möchte ich nicht sagen'
     },

@@ -10,7 +10,7 @@ import {NO_ANSWER} from '../../Questions/Question/Question';
 class Options extends Component {
 
     state = {
-        textInput: ''
+        textInput: this.props.extraTextSelected ? this.props.value : ''
     };
 
    render() {
@@ -43,9 +43,13 @@ class Options extends Component {
                           <TextInput
                               name={answer.label}
                               val={this.state.textInput}
+                              verify={this.props.verify}
                               inputChangedHandler={(event) => {
-                                  this.setState({textInput: event.target.value});
-                                  this.props.valueChanged(event.target.value, true);
+                                  const newVal = event.target.value.replace(',', '.');
+                                  if (newVal.length <= 1 || this.props.verify.test(newVal)){
+                                    this.setState({textInput: newVal});
+                                    this.props.valueChanged(newVal, true);
+                                  }                                  
                               }}
                           />
                       </div>
@@ -106,7 +110,8 @@ Options.propTypes = {
         propTypes.bool
     ]).isRequired,
     valueChanged: propTypes.func.isRequired,
-    required: propTypes.bool
+    required: propTypes.bool,
+    verify: propTypes.objectOf(RegExp)
 };
 
 export default Options;
