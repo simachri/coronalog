@@ -8,6 +8,8 @@ def get_timestamp():
     """Returns a server timestamp."""
     return firestore.firestore.SERVER_TIMESTAMP
 
+class ReturnMessage(BaseModel):
+    message: str
 
 class Symptoms(BaseModel):
     cough_intensity: int = None
