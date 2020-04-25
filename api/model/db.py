@@ -10,8 +10,9 @@ from google.cloud.firestore_v1.collection import CollectionReference
 from google.cloud.firestore_v1.document import DocumentReference
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.transforms import Sentinel
+from google.cloud.firestore_v1.query import Query
 
-from models import Record, Anamnesis, Symptoms, User
+from models import Record, Anamnesis, Symptoms, User, UserStored
 
 
 def firestore_client() -> Client:
@@ -51,6 +52,66 @@ def delete_subcolls(batch: WriteBatch, doc: DocumentReference):
 class UsersDb:
 
     @staticmethod
+    def username_exists(username: str):
+        """Query the db to check if user with username exists"""
+        query = firestore_client().collection(u'users').where(u'username', u'==', username)
+        doc = query.stream()
+        try:
+            ref = next(doc)
+            return True, ref
+        except:
+            return False, None
+
+    @staticmethod
+    def user_id_exists(user_id: str) -> Tuple[bool, DocumentReference]:
+        """Query the db to check if user with specified id exists.
+
+        :return: true or false depending on the existence of the user and the DocumentReference if it exists.
+        """
+        doc_ref = firestore_client().document(u'users', user_id)
+        if doc_ref.get().exists:
+            return True, doc_ref
+        else:
+            return False, None 
+
+    @staticmethod
+    def save_new_user(user_id: str, user: UserStored):
+        """Create a user in the db and raise an error if user already exists"""
+        firestore_client().collection(u'users').add(
+            document_data=user.dict(),
+            document_id=user_id
+        )
+
+    @staticmethod
+    def get_user(username: str) -> Tuple[str, User]:
+        """Get the user record by username.
+
+        :return: The user record for the requested user and his id.
+        :raises LookupError: If no database document exists for the requested user.
+        """
+        user_exists, doc_ref = UsersDb.username_exists(username)
+        if not user_exists:
+            raise LookupError(f"No database document exists for user '{username}'.")
+        return doc_ref.get().id, UserStored(**doc_ref.get().to_dict())
+
+    @staticmethod
+    def get_user_by_id(user_id: str) -> UserStored:
+        """Get the user record by id
+
+        :return: The user record of the specified id.
+        :raises LookupError: If no user with this id exists.
+        """
+        user_exists, doc_ref = UsersDb.user_id_exists(user_id)
+        if not user_exists:
+            raise LookupError(f'User with id {user_id} does not exist')
+        return UserStored(**doc_ref.get().to_dict())
+
+    @staticmethod
+    def remove_user_by_id(user_id: str) -> None:
+        """Permanently remove the user with specified is from the db."""
+        firestore_client().document(u'users', user_id).delete()
+
+    @staticmethod
     def set_user(user: User, anamnesis: Anamnesis = None) -> Anamnesis:
         """Create or update user for whom records can be tracked.
 
@@ -68,16 +129,23 @@ class UsersDb:
         return Anamnesis.parse_obj(doc_ref.get().to_dict())
 
     @staticmethod
-    def delete_user(username):
+    def remove_user_by_username(username: str):
         """Delete a user record including all its documents of its subcollections.
 
         When a document in Firestore is deleted, the documents of its subcollections are not deleted,
         see https://firebase.google.com/docs/firestore/solutions/delete-collections
         """
-        batch: WriteBatch = firestore_client().batch()
-        user_doc: DocumentReference = firestore_client().collection(u'users').document(username)
-        delete_subcolls(batch, user_doc)
-        batch.commit()
+        docs = firestore_client().collection(u'users').where(u'username', u'==', username).stream()
+        try:
+            doc = next(docs)
+            doc.reference.delete()
+        except:
+            print('username does not exist')
+
+        # batch: WriteBatch = firestore_client().batch()
+        # user_doc: DocumentReference = firestore_client().collection(u'users').document(username)
+        # delete_subcolls(batch, user_doc)
+        # batch.commit()
 
     @staticmethod
     def get_all() -> List[User]:

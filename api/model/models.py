@@ -1,5 +1,5 @@
 import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from firebase_admin import firestore
 
@@ -23,20 +23,6 @@ class Symptoms(BaseModel):
     fever: float = None
     diarrhoea: bool = None
 
-
-class Record(BaseModel):
-    """Symptoms record for a specific date."""
-    date: datetime.date
-    symptoms: Symptoms
-
-
-class User(BaseModel):
-    username: str
-
-class UserExists(BaseModel):
-    exists: bool
-
-
 class Anamnesis(BaseModel):
     gender: str
     residence: int
@@ -54,3 +40,25 @@ class Anamnesis(BaseModel):
     cancer: bool = None
     immunodeficiency: bool = None
     miscellaneous: str = None
+
+class Record(BaseModel):
+    """Symptoms record for a specific date."""
+    date: datetime.date
+    symptoms: Symptoms
+
+class User(BaseModel):
+    username: str = Field(..., min_length=6, max_length=32)
+
+class UserStored(User):
+    password: str
+    time_created: int
+    usage_purpose: str
+
+class UserLoginBody(BaseModel):
+    username: str
+    expires_in: int
+
+class UserExists(BaseModel):
+    exists: bool
+
+

@@ -9,7 +9,7 @@ from starlette.testclient import TestClient
 
 from models import User, Anamnesis
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'firebase_key.json'
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'firebase_key.json'
 # We need to suppress the PEP8 error 'import not at top'
 from db import UsersDb  # noqa: E402
 
@@ -27,7 +27,7 @@ class TestApi(unittest.TestCase):
 
     def setUp(self):
         """Test setup; is called before every unit test"""
-        from app import app
+        from api.app import app
         self.client = TestClient(app)
         # Create a document in the database for the test user.
         user = User(username=TEST_USER_NAME)
@@ -41,7 +41,7 @@ class TestApi(unittest.TestCase):
 
     def tearDown(self):
         """Test teardown; is called after every unit test"""
-        UsersDb.delete_user(TEST_USER_NAME)
+        UsersDb.remove_user_by_username(TEST_USER_NAME)
 
     def test_get_all_records_for_user_is_ok(self):
         dates = ['2020-03-21', '2020-03-22']

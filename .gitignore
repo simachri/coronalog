@@ -1,4 +1,5 @@
 api/firebase_key.json
+api/auth/config.json
 __pycache__
 package-lock.json
 #pycharm
