@@ -14,6 +14,3 @@ misc.xml
 *venv/
 Pipfile.lock
 docker-compose.yaml
-
-
-

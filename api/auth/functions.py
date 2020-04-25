@@ -45,15 +45,15 @@ def generate_access_token(user_id: str, user: UserStored) -> str:
         'iss': 'https://coronalog.de/auth',
         'sub': user_id,
         'iat': get_timestamp(),
-        'exp': get_timestamp( AUTH_CONFIG['access_token_lifetime'] ),
+        'exp': get_timestamp( AUTH_CONFIG['access_token']['lifetime'] ),
         'username': user.username,
         'roles': ['user']
     }
-    access_token = jwt.encode(payload, AUTH_CONFIG['access_token_secret'], algorithm=AUTH_CONFIG['access_token_sign_alg'])
+    access_token = jwt.encode(payload, AUTH_CONFIG['access_token']['secret'], algorithm=AUTH_CONFIG['access_token']['sign_alg'])
     return access_token
 
 def validate_access_token(access_token: str, user_role: str = 'user') -> Tuple[str, UserStored]:
-    payload = jwt.decode(access_token, AUTH_CONFIG['access_token_secret'], algorithms=AUTH_CONFIG['access_token_sign_alg'])
+    payload = jwt.decode(access_token, AUTH_CONFIG['access_token']['secret'], algorithms=AUTH_CONFIG['access_token']['sign_alg'])
     if user_role not in payload['roles']:
         raise UnverifiedRoleException('Required role not contained in jwt')
 
@@ -64,6 +64,14 @@ def validate_access_token(access_token: str, user_role: str = 'user') -> Tuple[s
     except LookupError:
         raise UserNotExistsException(f'User with id {user_id} does not exist')
 
+def generate_error_dict(status: int, key: str, message: str) -> dict:
+    return {
+        'error': {
+            'code': status,
+            'key': key,
+            'message': message
+        }
+    }
 
 
 class ClogException(Exception):
@@ -74,4 +82,6 @@ class PurposeIdException(ClogException):
 class UnverifiedRoleException(ClogException):
     pass
 class UserNotExistsException(ClogException):
+    pass
+class UserAlreadyExistsException(ClogException):
     pass

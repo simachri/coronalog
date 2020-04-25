@@ -70,11 +70,11 @@ class TestAuthFunctions(unittest.TestCase):
         token = functions.generate_access_token(user_id, user)
         t1 = functions.get_timestamp()
 
-        decoded = jwt.decode(token, functions.AUTH_CONFIG['access_token_secret'], algorithms=functions.AUTH_CONFIG['access_token_sign_alg'])
+        decoded = jwt.decode(token, functions.AUTH_CONFIG['access_token']['secret'], algorithms=functions.AUTH_CONFIG['access_token']['sign_alg'])
 
         assert decoded['sub'] == user_id
         assert decoded['iat'] >= t0 and decoded['iat'] <= t1
-        assert decoded['exp'] >= t0 + functions.AUTH_CONFIG['access_token_lifetime'] and decoded['exp'] <= t1 + functions.AUTH_CONFIG['access_token_lifetime'] 
+        assert decoded['exp'] >= t0 + functions.AUTH_CONFIG['access_token']['lifetime'] and decoded['exp'] <= t1 + functions.AUTH_CONFIG['access_token']['lifetime'] 
 
     def test_validate_access_token(self):
         user = TestAuthFunctions.generate_test_user()
@@ -83,12 +83,12 @@ class TestAuthFunctions(unittest.TestCase):
             'iss': 'https://coronalog.de/auth',
             'sub': user_id,
             'iat': functions.get_timestamp(),
-            'exp': functions.get_timestamp( functions.AUTH_CONFIG['access_token_lifetime'] ),
+            'exp': functions.get_timestamp( functions.AUTH_CONFIG['access_token']['lifetime'] ),
             'username': user.username,
             'roles': ['user']
         }
         UsersDb.save_new_user(user_id, user)
-        token = jwt.encode(payload, functions.AUTH_CONFIG['access_token_secret'], algorithm=functions.AUTH_CONFIG['access_token_sign_alg'])
+        token = jwt.encode(payload, functions.AUTH_CONFIG['access_token']['secret'], algorithm=functions.AUTH_CONFIG['access_token']['sign_alg'])
 
         dec_user_id, dec_user = functions.validate_access_token(token, 'user')
 
