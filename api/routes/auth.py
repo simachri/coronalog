@@ -29,16 +29,16 @@ def signup(
                 message=f'{username} already exists.'
             )
         )
-    # except Exception as err:
-    #     print(err)
-    #     return JSONResponse(
-    #         status_code=500,
-    #         content=auth.generate_error_dict(
-    #             status=500,
-    #             key='SERVER_ERROR',
-    #             message='Something went wrong'
-    #         )
-    #     )
+    except Exception as err:
+        print(err)
+        return JSONResponse(
+            status_code=500,
+            content=auth.generate_error_dict(
+                status=500,
+                key='SERVER_ERROR',
+                message='Something went wrong'
+            )
+        )
 
 @router.post('/signin', response_model=UserLoginBody)
 def signin(
