@@ -111,7 +111,7 @@ class TestAuth(unittest.TestCase):
             'username': TEST_USER_NAME,
             'password': TEST_USER_PW
         }
-        res = self.client.post('/auth/signin', post_body)
+        res = self.client.post('/auth/signin', json=post_body)
         assert res.status_code == 200
         TestAuth.check_login_response(res)
 
@@ -120,16 +120,16 @@ class TestAuth(unittest.TestCase):
             'username': TEST_USER_NAME,
             'password': TEST_USER_PW+'WRONG'
         }
-        res = self.client.post('/auth/signin', post_body)
+        res = self.client.post('/auth/signin', json=post_body)
         assert res.status_code == 400
         TestAuth.check_error_response(400, res.json(), 'WRONG_PASSWORD')
 
     def test_signin_user_not_exists(self):
         post_body = {
-            'username': TEST_USER_NAME + ''.join((random.choice(string.ascii_lowercase) for _ in range(10))),
+            'username': TEST_USER_NAME+'kjhkh', # + ''.join((random.choice(string.ascii_lowercase) for _ in range(5))),
             'password': TEST_USER_PW
         }
-        res = self.client.post('/auth/signin', post_body)
+        res = self.client.post('/auth/signin', json=post_body)
         assert res.status_code == 400
         TestAuth.check_error_response(400, res.json(), 'USER_NOT_FOUND')
 

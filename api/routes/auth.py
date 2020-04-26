@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from db import UsersDb
 from models import UserStored, UserLoginBody
 from auth import functions as auth
-from auth.functions import UserAlreadyExistsException
+from auth.functions import UserAlreadyExistsException, InvalidPasswordException
 
 from firebase_admin import initialize_app
 
@@ -29,6 +29,46 @@ def signup(
                 message=f'{username} already exists.'
             )
         )
+    # except Exception as err:
+    #     print(err)
+    #     return JSONResponse(
+    #         status_code=500,
+    #         content=auth.generate_error_dict(
+    #             status=500,
+    #             key='SERVER_ERROR',
+    #             message='Something went wrong'
+    #         )
+    #     )
+
+@router.post('/signin', response_model=UserLoginBody)
+def signin(
+    response: Response,
+    username: str = Body(...),
+    password: str = Body(...)
+):
+    try:
+        do_signin_logic(response, username, password)
+
+    except LookupError as err: # username does not exist
+        print(err)
+        return JSONResponse(
+            status_code=400,
+            content=auth.generate_error_dict(
+                status=400,
+                key='USER_NOT_FOUND',
+                message='The user does not exist'
+            )
+        )
+    except InvalidPasswordException as err: # wrong password
+        print(err)
+        return JSONResponse(
+            status_code=400,
+            content=auth.generate_error_dict(
+                status=400,
+                key='WRONG_PASSWORD',
+                message='The password is invalid'
+            )
+        )
     except Exception as err:
         print(err)
         return JSONResponse(
@@ -40,13 +80,26 @@ def signup(
             )
         )
 
-@router.post('/signin', response_model=UserLoginBody)
-def signin(
+def do_signin_logic(
     response: Response,
-    username: str = Body(...),
-    password: str = Body(...)
-):
-    return JSONResponse(content={'test': 'test'})
+    username: str,
+    password: str
+) -> UserLoginBody:
+
+    # check if user exists
+    user_id, user = UsersDb.get_user(username)
+
+    # check password
+    if not auth.verify_pw(password, user.password):
+        raise InvalidPasswordException('The entered password is invalid.')
+
+    # issue token
+    generate_and_set_access_token(response, user_id, user)
+
+    return UserLoginBody(
+        username=username,
+        expires_in=auth.AUTH_CONFIG['access_token']['lifetime']
+    )
     
 def do_signup_logic(
     response: Response,
@@ -70,7 +123,18 @@ def do_signup_logic(
     user_id = auth.generate_uuid()
 
     # create access token
-    access_token: str = auth.generate_access_token(user_id, new_user)
+    generate_and_set_access_token(response, user_id, new_user)
+
+    # save newly created user only if all steps up until now were successful
+    UsersDb.save_new_user(user_id, new_user)
+    
+    return UserLoginBody(
+        username=username,
+        expires_in=auth.AUTH_CONFIG['access_token']['lifetime']
+    )
+
+def generate_and_set_access_token(response: Response, user_id: str, user: UserStored) -> None:
+    access_token: str = auth.generate_access_token(user_id, user)
     header, payload, signature = access_token.decode().split('.')
 
     # set token in cookies
@@ -95,11 +159,3 @@ def do_signup_logic(
             if cookie.startswith(auth.AUTH_CONFIG['access_token']['body_cookie_key']) or cookie.startswith(auth.AUTH_CONFIG['access_token']['signature_cookie_key']):
                 cookie = cookie + '; SameSite=Strict'
                 response.raw_headers[idx] = (header[0], cookie.encode())
-
-    # save newly created user only if all steps up until now were successful
-    UsersDb.save_new_user(user_id, new_user)
-    
-    return UserLoginBody(
-        username=username,
-        expires_in=auth.AUTH_CONFIG['access_token']['lifetime']
-    )

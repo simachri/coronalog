@@ -85,3 +85,5 @@ class UserNotExistsException(ClogException):
     pass
 class UserAlreadyExistsException(ClogException):
     pass
+class InvalidPasswordException(ClogException):
+    pass
