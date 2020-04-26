@@ -7,7 +7,7 @@ from google.cloud.firestore_v1 import Client, WriteBatch
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.collection import CollectionReference
 # noinspection PyPackageRequirements
-from google.cloud.firestore_v1.document import DocumentReference
+from google.cloud.firestore_v1.document import DocumentReference, DocumentSnapshot
 # noinspection PyPackageRequirements
 from google.cloud.firestore_v1.transforms import Sentinel
 from google.cloud.firestore_v1.query import Query
@@ -52,13 +52,13 @@ def delete_subcolls(batch: WriteBatch, doc: DocumentReference):
 class UsersDb:
 
     @staticmethod
-    def username_exists(username: str):
+    def username_exists(username: str) -> Tuple[bool, DocumentReference]:
         """Query the db to check if user with username exists"""
         query = firestore_client().collection(u'users').where(u'username', u'==', username)
         doc = query.stream()
         try:
-            ref = next(doc)
-            return True, ref
+            snap = next(doc)
+            return True, snap.reference
         except:
             return False, None
 

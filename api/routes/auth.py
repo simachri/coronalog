@@ -47,7 +47,7 @@ def signin(
     password: str = Body(...)
 ):
     try:
-        do_signin_logic(response, username, password)
+        return do_signin_logic(response, username, password)
 
     except LookupError as err: # username does not exist
         print(err)

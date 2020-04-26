@@ -27,7 +27,7 @@ def hash_pw(pw: str) -> str:
     return bcrypt.hashpw(pw.encode('utf-8'), bcrypt.gensalt())
 
 def verify_pw(pw: str, hash: str) -> bool:
-    return bcrypt.checkpw(pw.encode('utf-8'), hash)
+    return bcrypt.checkpw(pw.encode('utf-8'), hash.encode('utf-8'))
 
 def get_purpose_id(name: str) -> str:
     queryResult = (firestore.client()

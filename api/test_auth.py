@@ -166,7 +166,7 @@ class TestAuth(unittest.TestCase):
     @staticmethod
     def check_login_response(res: Response, user_name_appendix: str = '') -> None:
         res_body = res.json();
-        assert res_body['username'] == TEST_USER_NAME+'NEW'
+        assert res_body['username'] == TEST_USER_NAME+user_name_appendix
         assert res_body['expires_in'] == AUTH_CONFIG['access_token']['lifetime']
         # assert cookies
         cookies = res.headers['set-cookie'].split(',')
