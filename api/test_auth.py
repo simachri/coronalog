@@ -147,6 +147,18 @@ class TestAuth(unittest.TestCase):
         TestAuth.check_err_body_param(res, 'username', 'value_error.missing')
         TestAuth.check_err_body_param(res, 'password', 'value_error.missing')
 
+    def test_logout_successful(self):
+        #logging in and obtaining token
+        post_body = {
+            'username': TEST_USER_NAME,
+            'password': TEST_USER_PW+'WRONG'
+        }
+        login = self.client.post('/auth/login', json=post_body)
+
+        res = self.client.get('/auth/logout', cookies=login.cookies)
+        assert res.status_code == 200
+        assert res.cookies == {}
+
     @staticmethod
     def check_error_response(status: int, res_body: dict, key: str) -> None:
         assert 'error' in res_body

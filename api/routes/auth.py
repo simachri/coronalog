@@ -81,6 +81,16 @@ def signin(
             )
         )
 
+@router.get('/logout')
+def logout(
+    res: Response
+):
+    res.delete_cookie(auth.AUTH_CONFIG['access_token']['body_cookie_key'])
+    res.delete_cookie(auth.AUTH_CONFIG['access_token']['signature_cookie_key'])
+    
+    return {}
+
+
 def do_signin_logic(
     response: Response,
     username: str,
