@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, status, Response
+from fastapi import APIRouter, Body, status, Response, Request
 from fastapi.responses import JSONResponse
 from db import UsersDb
 from models import UserStored, UserLoginBody
@@ -11,6 +11,7 @@ router = APIRouter()
 
 @router.post('/signup', response_model=UserLoginBody)
 def signup(
+    requst: Request,
     response: Response,
     username: str = Body(...), 
     password: str = Body(..., min_length=8, max_length=64),

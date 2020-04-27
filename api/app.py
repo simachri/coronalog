@@ -1,7 +1,8 @@
 import os
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+# from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 
 from firebase_admin import initialize_app
 
@@ -13,6 +14,7 @@ firebase_app = initialize_app()
 
 app = FastAPI()
 
+# app.add_middleware(HTTPSRedirectMiddleware)
 
 app.include_router(
     apiRouter,

@@ -27,7 +27,12 @@ def hash_pw(pw: str) -> str:
     return bcrypt.hashpw(pw.encode('utf-8'), bcrypt.gensalt())
 
 def verify_pw(pw: str, hash: str) -> bool:
-    return bcrypt.checkpw(pw.encode('utf-8'), hash.encode('utf-8'))
+    hash_bytes: bytes
+    try:
+        hash_bytes = hash.encode('utf-8')
+    except:
+        hash_bytes = hash
+    return bcrypt.checkpw(pw.encode('utf-8'), hash_bytes)
 
 def get_purpose_id(name: str) -> str:
     queryResult = (firestore.client()
@@ -73,6 +78,19 @@ def generate_error_dict(status: int, key: str, message: str) -> dict:
         }
     }
 
+def authenticate_user_by_cookies(cookies: dict) -> Tuple[str, UserStored]:
+    if not AUTH_CONFIG['access_token']['body_cookie_key'] in cookies or not AUTH_CONFIG['access_token']['signature_cookie_key'] in cookies:
+        raise AuthenticationException('Token could not be reconstructed')
+
+    header_payload = cookies[AUTH_CONFIG['access_token']['body_cookie_key']]
+    signature = cookies[AUTH_CONFIG['access_token']['signature_cookie_key']]
+
+    user_id, user_stored = validate_access_token(
+        '.'.join((header_payload, signature))
+    )
+
+    return user_id, user_stored
+
 
 class ClogException(Exception):
     pass
@@ -86,4 +104,6 @@ class UserNotExistsException(ClogException):
 class UserAlreadyExistsException(ClogException):
     pass
 class InvalidPasswordException(ClogException):
+    pass
+class AuthenticationException(ClogException):
     pass
