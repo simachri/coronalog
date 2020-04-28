@@ -107,3 +107,5 @@ class InvalidPasswordException(ClogException):
     pass
 class AuthenticationException(ClogException):
     pass
+class InvalidUsagePurposeException(ClogException):
+    pass

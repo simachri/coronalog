@@ -12,7 +12,7 @@ from google.cloud.firestore_v1.document import DocumentReference, DocumentSnapsh
 from google.cloud.firestore_v1.transforms import Sentinel
 from google.cloud.firestore_v1.query import Query
 
-from models import Record, Anamnesis, Symptoms, User, UserStored
+from models import Record, Anamnesis, Symptoms, User, UserStored, UsagePurpose
 
 
 def firestore_client() -> Client:
@@ -252,3 +252,10 @@ class AnamnesesDb:
         # that have been explicitely set for the model.
         user_ref.set(anamnesis.dict(exclude_unset=True), merge=True)
         return Anamnesis.parse_obj(user_ref.get().to_dict())
+
+class UsagePurposesDb:
+
+    @staticmethod
+    def get_all() -> Sequence[UsagePurpose]:
+        """ Get all registered usage purposes from db"""
+        return firestore_client().collection(u'usage_purpose').list_documents()

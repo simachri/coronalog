@@ -1,9 +1,11 @@
+from typing import Sequence
+
 from fastapi import APIRouter, Body, status, Response, Request
 from fastapi.responses import JSONResponse
-from db import UsersDb
+from db import UsersDb, UsagePurposesDb
 from models import UserStored, UserLoginBody
 from auth import functions as auth
-from auth.functions import UserAlreadyExistsException, InvalidPasswordException
+from auth.functions import UserAlreadyExistsException, InvalidPasswordException, InvalidUsagePurposeException
 
 from firebase_admin import initialize_app
 
@@ -28,6 +30,16 @@ def signup(
                 status=status.HTTP_400_BAD_REQUEST,
                 key='USER_EXISTS',
                 message=f'{username} already exists.'
+            )
+        )
+    except InvalidUsagePurposeException as err:
+        print(err)
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            content=auth.generate_error_dict(
+                status=status.HTTP_400_BAD_REQUEST,
+                key='INVALID_PURPOSE_ID',
+                message=f'{usage_purpose} is invalid.'
             )
         )
     except Exception as err:
@@ -118,6 +130,16 @@ def do_signup_logic(
     password: str,
     usage_purpose: str
 ) -> UserLoginBody:
+
+    # check if valid usage_purpose was submitted
+    all_purps: Sequence = UsagePurposesDb.get_all()
+    valid_purpose = False
+    for purp_ref in all_purps:
+        if purp_ref.get().id == usage_purpose:
+            valid_purpose = True
+            break
+    if not valid_purpose:
+        raise InvalidUsagePurposeException(f'Usage purpose id {usage_purpose} is invalid')
 
     # check if user already exists
     user_exists, _ = UsersDb.username_exists(username)

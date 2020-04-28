@@ -61,4 +61,5 @@ class UserLoginBody(BaseModel):
 class UserExists(BaseModel):
     exists: bool
 
-
+class UsagePurpose(BaseModel):
+    purpose: str
