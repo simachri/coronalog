@@ -2,8 +2,10 @@ import React, {Component, Fragment} from "react";
 
 import HorizontalDayPicker from "../../components/UI/HorizontalDayPicker/HorizontalDayPicker";
 import RadarChart from '../../components/UI/RadarChart/RadarChart';
+import { fetchSymptomsRecords } from '../../store/actions/index';
 
 import classes from './Dashboard.module.css';
+import {connect} from "react-redux";
 
 const axios = require('axios').default;
 
@@ -26,7 +28,8 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        this.fetchDashboardData();
+        this.props.fetchSymptomsRecords("Kurt");
+        // this.fetchDashboardData();
     }
 
     setStateFromApiRes(symptoms) {
@@ -48,10 +51,24 @@ class Dashboard extends Component {
         }));
     }
 
-    mapStateToDashboard() {
+    getDashboardSelectedDayData() {
+        const maxFactor = 0.8;
+        const minFactor = 0.1;
+        // TODO: Get data for selected day.
+        let symptoms = this.props.dashboardData.symptomsRecords[0];
+        let selectedDayData = {
+            cough_intensity: symptoms['cough_intensity'] !== 0 ? symptoms.cough_intensity / 100 * maxFactor : minFactor,
+            sore_throat: symptoms['sore_throat'] !== 0 ? symptoms.sore_throat / 100 * maxFactor : minFactor,
+            limb_pain: symptoms['limb_pain'] !== 0 ? symptoms.limb_pain / 100 * maxFactor : minFactor,
+            fatigued: symptoms.fatigued === true ? maxFactor : minFactor,
+            fewer: symptoms.fever === true ? maxFactor : minFactor,
+            sniffles: symptoms.sniffles === true ? maxFactor : minFactor,
+            breathlessness: symptoms.breathlessness === true ? maxFactor : minFactor,
+            diarrhoea: symptoms.diarrhoea === true ? maxFactor : minFactor,
+        };
         return [
             {
-                data: this.state.selectedDayData,
+                data: selectedDayData,
                 meta: {color: 'blue'}
             }
         ];
@@ -66,7 +83,7 @@ class Dashboard extends Component {
                 </div>
                 <HorizontalDayPicker/>
                 <div className={classes.RadarChart}>
-                    <RadarChart size={300} dashboardData={this.mapStateToDashboard()}/>
+                    <RadarChart size={300} dashboardData={this.getDashboardSelectedDayData()}/>
                 </div>
             </Fragment>
         );
@@ -93,4 +110,10 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+function select(state) {
+    return {
+        dashboardData: state.symptomsRecords
+    }
+}
+
+export default connect(select, { fetchSymptomsRecords })(Dashboard);
