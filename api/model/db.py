@@ -13,6 +13,7 @@ from google.cloud.firestore_v1.transforms import Sentinel
 from google.cloud.firestore_v1.query import Query
 
 from models import Record, Anamnesis, Symptoms, User, UserStored, UsagePurpose
+from api.errors import *
 
 
 def firestore_client() -> Client:
@@ -77,6 +78,9 @@ class UsersDb:
     @staticmethod
     def save_new_user(user_id: str, user: UserStored):
         """Create a user in the db and raise an error if user already exists"""
+        exists, _ = UsersDb.username_exists(user.username)
+        if exists:
+            raise UserAlreadyExistsException(f'This username already exists: {user.username}')
         firestore_client().collection(u'users').add(
             document_data=user.dict(),
             document_id=user_id

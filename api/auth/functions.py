@@ -8,6 +8,7 @@ import json
 from models import UserStored
 from db import UsersDb
 from typing import Tuple
+from api.errors import *
 
 from firebase_admin import firestore
 
@@ -90,22 +91,3 @@ def authenticate_user_by_cookies(cookies: dict) -> Tuple[str, UserStored]:
     )
 
     return user_id, user_stored
-
-
-class ClogException(Exception):
-    pass
-
-class PurposeIdException(ClogException):
-    pass
-class UnverifiedRoleException(ClogException):
-    pass
-class UserNotExistsException(ClogException):
-    pass
-class UserAlreadyExistsException(ClogException):
-    pass
-class InvalidPasswordException(ClogException):
-    pass
-class AuthenticationException(ClogException):
-    pass
-class InvalidUsagePurposeException(ClogException):
-    pass

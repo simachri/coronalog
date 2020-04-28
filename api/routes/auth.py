@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from db import UsersDb, UsagePurposesDb
 from models import UserStored, UserLoginBody
 from auth import functions as auth
-from auth.functions import UserAlreadyExistsException, InvalidPasswordException, InvalidUsagePurposeException
+from api.errors import UserAlreadyExistsException, InvalidPasswordException, InvalidUsagePurposeException
 
 from firebase_admin import initialize_app
 
