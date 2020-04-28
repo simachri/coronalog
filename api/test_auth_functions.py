@@ -31,18 +31,6 @@ class TestAuthFunctions(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         self._bin = []
         super().__init__(*args, **kwargs)
-        # Create a document in the database for the test user.
-        self.test_user_id = functions.generate_uuid()
-        self.test_user_stored = UserStored(
-            username=TEST_USER_NAME,
-            password=functions.hash_pw(TEST_USER_PW),
-            time_created=functions.get_timestamp(),
-            usage_purpose=PURPOSE_PRIVATE_ID
-        )
-        UsersDb.save_new_user(
-            user_id=self.test_user_id,
-            user=self.test_user_stored
-        )
 
     def tearDown(self):
         """Test teardown; is called after every unit test"""
@@ -111,8 +99,15 @@ class TestAuthFunctions(unittest.TestCase):
         assert dec_user_id == user_id
 
     def test_authenticate_user_by_cookies(self):
+        test_user_stored = TestAuthFunctions.generate_test_user()
+        test_user_id = functions.generate_uuid()
+        UsersDb.save_new_user(
+            user_id=test_user_id,
+            user=test_user_stored
+        )
+
         #generate token
-        token = functions.generate_access_token(self.test_user_id, self.test_user_stored)
+        token = functions.generate_access_token(test_user_id, test_user_stored)
         header, payload, signature = token.decode().split('.')
         
         cookies = {
@@ -122,10 +117,11 @@ class TestAuthFunctions(unittest.TestCase):
 
         val_user_id, val_user = functions.authenticate_user_by_cookies(cookies)
 
-        assert val_user.username == self.test_user_stored.username
-        assert val_user.password == self.test_user_stored.password
-        assert val_user.usage_purpose == self.test_user_stored.usage_purpose
-        assert val_user.time_created == self.test_user_stored.time_created
+        assert val_user.username == test_user_stored.username
+        assert val_user.password == test_user_stored.password
+        assert val_user.usage_purpose == test_user_stored.usage_purpose
+        assert val_user.time_created == test_user_stored.time_created
+        assert val_user_id == test_user_id
 
     @staticmethod
     def generate_test_user() -> UserStored:
