@@ -1,7 +1,5 @@
 import os
 import unittest
-from typing import List
-import jwt
 
 # For local testing, the Firebase credentials are provided from a local file,
 # see WHREG-8. We need to set the environment variable BEFORE we
@@ -10,6 +8,7 @@ from starlette.testclient import TestClient
 
 from model.models import User, Anamnesis, UserStored
 from auth import functions
+from errors import *
 
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'firebase_key.json'
 # We need to suppress the PEP8 error 'import not at top'
@@ -58,7 +57,7 @@ class TestAuthFunctions(unittest.TestCase):
     def test_get_purpose_id(self):
         id1: str = functions.get_purpose_id(u'private')
         assert id1 == PURPOSE_PRIVATE_ID
-        with self.assertRaises(functions.PurposeIdException) as context:
+        with self.assertRaises(PurposeIdException) as context:
             functions.get_purpose_id(u'Non existing')
         exc = context.exception
         assert str(exc) == 'Non existing is not a valid purpose identifier'

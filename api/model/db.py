@@ -13,7 +13,7 @@ from google.cloud.firestore_v1.transforms import Sentinel
 from google.cloud.firestore_v1.query import Query
 
 from models import Record, Anamnesis, Symptoms, User, UserStored, UsagePurpose
-from api.errors import *
+from errors import *
 
 
 def firestore_client() -> Client:
@@ -76,7 +76,7 @@ class UsersDb:
             return False, None 
 
     @staticmethod
-    def save_new_user(user_id: str, user: UserStored):
+    def save_new_user(user_id: str, user: UserStored) -> None:
         """Create a user in the db and raise an error if user already exists"""
         exists, _ = UsersDb.username_exists(user.username)
         if exists:
@@ -260,6 +260,6 @@ class AnamnesesDb:
 class UsagePurposesDb:
 
     @staticmethod
-    def get_all() -> Sequence[UsagePurpose]:
+    def get_all() -> Sequence[DocumentReference]:
         """ Get all registered usage purposes from db"""
         return firestore_client().collection(u'usage_purpose').list_documents()
