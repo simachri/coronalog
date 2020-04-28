@@ -24,9 +24,9 @@ class Symptoms(BaseModel):
     diarrhoea: bool = None
 
 class Anamnesis(BaseModel):
-    gender: str
-    residence: int
-    birthyear: int
+    gender: str = None
+    residence: int = None
+    birthyear: int = None
     smoker: bool = None
     pregnant: bool = None
     positive_tested: bool = None

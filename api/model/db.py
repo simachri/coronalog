@@ -87,7 +87,7 @@ class UsersDb:
         )
 
     @staticmethod
-    def get_user(username: str) -> Tuple[str, User]:
+    def get_user(username: str) -> Tuple[str, UserStored]:
         """Get the user record by username.
 
         :return: The user record for the requested user and his id.
@@ -95,7 +95,7 @@ class UsersDb:
         """
         user_exists, doc_ref = UsersDb.username_exists(username)
         if not user_exists:
-            raise LookupError(f"No database document exists for user '{username}'.")
+            raise LookupError(f"No database document exists for user {username}.")
         return doc_ref.get().id, UserStored(**doc_ref.get().to_dict())
 
     @staticmethod
@@ -107,30 +107,17 @@ class UsersDb:
         """
         user_exists, doc_ref = UsersDb.user_id_exists(user_id)
         if not user_exists:
-            raise LookupError(f'User with id {user_id} does not exist')
+            raise LookupError(f'User with id {user_id} does not exist.')
         return UserStored(**doc_ref.get().to_dict())
 
     @staticmethod
     def remove_user_by_id(user_id: str) -> None:
         """Permanently remove the user with specified is from the db."""
-        firestore_client().document(u'users', user_id).delete()
-
-    @staticmethod
-    def set_user(user: User, anamnesis: Anamnesis = None) -> Anamnesis:
-        """Create or update user for whom records can be tracked.
-
-        If the user already exists, nothing is changed.
-        :return: The anamanesis data wich contains the user.
-        """
-        if anamnesis is None:
-            anamnesis_data = {}
-        else:
-            # We do not want default values to overwrite existing values so we only fetch the values
-            # that have been explicitely set for the model.
-            anamnesis_data = anamnesis.dict(exclude_unset=True)
-        doc_ref: DocumentReference = firestore_client().collection(u'users').document(user.username)
-        doc_ref.set(anamnesis_data, merge=True)
-        return Anamnesis.parse_obj(doc_ref.get().to_dict())
+        batch: WriteBatch = firestore_client().batch()
+        user_doc: DocumentReference = firestore_client().collection(u'users').document(user_id)
+        delete_subcolls(batch, user_doc)
+        batch.commit()
+        user_doc.delete()
 
     @staticmethod
     def remove_user_by_username(username: str):
@@ -139,17 +126,29 @@ class UsersDb:
         When a document in Firestore is deleted, the documents of its subcollections are not deleted,
         see https://firebase.google.com/docs/firestore/solutions/delete-collections
         """
-        docs = firestore_client().collection(u'users').where(u'username', u'==', username).stream()
+        snaps = firestore_client().collection(u'users').where(u'username', u'==', username).stream()
         try:
-            doc = next(docs)
-            doc.reference.delete()
+            snap = next(snaps)
+            UsersDb.remove_user_by_id(snap.id)
         except:
             print('username does not exist')
 
-        # batch: WriteBatch = firestore_client().batch()
-        # user_doc: DocumentReference = firestore_client().collection(u'users').document(username)
-        # delete_subcolls(batch, user_doc)
-        # batch.commit()
+    @staticmethod
+    def update_user(user_id: str, anamnesis: Anamnesis = None) -> Anamnesis:
+        """Create or update user for whom records can be tracked."""
+        if anamnesis is None:
+            new_anamnesis_data = {}
+        else:
+            # We do not want default values to overwrite existing values so we only fetch the values
+            # that have been explicitely set for the model.
+            new_anamnesis_data = anamnesis.dict(exclude_unset=True)
+        doc_ref: DocumentReference = firestore_client().collection(u'users').document(user_id)
+        old_anamnesis = doc_ref.get().get(u'anamnesis')
+        doc_ref.set(
+            document_data={'anamnesis': {**old_anamnesis, **new_anamnesis_data}},
+            merge=True
+        )
+        return Anamnesis.parse_obj(doc_ref.get().get(u'anamnesis'))
 
     @staticmethod
     def get_all() -> List[User]:
@@ -160,31 +159,9 @@ class UsersDb:
         users = []
         for user_ref in users_ref.list_documents():
             user_snapshot = user_ref.get()
-            user = User(username=user_snapshot.id, anamnesis=Anamnesis.parse_obj(user_snapshot.to_dict()))
+            user = User(username=user_snapshot.get(u'username'), anamnesis=Anamnesis.parse_obj(user_snapshot.to_dict()['anamnesis']))
             users.append(user)
         return users
-
-    @staticmethod
-    def exists(username: str) -> Tuple[bool, DocumentReference]:
-        """Existence check for a given username.
-
-        :return: A tuple - the first element indicates if the user record exists.
-                 If the user record exists, the second element contains the DocumentReference.
-        """
-        doc_ref: DocumentReference = firestore_client().collection('users').document(username)
-        return doc_ref.get().exists, doc_ref if doc_ref.get().exists else None
-
-    @staticmethod
-    def get(username: str) -> User:
-        """Get the user record by username.
-
-        :return: The user record for the requested user.
-        :raises LookupError: If no database document exists for the requested user.
-        """
-        user_exists, doc_ref = UsersDb.exists(username)
-        if not user_exists:
-            raise LookupError(f"No database document exists for user '{username}'.")
-        return User(username=doc_ref.get().id)
 
 
 class RecordsDb:
