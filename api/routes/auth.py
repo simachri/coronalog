@@ -110,7 +110,7 @@ def do_signin_logic(
 ) -> UserLoginBody:
 
     # check if user exists
-    user_id, user = UsersDb.get_user(username)
+    user_id, user = UsersDb.get_user_by_username(username)
 
     # check password
     if not auth.verify_pw(password, user.password):

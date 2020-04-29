@@ -7,10 +7,10 @@ from google.cloud.firestore_v1.document import DocumentReference, DocumentSnapsh
 from firebase_admin import initialize_app
 firebase_app = initialize_app()
 
-from db import UsagePurposesDb, UsersDb, AnamnesesDb, RecordsDb, firestore_client, convert_date_to_str
+from db import UsagePurposesDb, UsersDb, AnamnesesDb, RecordsDb, firestore_client, convert_date_to_str, convert_str_to_date
 from model.models import UserStored, Symptoms, Record, Anamnesis
 from auth import functions
-from errors import *
+from errors import UserNotExistsException, UserAlreadyExistsException
 
 TEST_USER_NAME = u'UnitTestUser1337'
 TEST_USER_PW = u'DJfjdialj'
@@ -36,6 +36,36 @@ TEST_USER_RECORD_1 = Record(
         sore_throat = 4,
         fever = 39.1,
         diarrhoea = True
+    )
+)
+TEST_USER_RECORD_2 = Record(
+    date=datetime.strptime('2020-04-28', '%Y-%m-%d'),
+    symptoms=Symptoms(
+        cough_intensity = 1,
+        cough_type = 'yellow',
+        cough_color = 'yellow',
+        breathlessness = False,
+        fatigued = True,
+        limb_pain = 1,
+        sniffles = False,
+        sore_throat = 1,
+        fever = 39.1,
+        diarrhoea = False
+    )
+)
+TEST_USER_RECORD_3 = Record(
+    date=datetime.strptime('2020-04-27', '%Y-%m-%d'),
+    symptoms=Symptoms(
+        cough_intensity = 4,
+        cough_type = 'yellow',
+        cough_color = 'yellow',
+        breathlessness = False,
+        fatigued = True,
+        limb_pain = 4,
+        sniffles = False,
+        sore_throat = 4,
+        fever = 40,
+        diarrhoea = False
     )
 )
 TEST_USER_ANAMNESIS = Anamnesis(
@@ -71,10 +101,6 @@ class TestUsersDb(unittest.TestCase):
         )
         rec_ref = firestore_client().document(u'users', TEST_USER_ID).collection(u'records').document(convert_date_to_str(TEST_USER_RECORD_1.date))
         rec_ref.set(TEST_USER_RECORD_1.symptoms.dict())
-        # col.add(
-        #     document_id='myNewId', #convert_date_to_str(TEST_USER_RECORD_1.date),
-        #     document_data={} #TEST_USER_RECORD_1.symptoms.dict()
-        # )
         firestore_client().document(u'users', TEST_USER_ID).set(
             document_data={'anamnesis' : TEST_USER_ANAMNESIS.dict()},
             merge=True
@@ -83,6 +109,14 @@ class TestUsersDb(unittest.TestCase):
     def tearDown(self):
         UsersDb.remove_user_by_id(TEST_USER_ID)
         UsersDb.remove_user_by_id(TEST_USER_ID+'NEW')
+
+    def test_get_user_id(self):
+        id = UsersDb.get_user_id(TEST_USER_NAME)
+        assert id == TEST_USER_ID
+        not_user = TEST_USER_NAME+'notExistingjsdflkjslfj'
+        with self.assertRaises(UserNotExistsException) as context:
+            UsersDb.get_user_id(not_user)
+        assert str(context.exception) == f'User {not_user} does not exist'
 
     def test_username_exists(self):
         exists, ref = UsersDb.username_exists(TEST_USER_NAME)
@@ -146,7 +180,7 @@ class TestUsersDb(unittest.TestCase):
             )
 
     def test_get_user_succ(self):
-        user_id, user = UsersDb.get_user(TEST_USER_NAME)
+        user_id, user = UsersDb.get_user_by_username(TEST_USER_NAME)
         assert user_id == TEST_USER_ID
         assert user.username == TEST_USER_STORED.username
         assert user.password == TEST_USER_STORED.password
@@ -156,7 +190,7 @@ class TestUsersDb(unittest.TestCase):
     def test_get_user_fail(self):
         not_user = TEST_USER_NAME+'Not_existsingsjflksjf'
         with self.assertRaises(LookupError) as context:
-            UsersDb.get_user(not_user)
+            UsersDb.get_user_by_username(not_user)
         exc = context.exception
         assert str(exc) == f'No database document exists for user {not_user}.'
 
@@ -216,18 +250,121 @@ class TestUsersDb(unittest.TestCase):
 
 
 
-# class TestAnamanesisDb(unittest.TestCase):
+class TestAnamanesisDb(unittest.TestCase):
 
-#     def __init__(self, *args, **kwargs):
-#         self._bin = []
-#         super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        self._bin = []
+        super().__init__(*args, **kwargs)
+
+    def setUp(self):
+        # create a user for testing
+        firestore_client().collection(u'users').add(
+            document_data=TEST_USER_STORED.dict(),
+            document_id=TEST_USER_ID
+        )
+        rec_ref = firestore_client().document(u'users', TEST_USER_ID).collection(u'records').document(convert_date_to_str(TEST_USER_RECORD_1.date))
+        rec_ref.set(TEST_USER_RECORD_1.symptoms.dict())
+        firestore_client().document(u'users', TEST_USER_ID).set(
+            document_data={'anamnesis' : TEST_USER_ANAMNESIS.dict()},
+            merge=True
+        )
+
+    def tearDown(self):
+        UsersDb.remove_user_by_id(TEST_USER_ID)
+        UsersDb.remove_user_by_id(TEST_USER_ID+'NEW')
+
+    def test_get_by_user_id(self):
+        anamnesis: Anamnesis = AnamnesesDb.get_by_user_id(TEST_USER_ID)
+        self.assertDictEqual(anamnesis.dict(), TEST_USER_ANAMNESIS.dict())
+
+    def test_get_by_username(self):
+        anamnesis: Anamnesis = AnamnesesDb.get_by_username(TEST_USER_NAME)
+        self.assertDictEqual(anamnesis.dict(), TEST_USER_ANAMNESIS.dict())
+    
+    def test_set_anamanesis(self):
+        anamnesis_to_update = {
+            'gender': 'w',
+            'positive_tested': False
+        }
+        updated_anamnesis = {**TEST_USER_ANAMNESIS.dict(), **anamnesis_to_update}
+        ret_a = AnamnesesDb.set_anamnesis(TEST_USER_ID, Anamnesis.parse_obj(anamnesis_to_update))
+
+        self.assertDictEqual(ret_a.dict(), updated_anamnesis)
+
+        doc_ref = firestore_client().document(u'users', TEST_USER_ID)
+        ret_b = doc_ref.get().get(u'anamnesis')
+        self.assertDictEqual(ret_b, updated_anamnesis)
 
 
-# class TestRecordsDb(unittest.TestCase):
+class TestRecordsDb(unittest.TestCase):
 
-#     def __init__(self, *args, **kwargs):
-#         self._bin = []
-#         super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        self._bin = []
+        super().__init__(*args, **kwargs)
+
+    def setUp(self):
+        # create a user for testing
+        firestore_client().collection(u'users').add(
+            document_data=TEST_USER_STORED.dict(),
+            document_id=TEST_USER_ID
+        )
+        rec_ref_1 = firestore_client().document(u'users', TEST_USER_ID).collection(u'records').document(convert_date_to_str(TEST_USER_RECORD_1.date))
+        rec_ref_1.set(TEST_USER_RECORD_1.symptoms.dict())
+        rec_ref_2 = firestore_client().document(u'users', TEST_USER_ID).collection(u'records').document(convert_date_to_str(TEST_USER_RECORD_2.date))
+        rec_ref_2.set(TEST_USER_RECORD_2.symptoms.dict())
+        firestore_client().document(u'users', TEST_USER_ID).set(
+            document_data={'anamnesis' : TEST_USER_ANAMNESIS.dict()},
+            merge=True
+        )
+
+    def tearDown(self):
+        UsersDb.remove_user_by_id(TEST_USER_ID)
+        UsersDb.remove_user_by_id(TEST_USER_ID+'NEW')
+
+    def test_get_by_user_id(self):
+        recs: List[Record] = RecordsDb.get_by_user_id(TEST_USER_ID)
+        assert len(recs) == 2
+        i = 0
+        for rec in recs:
+            if rec.date == TEST_USER_RECORD_1.date:
+                self.assertDictEqual(rec.symptoms.dict(), TEST_USER_RECORD_1.symptoms.dict())
+                i += 1
+            if rec.date == TEST_USER_RECORD_2.date:
+                self.assertDictEqual(rec.symptoms.dict(), TEST_USER_RECORD_2.symptoms.dict())
+                i += 1
+        assert i == 2
+
+    def test_set_record_new(self):
+        RecordsDb.set_record(TEST_USER_ID, TEST_USER_RECORD_3)
+        all_recs = firestore_client().collection(u'users', TEST_USER_ID, u'records').list_documents()
+        i = 0
+        for rec in all_recs:
+            if convert_str_to_date(rec.get().id) == TEST_USER_RECORD_1.date:
+                self.assertDictEqual(rec.get().to_dict(), TEST_USER_RECORD_1.symptoms.dict())
+                i += 1
+            if convert_str_to_date(rec.get().id) == TEST_USER_RECORD_2.date:
+                self.assertDictEqual(rec.get().to_dict(), TEST_USER_RECORD_2.symptoms.dict())
+                i += 1
+            if convert_str_to_date(rec.get().id) == TEST_USER_RECORD_3.date:
+                self.assertDictEqual(rec.get().to_dict(), TEST_USER_RECORD_3.symptoms.dict())
+                i += 1
+        assert i == 3
+
+    def test_set_record_merge(self):
+        to_update_symptoms = {
+            'sore_throat': 1,
+            'diarrhoea': False
+        }
+        to_update = Record(
+            date=TEST_USER_RECORD_1.date,
+            symptoms=Symptoms.parse_obj(to_update_symptoms)
+        )
+        RecordsDb.set_record(TEST_USER_ID, to_update)
+        x = TEST_USER_RECORD_1.dict()['symptoms']
+        updated_symptoms = {**TEST_USER_RECORD_1.dict()['symptoms'], **to_update_symptoms}
+
+        rec_ref: DocumentReference = firestore_client().document(u'users', TEST_USER_ID, u'records', convert_date_to_str(TEST_USER_RECORD_1.date))
+        self.assertDictEqual(rec_ref.get().to_dict(), updated_symptoms)
 
         
 class TestUsagePurposeDb(unittest.TestCase):

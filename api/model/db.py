@@ -15,6 +15,8 @@ from google.cloud.firestore_v1.query import Query
 from models import Record, Anamnesis, Symptoms, User, UserStored, UsagePurpose
 from errors import *
 
+DATE_FORMAT = '%Y-%m-%d'
+
 
 def firestore_client() -> Client:
     return firestore.client()
@@ -26,7 +28,10 @@ def get_timestamp() -> Sentinel:
 
 
 def convert_date_to_str(date: datetime.date) -> str:
-    return date.strftime('%Y-%m-%d')
+    return date.strftime(DATE_FORMAT)
+
+def convert_str_to_date(date_str: str) -> datetime.date:
+    return datetime.datetime.strptime(date_str, DATE_FORMAT).date()
 
 
 def delete_doc(batch: WriteBatch, doc: DocumentReference):
@@ -51,6 +56,13 @@ def delete_subcolls(batch: WriteBatch, doc: DocumentReference):
 
 
 class UsersDb:
+
+    @staticmethod
+    def get_user_id(username: str) -> str:
+        _, ref = UsersDb.username_exists(username)
+        if not ref:
+            raise UserNotExistsException(f'User {username} does not exist')
+        return ref.get().id
 
     @staticmethod
     def username_exists(username: str) -> Tuple[bool, DocumentReference]:
@@ -87,7 +99,7 @@ class UsersDb:
         )
 
     @staticmethod
-    def get_user(username: str) -> Tuple[str, UserStored]:
+    def get_user_by_username(username: str) -> Tuple[str, UserStored]:
         """Get the user record by username.
 
         :return: The user record for the requested user and his id.
@@ -167,72 +179,92 @@ class UsersDb:
 class RecordsDb:
 
     @staticmethod
-    def get(username) -> List[Record]:
+    def get_by_user_id(user_id: str) -> List[Record]:
         """Get medical record documents from the Firestore database.
 
-        :param username: username for whom the records shall be retrieved
+        :param user_id: user id for whom the records shall be retrieved
         :return: all records for the user, empty if nothing found
         """
-        # TODO: Raise exception if user record does not exist.
-        records_ref: CollectionReference = firestore_client().collection(
-                'users/' + username + '/records')
+        user_exists, user_ref = UsersDb.user_id_exists(user_id)
+        if not user_exists:
+            raise UserNotExistsException(f'User with id {user_id} does not exist')
+        records_ref: CollectionReference = user_ref.collection(u'records')
+
         records = []
         for doc_ref in records_ref.list_documents(page_size=50):
             doc_snapshot = doc_ref.get()
             symptoms = Symptoms.parse_obj(doc_snapshot.to_dict())
-            record = Record(username=username, date=doc_snapshot.id, symptoms=symptoms)
+            record = Record(date=doc_snapshot.id, symptoms=symptoms)
             records.append(record)
         return records
 
     @staticmethod
-    def set_record(user: User, record: Record) -> Record:
+    def set_record(user_id: str, record: Record) -> Record:
         """Set medical record data.
         If the record already exists, its data is merged.
 
         :return: The updated record data.
         :raises LookupError: If no record exists for the requested user.
         """
-        user_exists, user_ref = UsersDb.exists(user.username)
+        user_exists, user_ref = UsersDb.user_id_exists(user_id)
         if not user_exists:
-            raise LookupError(f"No database document exists for user '{user.username}'.")
+            raise UserNotExistsException(f'User with id {user_id} does not exist')
         date_str = convert_date_to_str(record.date)
-        record_ref: DocumentReference = firestore_client().collection('users/' + user.username + '/records').document(
-                date_str)
-        # We do not want default values to overwrite existing values so we only fetch the values
-        # that have been explicitely set for the model.
+        record_ref: DocumentReference = user_ref.collection('records').document(date_str)
         record_ref.set(record.symptoms.dict(exclude_unset=True), merge=True)
-        db_data = record_ref.get().to_dict()
-        return Record(date=date_str, symptoms=Symptoms.parse_obj(db_data))
+        
+        updated_record = record_ref.get().to_dict()
+        return Record(
+            date=datetime.datetime.strptime(date_str, DATE_FORMAT),
+            symptoms=Symptoms.parse_obj(updated_record)
+        )
 
 
 class AnamnesesDb:
 
     @staticmethod
-    def get(username: str) -> Anamnesis:
+    def get_by_user_id(user_id: str) -> Anamnesis:
         """Get anamnese single record from the Firestore database.
 
         :return: Anamnesis data record for the user.
         :raises: LookupError if no record exists for the requested user.
         """
-        user_ref: DocumentReference = firestore_client().collection('users').document(username)
+        user_ref: DocumentReference = firestore_client().collection('users').document(user_id)
         snap = user_ref.get()
         if not snap.exists:
-            raise LookupError(f"No database document exists for user '{username}'.")
-        return Anamnesis(user=User(username=username), **snap.to_dict())
+            raise LookupError(f"No database document exists for user with id '{user_id}'.")
+        return Anamnesis(**snap.get(u'anamnesis'))
 
     @staticmethod
-    def set_anamnesis(username: str, anamnesis: Anamnesis) -> Anamnesis:
+    def get_by_username(username: str) -> Anamnesis:
+        """Get anamnese single record from the Firestore database.
+
+        :return: Anamnesis data record for the user.
+        :raises: LookupError if no record exists for the requested user.
+        """
+        return AnamnesesDb.get_by_user_id(UsersDb.get_user_id(username))
+
+    @staticmethod
+    def set_anamnesis(user_id: str, anamnesis: Anamnesis) -> Anamnesis:
         """Create or update single anamnesis record from the json file from the input.
         If the record already exists, a merge is performed.
         If the user does not exist, it is created.
 
-        :return: DocumentReference of the new document created.
+        :return: Current anamnesis records of the user.
         """
-        user_ref: DocumentReference = firestore_client().collection('users').document(username)
-        # We do not want default values to overwrite existing values so we only fetch the values
-        # that have been explicitely set for the model.
-        user_ref.set(anamnesis.dict(exclude_unset=True), merge=True)
-        return Anamnesis.parse_obj(user_ref.get().to_dict())
+        if anamnesis is None:
+            new_anamnesis_data = {}
+        else:
+            # We do not want default values to overwrite existing values so we only fetch the values
+            # that have been explicitely set for the model.
+            new_anamnesis_data = anamnesis.dict(exclude_unset=True)
+        doc_ref: DocumentReference = firestore_client().collection(u'users').document(user_id)
+        old_anamnesis = doc_ref.get().get(u'anamnesis')
+        doc_ref.set(
+            document_data={'anamnesis': {**old_anamnesis, **new_anamnesis_data}},
+            merge=True
+        )
+        return Anamnesis.parse_obj(doc_ref.get().get(u'anamnesis'))
 
 class UsagePurposesDb:
 
