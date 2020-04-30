@@ -11,6 +11,14 @@ def get_timestamp():
 class ReturnMessage(BaseModel):
     message: str
 
+class ErrorInnerMessage(BaseModel):
+    code: int
+    key: str
+    message: str
+
+class ErrorMessage(BaseModel):
+    error: ErrorInnerMessage
+
 class Symptoms(BaseModel):
     cough_intensity: int = None
     cough_type: str = None

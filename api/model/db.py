@@ -1,5 +1,6 @@
 import datetime
 from typing import List, Tuple, Sequence
+import re
 
 from firebase_admin import firestore
 # noinspection PyPackageRequirements
@@ -13,7 +14,7 @@ from google.cloud.firestore_v1.transforms import Sentinel
 from google.cloud.firestore_v1.query import Query
 
 from models import Record, Anamnesis, Symptoms, User, UserStored, UsagePurpose
-from errors import *
+import errors
 
 DATE_FORMAT = '%Y-%m-%d'
 
@@ -32,6 +33,12 @@ def convert_date_to_str(date: datetime.date) -> str:
 
 def convert_str_to_date(date_str: str) -> datetime.date:
     return datetime.datetime.strptime(date_str, DATE_FORMAT).date()
+
+def is_correct_format(date_str: str) -> bool:
+    if re.match('^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$', date_str) is not None:
+        return True
+    else:
+        return False
 
 
 def delete_doc(batch: WriteBatch, doc: DocumentReference):
@@ -61,7 +68,7 @@ class UsersDb:
     def get_user_id(username: str) -> str:
         _, ref = UsersDb.username_exists(username)
         if not ref:
-            raise UserNotExistsException(f'User {username} does not exist')
+            raise errors.UserNotExistsException(f'User {username} does not exist')
         return ref.get().id
 
     @staticmethod
@@ -92,7 +99,7 @@ class UsersDb:
         """Create a user in the db and raise an error if user already exists"""
         exists, _ = UsersDb.username_exists(user.username)
         if exists:
-            raise UserAlreadyExistsException(f'This username already exists: {user.username}')
+            raise errors.UserAlreadyExistsException(f'This username already exists: {user.username}')
         firestore_client().collection(u'users').add(
             document_data=user.dict(),
             document_id=user_id
@@ -187,16 +194,55 @@ class RecordsDb:
         """
         user_exists, user_ref = UsersDb.user_id_exists(user_id)
         if not user_exists:
-            raise UserNotExistsException(f'User with id {user_id} does not exist')
+            raise errors.UserNotExistsException(f'User with id {user_id} does not exist')
         records_ref: CollectionReference = user_ref.collection(u'records')
 
         records = []
         for doc_ref in records_ref.list_documents(page_size=50):
             doc_snapshot = doc_ref.get()
             symptoms = Symptoms.parse_obj(doc_snapshot.to_dict())
-            record = Record(date=doc_snapshot.id, symptoms=symptoms)
+            record = Record(date=convert_str_to_date(doc_snapshot.id), symptoms=symptoms)
             records.append(record)
         return records
+
+    @staticmethod
+    def get_by_username(username: str) -> List[Record]:
+        return RecordsDb.get_by_user_id(UsersDb.get_user_id(username))
+
+    @staticmethod
+    def get_one_by_user_id_and_date_str(user_id: str, date_str: str) -> Record:
+        user_exists, user_ref = UsersDb.user_id_exists(user_id)
+        if not user_exists:
+            raise errors.UserNotExistsException(f'User with id {user_id} does not exist')
+        records_ref: CollectionReference = user_ref.collection(u'records')
+
+        record = None
+        for doc_ref in records_ref.list_documents():
+            doc_date = doc_ref.get().id
+            if doc_date == date_str:
+                symptoms = Symptoms.parse_obj(doc_ref.get().to_dict())
+                record = Record(date=convert_str_to_date(doc_date), symptoms=symptoms)
+                break
+
+        if not record:
+            raise LookupError(f'No record for {date_str} could be found')
+        else:
+            return record
+
+    @staticmethod
+    def get_one_by_user_id_and_date(user_id: str, date: datetime.date) -> Record:
+        return RecordsDb.get_by_user_id(user_id, convert_date_to_str(date))
+
+    @staticmethod
+    def get_one_by_username_and_date_str(username: str, date_str: str) -> Record:
+        return RecordsDb.get_by_user_id(UsersDb.get_user_id(username), date_str)
+
+    @staticmethod
+    def get_one_by_username_and_date(username: str, date: datetime.date) -> Record:
+        return RecordsDb.get_by_user_id(
+            UsersDb.get_user_id(username),
+            convert_date_to_str(date)
+        )
 
     @staticmethod
     def set_record(user_id: str, record: Record) -> Record:
@@ -208,7 +254,7 @@ class RecordsDb:
         """
         user_exists, user_ref = UsersDb.user_id_exists(user_id)
         if not user_exists:
-            raise UserNotExistsException(f'User with id {user_id} does not exist')
+            raise errors.UserNotExistsException(f'User with id {user_id} does not exist')
         date_str = convert_date_to_str(record.date)
         record_ref: DocumentReference = user_ref.collection('records').document(date_str)
         record_ref.set(record.symptoms.dict(exclude_unset=True), merge=True)
@@ -220,7 +266,7 @@ class RecordsDb:
         )
 
 
-class AnamnesesDb:
+class AnamnesisDb:
 
     @staticmethod
     def get_by_user_id(user_id: str) -> Anamnesis:
@@ -242,7 +288,7 @@ class AnamnesesDb:
         :return: Anamnesis data record for the user.
         :raises: LookupError if no record exists for the requested user.
         """
-        return AnamnesesDb.get_by_user_id(UsersDb.get_user_id(username))
+        return AnamnesisDb.get_by_user_id(UsersDb.get_user_id(username))
 
     @staticmethod
     def set_anamnesis(user_id: str, anamnesis: Anamnesis) -> Anamnesis:
@@ -259,7 +305,11 @@ class AnamnesesDb:
             # that have been explicitely set for the model.
             new_anamnesis_data = anamnesis.dict(exclude_unset=True)
         doc_ref: DocumentReference = firestore_client().collection(u'users').document(user_id)
-        old_anamnesis = doc_ref.get().get(u'anamnesis')
+        user_data = doc_ref.get().to_dict()
+        if 'anamnesis' in user_data:
+            old_anamnesis = user_data['anamnesis']
+        else:
+            old_anamnesis = {}
         doc_ref.set(
             document_data={'anamnesis': {**old_anamnesis, **new_anamnesis_data}},
             merge=True

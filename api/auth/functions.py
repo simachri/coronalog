@@ -8,7 +8,7 @@ import json
 from models import UserStored
 from db import UsersDb
 from typing import Tuple
-from api.errors import *
+import errors
 
 from firebase_admin import firestore
 
@@ -44,7 +44,7 @@ def get_purpose_id(name: str) -> str:
         ref = next(queryResult)
         return ref.id
     except:
-        raise PurposeIdException(f'{name} is not a valid purpose identifier')
+        raise errors.PurposeIdException(f'{name} is not a valid purpose identifier')
 
 def generate_access_token(user_id: str, user: UserStored) -> str:
     payload = {
@@ -61,14 +61,14 @@ def generate_access_token(user_id: str, user: UserStored) -> str:
 def validate_access_token(access_token: str, user_role: str = 'user') -> Tuple[str, UserStored]:
     payload = jwt.decode(access_token, AUTH_CONFIG['access_token']['secret'], algorithms=AUTH_CONFIG['access_token']['sign_alg'])
     if user_role not in payload['roles']:
-        raise UnverifiedRoleException('Required role not contained in jwt')
+        raise errors.UnverifiedRoleException('Required role not contained in jwt')
 
     user_id: str = payload['sub']
     try:
         user: UserStored = UsersDb.get_user_by_id(user_id)
         return user_id, user
     except LookupError:
-        raise UserNotExistsException(f'User with id {user_id} does not exist')
+        raise errors.UserNotExistsException(f'User with id {user_id} does not exist')
 
 def generate_error_dict(status: int, key: str, message: str) -> dict:
     return {
@@ -81,7 +81,7 @@ def generate_error_dict(status: int, key: str, message: str) -> dict:
 
 def authenticate_user_by_cookies(cookies: dict) -> Tuple[str, UserStored]:
     if not AUTH_CONFIG['access_token']['body_cookie_key'] in cookies or not AUTH_CONFIG['access_token']['signature_cookie_key'] in cookies:
-        raise AuthenticationException('Token could not be reconstructed')
+        raise errors.InvalidAuthCookiesException('Token could not be reconstructed')
 
     header_payload = cookies[AUTH_CONFIG['access_token']['body_cookie_key']]
     signature = cookies[AUTH_CONFIG['access_token']['signature_cookie_key']]

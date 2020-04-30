@@ -7,10 +7,10 @@ from google.cloud.firestore_v1.document import DocumentReference, DocumentSnapsh
 from firebase_admin import initialize_app
 firebase_app = initialize_app()
 
-from db import UsagePurposesDb, UsersDb, AnamnesesDb, RecordsDb, firestore_client, convert_date_to_str, convert_str_to_date
+from model.db import UsagePurposesDb, UsersDb, AnamnesisDb, RecordsDb, firestore_client, convert_date_to_str, convert_str_to_date
 from model.models import UserStored, Symptoms, Record, Anamnesis
 from auth import functions
-from errors import UserNotExistsException, UserAlreadyExistsException
+import errors
 
 TEST_USER_NAME = u'UnitTestUser1337'
 TEST_USER_PW = u'DJfjdialj'
@@ -114,7 +114,7 @@ class TestUsersDb(unittest.TestCase):
         id = UsersDb.get_user_id(TEST_USER_NAME)
         assert id == TEST_USER_ID
         not_user = TEST_USER_NAME+'notExistingjsdflkjslfj'
-        with self.assertRaises(UserNotExistsException) as context:
+        with self.assertRaises(errors.UserNotExistsException) as context:
             UsersDb.get_user_id(not_user)
         assert str(context.exception) == f'User {not_user} does not exist'
 
@@ -154,7 +154,7 @@ class TestUsersDb(unittest.TestCase):
         assert doc.get(u'username') == TEST_USER_NAME+'NEW'
 
     def test_save_new_user_fail_username(self):
-        with self.assertRaises(UserAlreadyExistsException) as context:
+        with self.assertRaises(errors.UserAlreadyExistsException) as context:
             UsersDb.save_new_user(
                 user_id=TEST_USER_ID+'NEW',
                 user=UserStored(
@@ -274,11 +274,11 @@ class TestAnamanesisDb(unittest.TestCase):
         UsersDb.remove_user_by_id(TEST_USER_ID+'NEW')
 
     def test_get_by_user_id(self):
-        anamnesis: Anamnesis = AnamnesesDb.get_by_user_id(TEST_USER_ID)
+        anamnesis: Anamnesis = AnamnesisDb.get_by_user_id(TEST_USER_ID)
         self.assertDictEqual(anamnesis.dict(), TEST_USER_ANAMNESIS.dict())
 
     def test_get_by_username(self):
-        anamnesis: Anamnesis = AnamnesesDb.get_by_username(TEST_USER_NAME)
+        anamnesis: Anamnesis = AnamnesisDb.get_by_username(TEST_USER_NAME)
         self.assertDictEqual(anamnesis.dict(), TEST_USER_ANAMNESIS.dict())
     
     def test_set_anamanesis(self):
@@ -287,7 +287,7 @@ class TestAnamanesisDb(unittest.TestCase):
             'positive_tested': False
         }
         updated_anamnesis = {**TEST_USER_ANAMNESIS.dict(), **anamnesis_to_update}
-        ret_a = AnamnesesDb.set_anamnesis(TEST_USER_ID, Anamnesis.parse_obj(anamnesis_to_update))
+        ret_a = AnamnesisDb.set_anamnesis(TEST_USER_ID, Anamnesis.parse_obj(anamnesis_to_update))
 
         self.assertDictEqual(ret_a.dict(), updated_anamnesis)
 

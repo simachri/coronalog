@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from db import UsersDb, UsagePurposesDb
 from models import UserStored, UserLoginBody
 from auth import functions as auth
-from api.errors import UserAlreadyExistsException, InvalidPasswordException, InvalidUsagePurposeException
+import errors
 
 from firebase_admin import initialize_app
 
@@ -22,36 +22,15 @@ def signup(
     try:
         return do_signup_logic(response, username, password, usage_purpose)
 
-    except UserAlreadyExistsException as err:
+    except errors.UserAlreadyExistsException as err:
         print(err)
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, 
-            content=auth.generate_error_dict(
-                status=status.HTTP_400_BAD_REQUEST,
-                key='USER_EXISTS',
-                message=f'{username} already exists.'
-            )
-        )
-    except InvalidUsagePurposeException as err:
+        return errors.USER_EXISTS_RES(username)
+    except errors.InvalidUsagePurposeException as err:
         print(err)
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST, 
-            content=auth.generate_error_dict(
-                status=status.HTTP_400_BAD_REQUEST,
-                key='INVALID_PURPOSE_ID',
-                message=f'{usage_purpose} is invalid.'
-            )
-        )
+        return errors.INVALID_PURPOSE_ID_RES(usage_purpose)
     except Exception as err:
         print(err)
-        return JSONResponse(
-            status_code=500,
-            content=auth.generate_error_dict(
-                status=500,
-                key='SERVER_ERROR',
-                message='Something went wrong'
-            )
-        )
+        return errors.SERVER_ERROR()
 
 @router.post('/signin', response_model=UserLoginBody)
 def signin(
@@ -64,34 +43,13 @@ def signin(
 
     except LookupError as err: # username does not exist
         print(err)
-        return JSONResponse(
-            status_code=400,
-            content=auth.generate_error_dict(
-                status=400,
-                key='USER_NOT_FOUND',
-                message='The user does not exist'
-            )
-        )
-    except InvalidPasswordException as err: # wrong password
+        return errors.USER_NOT_FOUND_RES(username)
+    except errors.InvalidPasswordException as err: # wrong password
         print(err)
-        return JSONResponse(
-            status_code=400,
-            content=auth.generate_error_dict(
-                status=400,
-                key='WRONG_PASSWORD',
-                message='The password is invalid'
-            )
-        )
+        return errors.WRONG_PASSWORD_RES()
     except Exception as err:
         print(err)
-        return JSONResponse(
-            status_code=500,
-            content=auth.generate_error_dict(
-                status=500,
-                key='SERVER_ERROR',
-                message='Something went wrong'
-            )
-        )
+        return errors.SERVER_ERROR()
 
 @router.get('/logout')
 def logout(
@@ -114,7 +72,7 @@ def do_signin_logic(
 
     # check password
     if not auth.verify_pw(password, user.password):
-        raise InvalidPasswordException('The entered password is invalid.')
+        raise errors.InvalidPasswordException('The entered password is invalid.')
 
     # issue token
     generate_and_set_access_token(response, user_id, user)
@@ -139,12 +97,12 @@ def do_signup_logic(
             valid_purpose = True
             break
     if not valid_purpose:
-        raise InvalidUsagePurposeException(f'Usage purpose id {usage_purpose} is invalid')
+        raise errors.InvalidUsagePurposeException(f'Usage purpose id {usage_purpose} is invalid')
 
     # check if user already exists
     user_exists, _ = UsersDb.username_exists(username)
     if user_exists:
-        raise UserAlreadyExistsException(f'Bad request: {username} already exists.')
+        raise errors.UserAlreadyExistsException(f'Bad request: {username} already exists.')
 
     # create new user
     new_user: UserStored = UserStored(
