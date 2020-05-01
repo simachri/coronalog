@@ -372,11 +372,11 @@ class TestUsagePurposeDb(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         self._bin = []
         super().__init__(*args, **kwargs)
-        list_purps = firestore_client().collection(u'usage_purpose').list_documents()
+        list_purps = firestore_client().collection(u'usage_purposes').list_documents()
         self.all_purps = []
         for purp in list_purps:
-            self.all_purps.append(purp.get().get(u'purpose'))
+            self.all_purps.append(purp.get().id)
 
     def test_get_all(self):
         for purp in UsagePurposesDb.get_all():
-            assert purp.get().get(U'purpose') in self.all_purps
+            assert purp.value in self.all_purps

@@ -70,4 +70,5 @@ class UserExists(BaseModel):
     exists: bool
 
 class UsagePurpose(BaseModel):
-    purpose: str
+    value: str
+    label: str

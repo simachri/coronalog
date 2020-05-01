@@ -22,7 +22,7 @@ app = FastAPI()
 
 # middleware to check for auth status on all /api routes
 auth_routes = ['/api']
-except_routes = ['/api/check']
+except_routes = ['/api/check', '/api/vendors']
 @app.middleware('http')
 async def check_auth_status(req: Request, call_next):
     cur_path = req.url.path

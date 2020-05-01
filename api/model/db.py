@@ -17,6 +17,7 @@ from models import Record, Anamnesis, Symptoms, User, UserStored, UsagePurpose
 import errors
 
 DATE_FORMAT = '%Y-%m-%d'
+USAGE_PURPOSE_PRIVATE = u'fAAmChFEatGHgUDuORqX'
 
 
 def firestore_client() -> Client:
@@ -319,6 +320,19 @@ class AnamnesisDb:
 class UsagePurposesDb:
 
     @staticmethod
-    def get_all() -> Sequence[DocumentReference]:
+    def get_all() -> List[UsagePurpose]:
         """ Get all registered usage purposes from db"""
-        return firestore_client().collection(u'usage_purpose').list_documents()
+        purps = []
+        for doc_ref in firestore_client().collection(u'usage_purposes').list_documents():
+            purp = {
+                'value': doc_ref.get().id,
+                'label': doc_ref.get().get(u'purpose') 
+            }
+            purps.append(UsagePurpose.parse_obj(purp))
+        if len(purps) == 0:
+            firestore_client().collection(u'usage_purposes').document(USAGE_PURPOSE_PRIVATE).set(document_data={u'purpose': 'private'})
+            purps.append(UsagePurpose.parse_obj({
+                'value': USAGE_PURPOSE_PRIVATE,
+                'label': 'private'
+            }))
+        return purps

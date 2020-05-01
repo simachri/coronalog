@@ -1,9 +1,9 @@
-from typing import Sequence
+from typing import Sequence, List
 
 from fastapi import APIRouter, Body, status, Response, Request
 from fastapi.responses import JSONResponse
 from db import UsersDb, UsagePurposesDb
-from models import UserStored, UserLoginBody
+from models import UserStored, UserLoginBody, UsagePurpose
 from auth import functions as auth
 import errors
 
@@ -59,6 +59,10 @@ def logout(
     res.delete_cookie(auth.AUTH_CONFIG['access_token']['signature_cookie_key'])
     
     return {}
+
+@router.get('/vendors', response_model=List[UsagePurpose])
+def get_vendors():
+    return UsagePurposesDb.get_all()
 
 
 def do_signin_logic(
