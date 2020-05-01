@@ -3,7 +3,7 @@ from typing import Sequence, List
 from fastapi import APIRouter, Body, status, Response, Request
 from fastapi.responses import JSONResponse
 from db import UsersDb, UsagePurposesDb
-from models import UserStored, UserLoginBody, UsagePurpose
+from models import UserStored, UserLoginBody, UsagePurpose, ErrorMessage
 from auth import functions as auth
 import errors
 
@@ -11,7 +11,9 @@ from firebase_admin import initialize_app
 
 router = APIRouter()
 
-@router.post('/signup', response_model=UserLoginBody)
+@router.post('/signup', response_model=UserLoginBody, responses={
+    400: {"model": ErrorMessage}, 500: {"model": ErrorMessage}
+})
 def signup(
     requst: Request,
     response: Response,
@@ -32,7 +34,9 @@ def signup(
         print(err)
         return errors.SERVER_ERROR()
 
-@router.post('/signin', response_model=UserLoginBody)
+@router.post('/signin', response_model=UserLoginBody, responses={
+    400: {"model": ErrorMessage}, 500: {"model": ErrorMessage}
+})
 def signin(
     response: Response,
     username: str = Body(...),
