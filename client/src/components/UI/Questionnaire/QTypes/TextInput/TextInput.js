@@ -2,7 +2,7 @@ import React from "react";
 import propTypes from 'prop-types';
 
 import classes from '../../Questionnaire.module.css';
-import TextInput from "../../../TextInput/TextInput";
+import Input from "../../../Input/Input";
 import {NO_ANSWER} from '../../Questions/Question/Question';
 import {arrToCss} from '../../../../../util/utility';
 
@@ -18,9 +18,13 @@ const textInput = ( props ) => {
             <div className={classes.Header}>{props.header + (props.required ? ' *' : '')}</div>
             <div className={classes.SubHeader}>{props.subHeader}</div>
             <div className={classes.AnswerTextInput}>
-                <TextInput
-                    name={props.name}
-                    placeholder={props.placeholder}
+                <Input
+                    elementType='input'
+                    elementConfig={{
+                        type: 'text',
+                        name: props.name,
+                        placeholder: props.placeholder
+                    }}
                     verify={props.verify}
                     val={props.value !== NO_ANSWER ? props.value : ''}
                     inputChangedHandler={event => props.valueChanged(event.target.value)}

@@ -4,7 +4,7 @@ import * as actions from '../../store/actions/index';
 
 import {SYMPTOM_ANAMNESIS_QUESTIONS} from "../../contentConf/SymptomAnamnesis";
 import Questions from "../../components/UI/Questionnaire/Questions/Questions";
-import { sameDay } from '../../util/utility';
+import { sameDay, isDateInFuture } from '../../util/utility';
 import { withRouter, Redirect } from 'react-router-dom';
 import { POST_RECORD_SUCCESS, POST_RECORD_FAIL } from '../../store/actions/actionTypes';
 
@@ -39,7 +39,13 @@ class SymptomAnamnesis extends Component {
 
     render() {
 
-        if (!this.state.date || new Date().getTime() < new Date(this.state.date).getTime()
+        console.log(this.state.date)
+        console.log(new Date().getTime() <= new Date(this.state.date + 'GMT+0200').getTime())
+        console.log(new Date().getTime())
+        console.log(new Date(this.state.date).getTime())
+        console.log(new Date().getTime() - new Date(this.state.date).getTime())
+        if (!this.state.date || !new Date(this.state.date).getTime()
+            || isDateInFuture(this.state.date)
             || (this.state.successfullySaved && !this.props.loading &&!this.props.errorMsg)) {
             return <Redirect to='/dashboard' />;
         }

@@ -3,87 +3,84 @@ import { put, all, take } from 'redux-saga/effects';
 import * as actions from '../actions';
 import * as actionTypes from '../actions/actionTypes';
 import { saveItem, parseItem, delItem } from '../../util/utility';
+import { getErrorMessage } from './../../contentConf/Errors';
 
 export function* signin(action) {
     try {
-        const res = yield server.get('/api/check?username=' + action.username);
-        if(res.data.exists){ 
-            const {anamnesesResult, recordsResult} = yield all({
-                afetch:             put(actions.fetchAnamnesisData(action.username)),
-                rfetch:             put(actions.fetchRecords(action.username)),
-                anamnesesResult:    take([actionTypes.FETCH_ANAMNESIS_DATA_SUCCESS, actionTypes.FETCH_ANAMNESIS_DATA_FAIL]),
-                recordsResult:      take([actionTypes.FETCH_RECORDS_SUCCESS, actionTypes.FETCH_RECORDS_FAIL])
-            });
-            if(anamnesesResult.type === actionTypes.FETCH_ANAMNESIS_DATA_FAIL || recordsResult.type === actionTypes.FETCH_RECORDS_FAIL){
-                yield put(actions.signinFail('Server Error'));
-            } else {
-                saveItem('username', action.username);
-                yield all([
-                    put(actions.signinSuccess(action.username)),
-                    put(actions.redirect('/dashboard'))
-                ]);
-            }
-        } else {
-            yield put(actions.signinFail('Nutzer existiert nicht'));
+        const data = {
+            username: action.username,
+            password: action.password
         }
+        const res = yield server.post('/auth/signin', data);
+        saveItem('username', res.data.username);
+
+        // try getting records and anamnesis
+        yield all({
+            afetch:             put(actions.fetchAnamnesisData()),
+            rfetch:             put(actions.fetchRecords()),
+            anamnesesResult:    take([actionTypes.FETCH_ANAMNESIS_DATA_SUCCESS, actionTypes.FETCH_ANAMNESIS_DATA_FAIL]),
+            recordsResult:      take([actionTypes.FETCH_RECORDS_SUCCESS, actionTypes.FETCH_RECORDS_FAIL])
+        });
+
+        yield all([
+            put(actions.signinSuccess(action.username)),
+            put(actions.redirect('/dashboard'))
+        ]);
     } catch (err) {
-        yield put(actions.signinFail('Server Error'));
+        let message = 'Error';
+        if (err.response && err.response.data.error && err.response.data.error.key) {
+            message = getErrorMessage(err.response.data.error.key);
+        }
+        yield put(actions.signinFail(message));
     }
 }
 
 export function* logout(action) {
-    delItem('username');
-    delItem('records');
-    yield delItem('anamnesis');
-}
-
-export function* signup(action){
     try {
-        const res = yield server.get('/api/check?username=' + action.username);
-        if(!res.data.exists){ 
-            yield put(actions.startSignupProcess(action.username));
-        } else {
-            yield put(actions.signupFail('Nutzername existiert bereits'));
-        }
+        delItem('username');
+        delItem('anamnesis');
+        delItem('records');
+        yield server.get('/auth/logout');
     } catch (err) {
-        yield put(actions.signupFail('Server Error'));
+        console.log(err);
     }
 }
 
-export function* endSignupProcess(action){
-    try {
-        const data = {
-            user: {username: action.username},
-            anamnesis_data: action.anamnesisData
+export function* signup(action){
+    if (action.password1 === action.password2) {
+        try {
+            const data = {
+                username: action.username,
+                password: action.password1,
+                usage_purpose: action.vendor
+            }
+            const res = yield server.post('/auth/signup', data);
+            saveItem('username', res.data.username);
+
+            yield put(actions.setAnamnesisData({}));
+            yield put(actions.setRecords([]));
+            yield put(actions.signupSuccess(res.data.username));
+            yield put(actions.redirect('/user-info'));
+
+        } catch (err) {
+            let message = 'Error';
+            if (err.response && err.response.data.error && err.response.data.error.key) {
+                message = getErrorMessage(err.response.data.error.key);
+            }
+            yield put(actions.signinFail(message));
         }
-        const res = yield server.post('/api/anamneses', data);
-        yield put(actions.setAnamnesisData(res.data));
-        const {fetchResult} = yield all({
-            frecords:       put(actions.fetchRecords(action.username)),
-            fetchResult:    take([actionTypes.FETCH_RECORDS_SUCCESS, actionTypes.FETCH_RECORDS_FAIL])
-        });
-        if (fetchResult.type === actionTypes.FETCH_RECORDS_SUCCESS){
-            saveItem('username', action.username);
-            yield all([
-                put(actions.signupSuccess(action.username)),
-                put(actions.redirect('/dashboard'))
-            ]);
-        } else {
-            yield put(actions.signupFail('Server Error'));
-        }
-    } catch (err) {
-        yield put(actions.signupFail(err.message));
     }
 }
 
 export function* checkAuthState(action) {
     const username = parseItem('username');
-    const anamnesis = parseItem('anamnesis');
-    const records = parseItem('records');
-    if (username === null) {
+    if ( !username ) {
         yield put(actions.logout());
     } else {
-        
+        //try to fetch user data. If it fails --> logout
+        const anamnesis = parseItem('anamnesis');
+        const records = parseItem('records');
+
         let signinSuccess = true;
         if(anamnesis === null) {
             const {fetchResult} = yield all({

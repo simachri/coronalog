@@ -281,7 +281,6 @@ class Questions extends Component {
     }
 
     render() {
-        console.log(this.state.values)
         
         const questions = [];
         this.props.qSpecs.forEach( (pageSpec, idx) => {

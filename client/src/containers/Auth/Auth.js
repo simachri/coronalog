@@ -1,23 +1,45 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import classes from './Auth.module.scss';
-import TextInput from '../../components/UI/TextInput/TextInput';
-import Button from '../../components/UI/Button/Button';
 import Spinner from './../../components/UI/Spinner/Spinner';
+import Signin from '../../components/auth/Signin/Signin';
+import Signup from '../../components/auth/Signup/Signup';
+import Button from '../../components/UI/Button/Button';
+import axios from '../../axios-main';
 
 class Auth extends Component {
 
     constructor(props){
         super(props);
         this.state = {
-            username: '',
-            isSignin: this.getIsSignin()
+            isSignin: this.getIsSignin(),
+            vendors: null,
+            error: null
         }
     }
 
+    getVendors = () => {
+        axios.get('/auth/vendors')
+            .then(res => this.setState({vendors: res.data}))
+            .catch(err => this.setState({error: 'An unexpected error has occurred'}));
+    }
+
+    componentDidMount(){
+        if (!this.state.isSignin) {
+            this.getVendors();
+        }
+    }
+
+    componentDidUpdate() {
+        if (!this.state.vendors && !this.state.error && !this.state.isSignin) {
+            this.getVendors()
+        }
+    }
+
+    // extract from url whether signin or signup
     getIsSignin = () => {
         const params = new URLSearchParams(this.props.location.search);
         switch(params.get('method')){
@@ -42,8 +64,13 @@ class Auth extends Component {
 
     render() {
 
-        if (this.props.inSignupProcess){
-            return <Redirect to='user-info' />;
+        //loading vendors or loading failed
+        if (!this.state.isSignin && !this.state.vendors) {
+            if (!this.state.error) {
+                return <Spinner />
+            } else {
+                return <p>{this.state.error}</p>
+            }
         }
 
         let error = null;
@@ -54,39 +81,17 @@ class Auth extends Component {
         let inputArea = null;
         if(this.props.isSignedIn){
             inputArea = 'Angemeldet als ' + this.props.username;
+        } else if (this.state.isSignin) {
+            inputArea = <Signin 
+                onSubmit={(username, password) => this.props.signin(username, password)} 
+                loading={this.props.loading}
+            />
         } else {
-            inputArea = (
-                <TextInput 
-                    val={this.state.username}
-                    inputChangedHandler={event => this.setState({username: event.target.value})}
-                    name='username'
-                    placeholder='Dein Nutzername'
-                    verify={/^(?!\s*$).+/}
-                />
-            );
-        }
-
-        let submitCaption = '';
-        let submitMethod = null;
-        if(this.props.isSignedIn){
-            submitCaption = 'Logout';
-            submitMethod = () => this.props.logout();
-        } else {
-            if(this.state.isSignin){
-                submitCaption = 'Anmelden';
-                submitMethod = () => this.props.signin(this.state.username);
-            } else {
-                submitCaption = 'Registrieren';
-                submitMethod = () => this.props.signup(this.state.username);
-            }
-        }
-        let submitButton = (
-            <Button click={submitMethod}>
-                {submitCaption}
-            </Button>
-        );
-        if(this.props.loading){
-            submitButton = <Spinner />;
+            inputArea = <Signup
+                onSubmit={(username, pw1, pw2, vendor) => this.props.signup(username, pw1, pw2, vendor)}
+                loading={this.props.loading}
+                vendors={this.state.vendors}
+            />
         }
 
         return (
@@ -96,18 +101,14 @@ class Auth extends Component {
                 </h1>
                 <div className={classes.Card}>
                     {error}
-                    <div className={classes.UsernameInput}>
-                        {inputArea}
-                    </div>
-                    <div className={classes.Submit}>
-                        {submitButton}
-                    </div>
+                    {inputArea}
                     {!this.props.isSignedIn 
                         ? 
                             <div className={classes.SwitchMode} onClick={this.changeMethodHandler}>
                                 {this.state.isSignin ? 'Jetzt registrieren' : 'Bereits registriert?'}
                             </div>
-                        : null}
+                        :   <Button click={this.props.logout}>Logout</Button>
+                    }
                 </div>
             </div>
         )
@@ -120,14 +121,13 @@ const mapStateToProps = state => {
         username: state.auth.username,
         loading: state.auth.loading,
         errorMsg: state.auth.errorMsg,
-        inSignupProcess: state.auth.currentlySignup,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        signin: (username) => dispatch(actions.signin(username)),
-        signup: (username) => dispatch(actions.signup(username)),
+        signin: (username, password) => dispatch(actions.signin(username, password)),
+        signup: (username, password1, password2, vendor) => dispatch(actions.signup(username, password1, password2, vendor)),
         logout: () => dispatch(actions.logout()),
     };
 };

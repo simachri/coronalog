@@ -5,7 +5,6 @@ const initialState = {
     username: null,
     loading: false,
     errorMsg: null,
-    currentlySignup: null
 };
 
 export default (state = initialState, action) => {
@@ -17,8 +16,6 @@ export default (state = initialState, action) => {
         case actionTypes.AUTH_SIGNUP_SUCCESS: return signupSuccess(state, action);
         case actionTypes.AUTH_SIGNUP_FAIL: return signupFail(state, action);
         case actionTypes.AUTH_LOGOUT: return logout(state, action);
-        case actionTypes.START_SIGNUP_PROCESS: return startSignupProcess(state, action);
-        case actionTypes.END_SIGNUP_PROCESS: return endSignupProcess(state, action);
         default: return state;
     }
 };
@@ -54,10 +51,16 @@ const logout = (state, action) => {
 };
 
 const signup = (state, action) => {
-    return updateObject(state, {
-        loading: true,
-        errorMsg: null
-    });
+    if (action.password1 !== action.password2) {
+        return updateObject(state, {
+            errorMsg: 'Die Passwörter stimmen nicht überein.'
+        })
+    } else {
+        return updateObject(state, {
+            loading: true,
+            errorMsg: null
+        });
+    }
 };
 
 const signupFail = (state, action) => {
@@ -65,7 +68,6 @@ const signupFail = (state, action) => {
         username: null,
         loading: false,
         errorMsg: action.msg,
-        currentlySignup: false
     });
 };
 
@@ -74,22 +76,5 @@ const signupSuccess = (state, action) => {
         username: action.username,
         loading: false,
         errorMsg: null,
-        currentlySignup: false,
-    });
-};
-
-const startSignupProcess = (state, action) => {
-    return updateObject(state, {
-        loading: false,
-        currentlySignup: {
-            username: action.username
-        }
-    });
-};
-
-const endSignupProcess = (state, action) => {
-    const loading = state.currentlySignup ? true : false;
-    return updateObject(state, {
-        loading: loading,
     });
 };

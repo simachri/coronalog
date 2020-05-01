@@ -10,7 +10,6 @@ export function* authWatcher() {
     yield all([
         takeEvery(actionTypes.AUTH_SIGNIN, authSagas.signin),
         takeEvery(actionTypes.AUTH_SIGNUP, authSagas.signup),
-        takeEvery(actionTypes.END_SIGNUP_PROCESS, authSagas.endSignupProcess),
         takeEvery(actionTypes.AUTH_LOGOUT, authSagas.logout),
         takeEvery([
             actionTypes.AUTH_LOGOUT,

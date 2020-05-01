@@ -5,7 +5,7 @@ import classes from './MultiOptions.module.css';
 import qClasses from '../../Questionnaire.module.css';
 import { arrToCss } from './../../../../../util/utility';
 import { NO_ANSWER } from './../../Questions/Question/Question';
-import TextInput from './../../../TextInput/TextInput';
+import Input from './../../../Input/Input';
 
 class MultiOptions extends Component {
 
@@ -95,8 +95,12 @@ class MultiOptions extends Component {
         const textInput = (
             this.props.addOptions ?
                 <div className={inputClass}>
-                    <TextInput
-                        name={this.props.addOptions.id}
+                    <Input
+                        elementType='input'
+                        elementConfig={{
+                            type: 'text',
+                            name: this.props.addOptions.id
+                        }}
                         val={this.state.textInput}
                         inputChangedHandler={(event) => this.textTyped(event)}
                 />

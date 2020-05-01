@@ -6,8 +6,6 @@ export {
     signup,
     signupFail,
     signupSuccess,
-    startSignupProcess,
-    endSignupProcess,
     checkAuthState
 } from './auth';
 export {

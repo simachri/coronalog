@@ -32,7 +32,7 @@ class App extends Component {
                 <Route exact path="/" component={Home} />
                 <Route exact path="/about-us" component={AboutUs} />
                 <ProtectedRoute exact path='/dashboard' component={Dashboard} orElse='/auth' />
-                <ProtectedRoute orIf={this.props.inSignupProcess} exact path='/user-info' component={GeneralAnamnesis} orElse='/auth' />
+                <ProtectedRoute exact path='/user-info' component={GeneralAnamnesis} orElse='/auth' />
                 <ProtectedRoute exact path='/daily-q' component={SymptomAnamnesis} orElse='/auth' />
                 <Route exact path='/info' render={() => <h1>Info Page</h1>} />
                 <Route exact path='/auth' component={Auth} />
@@ -54,7 +54,6 @@ class App extends Component {
 const mapStateToProps = state => {
     return {
         redirect: state.general.redirectTo,
-        inSignupProcess: state.auth.currentlySignup ? true : false
     };
 };
 

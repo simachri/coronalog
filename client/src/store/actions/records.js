@@ -21,10 +21,9 @@ export const resetRecords = () => {
     };
 };
 
-export const fetchRecords = (username) => {
+export const fetchRecords = () => {
     return {
         type: actionTypes.FETCH_RECORDS,
-        username: username
     };
 };
 

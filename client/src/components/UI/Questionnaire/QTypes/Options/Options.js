@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 
 import classes from '../../Questionnaire.module.css';
 import Bubble from "../../../Bubble/Bubble";
-import TextInput from "../../../TextInput/TextInput";
+import Input from "../../../Input/Input";
 import {arrToCss} from "../../../../../util/utility";
 import {NO_ANSWER} from '../../Questions/Question/Question';
 
@@ -40,8 +40,12 @@ class Options extends Component {
                   {answer.textInput
                       ?
                       <div className={arrToCss(inputClasses)}>
-                          <TextInput
-                              name={answer.label}
+                          <Input
+                              elementType='input'
+                              elementConfig={{
+                                  type: 'text',
+                                  name: answer.label
+                              }}
                               val={this.state.textInput}
                               verify={this.props.verify}
                               inputChangedHandler={(event) => {

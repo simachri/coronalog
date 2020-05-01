@@ -13,10 +13,9 @@ export const resetAnamnesisData = () => {
     };
 };
 
-export const fetchAnamnesisData = (username) => {
+export const fetchAnamnesisData = () => {
     return {
         type: actionTypes.FETCH_ANAMNESIS_DATA,
-        username: username
     };
 };
 
@@ -34,10 +33,9 @@ export const fetchAnamnesisDataFail = (msg) => {
     };
 };
 
-export const postAnamnesisData = (username) => {
+export const postAnamnesisData = () => {
     return {
         type: actionTypes.POST_ANAMNESIS_DATA,
-        username: username
     };
 };
 

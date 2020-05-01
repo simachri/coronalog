@@ -17,7 +17,7 @@ const picker = ( props ) => {
             break;
     }
 
-    const selects = options.map(el => (
+    const items = options.map(el => (
         <option
             key={el}
             value={el}
@@ -33,7 +33,7 @@ const picker = ( props ) => {
 
     return (
         <select className={arrToCss(pickerClasses)} name={props.name} value={props.value} onChange={props.changed}>
-            {selects}
+            {items}
         </select>
     )
 };

@@ -1,9 +1,10 @@
 import * as actionTypes from './actionTypes';
 
-export const signin = (username) => {
+export const signin = (username, password) => {
     return {
         type: actionTypes.AUTH_SIGNIN,
-        username: username
+        username: username,
+        password: password
     };
 };
 
@@ -21,16 +22,19 @@ export const signinSuccess = (username) => {
     };
 };
 
-export const logout = (username) => {
+export const logout = () => {
     return {
         type: actionTypes.AUTH_LOGOUT
     };
 };
 
-export const signup = (username) => {
+export const signup = (username, password1, password2, vendor) => {
     return {
         type: actionTypes.AUTH_SIGNUP,
-        username: username
+        username: username,
+        password1: password1,
+        password2: password2,
+        vendor: vendor
     };
 };
 
@@ -44,21 +48,6 @@ export const signupFail = (msg) => {
 export const signupSuccess = (username) => {
     return {
         type: actionTypes.AUTH_SIGNUP_SUCCESS,
-        username: username
-    };
-};
-
-export const startSignupProcess = (username) => {
-    return {
-        type: actionTypes.START_SIGNUP_PROCESS,
-        username: username
-    };
-};
-
-export const endSignupProcess = (username, anamnesisData) => {
-    return {
-        type: actionTypes.END_SIGNUP_PROCESS,
-        anamnesisData: anamnesisData,
         username: username
     };
 };

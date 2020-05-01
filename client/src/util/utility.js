@@ -56,11 +56,11 @@ export const arrContainsDay = (arr, day) => {
 }
 
 export const saveItem = (key, item) => {
-    localStorage.setItem(key, JSON.stringify(item));
+    sessionStorage.setItem(key, JSON.stringify(item));
 }
 
 export const parseItem = (key) => {
-    return JSON.parse(localStorage.getItem(key));
+    return JSON.parse(sessionStorage.getItem(key));
 }
 
 export const delItem = (key) => {
@@ -135,4 +135,10 @@ export const isNumeric = val => {
 
 export const asNumOrOriginal = val => {
     return isNumeric(val) ? +val : val;
+}
+
+export const isDateInFuture = (dateStr) => {//takes date str like 2020-05-3
+    const now = new Date();
+    const dateUtcSecs = new Date(dateStr).getTime() + now.getTimezoneOffset() * 60 * 1000;
+    return dateUtcSecs > now.getTime();
 }

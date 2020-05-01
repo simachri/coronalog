@@ -4,18 +4,12 @@ import { connect } from 'react-redux';
 import {GENERAL_ANAMNESIS_QUESTIONS} from "../../contentConf/GeneralAnamnesis";
 import Questions from "../../components/UI/Questionnaire/Questions/Questions";
 import * as actions from './../../store/actions/index';
+import { POST_ANAMENSIS_DATA_SUCCESS, POST_ANAMNESIS_DATA_FAIL } from '../../store/actions/actionTypes';
 
 class GeneralAnamnesis extends Component {
 
     saveHandler = (anamnesisData) => {
-        if (this.props.currentlySignup){
-            this.props.endSignupProcess(
-                this.props.currentlySignup.username,
-                anamnesisData
-            );
-        } else {
-            this.props.saveAndPostAnamnesis(this.props.username, anamnesisData);
-        }
+        this.props.saveAndPostAnamnesis(anamnesisData);
     }
 
     render() {
@@ -33,7 +27,6 @@ class GeneralAnamnesis extends Component {
 
 const mapStateToProps = state => {
     return {
-        currentlySignup: state.auth.currentlySignup,
         loading: state.auth.loading || state.anamnesis.loading,
         userAnamnesis: state.anamnesis.data,
         username: state.auth.username
@@ -42,10 +35,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        endSignupProcess: (username, data) => dispatch(actions.endSignupProcess(username, data)),
-        saveAndPostAnamnesis: (username, data) => {
+        saveAndPostAnamnesis: (data) => {
+            dispatch(actions.redirectOn('/dashboard', POST_ANAMENSIS_DATA_SUCCESS, POST_ANAMNESIS_DATA_FAIL));
             dispatch(actions.setAnamnesisData(data));
-            dispatch(actions.postAnamnesisData(username));
+            dispatch(actions.postAnamnesisData());
         }
     };
 };
