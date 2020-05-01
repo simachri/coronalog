@@ -280,7 +280,10 @@ class AnamnesisDb:
         snap = user_ref.get()
         if not snap.exists:
             raise LookupError(f"No database document exists for user with id '{user_id}'.")
-        return Anamnesis(**snap.get(u'anamnesis'))
+        if 'anamnesis' not in snap.to_dict():
+            return Anamnesis()
+        else:
+            return Anamnesis(**snap.get(u'anamnesis'))
 
     @staticmethod
     def get_by_username(username: str) -> Anamnesis:

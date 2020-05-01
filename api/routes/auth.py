@@ -32,7 +32,7 @@ def signup(
         return errors.INVALID_PURPOSE_ID_RES(usage_purpose)
     except Exception as err:
         print(err)
-        return errors.SERVER_ERROR()
+        return errors.SERVER_ERROR_RES()
 
 @router.post('/signin', response_model=UserLoginBody, responses={
     400: {"model": ErrorMessage}, 500: {"model": ErrorMessage}
@@ -53,14 +53,26 @@ def signin(
         return errors.WRONG_PASSWORD_RES()
     except Exception as err:
         print(err)
-        return errors.SERVER_ERROR()
+        return errors.SERVER_ERROR_RES()
 
 @router.get('/logout')
 def logout(
     res: Response
 ):
-    res.delete_cookie(auth.AUTH_CONFIG['access_token']['body_cookie_key'])
-    res.delete_cookie(auth.AUTH_CONFIG['access_token']['signature_cookie_key'])
+
+    # delete cookies manually
+    res.set_cookie(
+        key=auth.AUTH_CONFIG['access_token']['body_cookie_key'],
+        value='',
+        secure=True,
+        expires=-1000
+    )
+    res.set_cookie(
+        key=auth.AUTH_CONFIG['access_token']['signature_cookie_key'],
+        value='',
+        secure=True,
+        expires=-1000
+    )
     
     return {}
 
@@ -101,7 +113,7 @@ def do_signup_logic(
     all_purps: Sequence = UsagePurposesDb.get_all()
     valid_purpose = False
     for purp_ref in all_purps:
-        if purp_ref.get().id == usage_purpose:
+        if purp_ref.value == usage_purpose:
             valid_purpose = True
             break
     if not valid_purpose:
