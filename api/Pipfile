@@ -9,5 +9,7 @@ verify_ssl = true
 fastapi = "*"
 uvicorn = "*"
 firebase-admin = "*"
+bcrypt = "*"
+pyjwt = "*"
 
 [requires]
