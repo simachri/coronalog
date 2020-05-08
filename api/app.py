@@ -23,11 +23,13 @@ app = FastAPI()
 # middleware to check for auth status on all /api routes
 auth_routes = ['/api']
 except_routes = ['/api/check', '/api/vendors']
+
+
 @app.middleware('http')
 async def check_auth_status(req: Request, call_next):
     cur_path = req.url.path
     # check if auth route is taken and no except route is taken
-    if any( cur_path.startswith(p) for p in auth_routes ) and all( not cur_path.startswith(p) for p in except_routes ):
+    if any(cur_path.startswith(p) for p in auth_routes) and all(not cur_path.startswith(p) for p in except_routes):
         try:
             user_id, user = authenticate_user_by_cookies(req.cookies)
             req.state.user_id = user_id
@@ -41,14 +43,16 @@ async def check_auth_status(req: Request, call_next):
         except Exception as err:
             print(err)
             return errors.SERVER_ERROR_RES()
-    
+
     res: Response = await call_next(req)
 
     # if user needed to authenticate and status 200, issue new token
-    if res.status_code == 200 and any( cur_path.startswith(p) for p in auth_routes ) and all( not cur_path.startswith(p) for p in except_routes ):
+    if res.status_code == 200 and any(cur_path.startswith(p) for p in auth_routes) and all(
+            not cur_path.startswith(p) for p in except_routes):
         generate_and_set_access_token(res, user_id, user)
 
     return res
+
 
 @app.middleware('http')
 async def beautify_server_errors(req: Request, call_next):
@@ -57,6 +61,7 @@ async def beautify_server_errors(req: Request, call_next):
         return errors.SERVER_ERROR_RES()
     else:
         return res
+
 
 app.include_router(
     apiRouter,
@@ -68,6 +73,8 @@ app.include_router(
     prefix='/auth'
 )
 
-port = os.environ['PORT']
+# port = os.environ['PORT']
+port = 5000
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=int(port))
