@@ -23,14 +23,14 @@ Requirements:
 ```bash
 pip install pipenv
 ```
-- You will need an [SSH certificate](https://gist.github.com/cecilemuller/9492b848eb8fe46d462abeb26656c4f8) to run the server via https. Store the .key and .crt files savely as they will be needed to start the server.
-- To use the firestore NoSQL database, create a new firebase project (basic usage is free). Open the firebase console of your project and go to 'Database' -> 'Create Database'. Create the database and create two new collections:
-  1. Name: 'usage_purpose'. In the dialog, create a document named 'fAAmChFEatGHgUDuORqX' (The name can be chosen arbitrarily, however unit tests look for a doc with this id) with a field 'purpose' set to 'private'.
-  2. Name: 'users'. Insert an arbitrary document. In firestore, at least one document is required inside a collection.
+- You will need an [SSH certificate](https://gist.github.com/cecilemuller/9492b848eb8fe46d462abeb26656c4f8) to run the server via https. Store the .key and .crt files safely as they will be needed to start the server.
+- To use the firestore NoSQL database, create a new firebase project (basic usage is free). Open the firebase console of your project and go to *Database* -> *Create Database*. Create the database and create two new collections:
+  1. Name: `usage_purposes`. In the dialog, create a document named `fAAmChFEatGHgUDuORqX` (The name can be chosen arbitrarily, however unit tests look for a doc with this id) with a field `purpose` set to `private`.
+  2. Name: `users`. Insert an arbitrary document. In firestore, at least one document is required inside a collection.
 
-  Afterwards, create a new private key to access this database from the python server: Settings -> project settings -> service accounts -> Generate new private key  
-  Download the file, make sure it is named 'firebase_key.json', and save it to the api folder of the project.
-- Create a new json file 'config.json' and save it to api/auth. This file will contain configuration for user authentication. Replace the secret key, at least.
+  Afterwards, create a new private key to access this database from the python server: *Settings* -> *project settings* -> *service accounts* -> *Generate new private key*  
+  Download the file, make sure it is named `firebase_key.json`, and save it to the api folder of the project.
+- Create a new json file `config.json` and save it to *api/auth*. This file will contain configuration for user authentication. Replace the secret key, at least.
 ```json
 {
     "access_token": {
