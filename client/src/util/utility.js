@@ -82,7 +82,7 @@ export const mapSymptomsToFloats = (symptoms) => {
 
         switch (key) {
             case 'fever':
-                if (symptoms[key] === 0) {
+                if (!symptoms[key] || symptoms[key] === 0) {
                     val = MIN_VAL;
                 } else {
                     val = mapNumberFromRange(+symptoms[key], 36, 42);

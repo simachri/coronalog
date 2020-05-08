@@ -201,7 +201,7 @@ class Questions extends Component {
     getFlattennedState = () => {
         const flatState = {};
         for (let key in this.state.values){
-            if (this.state.values[key].value.constructor.name === 'Object'){
+            if (this.state.values[key].value.constructor.name === 'Object'){ // if array
                 for (let deepKey in this.state.values[key].value){
                     if (!this.state.values[key].value[deepKey] && this.props.qSpecs.find(conf => conf.name === key).addOptions && deepKey === this.props.qSpecs.find(conf => conf.name === key).addOptions.id) {
                         flatState[deepKey] = null;

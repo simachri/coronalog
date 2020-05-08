@@ -38,12 +38,7 @@ class SymptomAnamnesis extends Component {
     }
 
     render() {
-
-        console.log(this.state.date)
-        console.log(new Date().getTime() <= new Date(this.state.date + 'GMT+0200').getTime())
-        console.log(new Date().getTime())
-        console.log(new Date(this.state.date).getTime())
-        console.log(new Date().getTime() - new Date(this.state.date).getTime())
+        
         if (!this.state.date || !new Date(this.state.date).getTime()
             || isDateInFuture(this.state.date)
             || (this.state.successfullySaved && !this.props.loading &&!this.props.errorMsg)) {

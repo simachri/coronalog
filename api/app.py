@@ -35,7 +35,7 @@ async def check_auth_status(req: Request, call_next):
         except (errors.UnverifiedRoleException) as err:
             print(err)
             return errors.NO_PERMISSION_RES()
-        except (errors.InvalidAuthCookiesException, InvalidTokenError) as err:
+        except (errors.InvalidAuthCookiesException, errors.InvalidTokenError) as err:
             print(err)
             return errors.INVALID_TOKEN_RES()
         except Exception as err:
