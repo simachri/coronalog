@@ -31,11 +31,11 @@ class App extends Component {
             <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/about-us" component={AboutUs} />
-                <ProtectedRoute exact path='/dashboard' component={Dashboard} orElse='/auth' />
-                <ProtectedRoute exact path='/user-info' component={GeneralAnamnesis} orElse='/auth' />
-                <ProtectedRoute exact path='/daily-q' component={SymptomAnamnesis} orElse='/auth' />
+                <ProtectedRoute exact path='/dashboard' component={Dashboard} orElse='/authentication' />
+                <ProtectedRoute exact path='/user-info' component={GeneralAnamnesis} orElse='/authentication' />
+                <ProtectedRoute exact path='/daily-q' component={SymptomAnamnesis} orElse='/authentication' />
                 <Route exact path='/info' render={() => <h1>Info Page</h1>} />
-                <Route exact path='/auth' component={Auth} />
+                <Route exact path='/authentication' component={Auth} />
                 <Redirect to="/" />
             </Switch>
         );
