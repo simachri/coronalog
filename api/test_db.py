@@ -15,7 +15,7 @@ import errors
 TEST_USER_NAME = u'UnitTestUser1337'
 TEST_USER_PW = u'DJfjdialj'
 NON_EXISTING_USER_NAME = u'9012nsdkfl0912k'
-PURPOSE_PRIVATE_ID = u'NnqnZ38FMOUFskHFEjUX'
+PURPOSE_PRIVATE_ID = u'fAAmChFEatGHgUDuORqX'
 TEST_USER_ID = functions.generate_uuid()
 TEST_USER_STORED = UserStored(
     username=TEST_USER_NAME,

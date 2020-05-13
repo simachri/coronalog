@@ -37,7 +37,7 @@ def verify_pw(pw: str, hash: str) -> bool:
 
 def get_purpose_id(name: str) -> str:
     queryResult = (firestore.client()
-        .collection(u'usage_purpose')
+        .collection(u'usage_purposes')
         .where(u'purpose', u'==', name)
         .stream())
     try:
