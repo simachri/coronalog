@@ -29,7 +29,7 @@ pydantic==1.4
 pyjwt==1.7.1
 pytz==2019.3
 requests==2.23.0
-rsa==4.0
+rsa==4.7
 six==1.14.0
 starlette==0.13.2
 uritemplate==3.0.1
