@@ -26,7 +26,7 @@ protobuf==3.11.3
 pyasn1-modules==0.2.8
 pyasn1==0.4.8
 pydantic==1.4
-pyjwt==1.7.1
+pyjwt==2.4.0
 pytz==2019.3
 requests==2.23.0
 rsa==4.0
